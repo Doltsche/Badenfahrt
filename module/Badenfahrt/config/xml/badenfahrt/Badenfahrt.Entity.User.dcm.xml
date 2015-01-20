@@ -6,12 +6,13 @@
                   
     <entity name="Badenfahrt\Entity\User" table="user">
 	
+		<field name="token" type="string" length="255" nullable="true" />
 		<field name="firstName" type="string" length="255" />
 		<field name="lastName" type="string" length="255" />
 		<field name="streetAndNumber" type="string" length="255" />
 		<field name="postalCode" type="string" length="5" />
 		<field name="city" type="string" length="255" />
-		<field name="phone" type="string" length="10" />
+		<field name="phone" type="string" length="10" nullable="true" />
 		<many-to-many field="roles" target-entity="Badenfahrt\Entity\Role" />
 		
     </entity>
