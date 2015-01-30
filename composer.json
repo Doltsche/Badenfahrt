@@ -9,7 +9,9 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.3.*"
+        "zendframework/zendframework": "2.3.*",
+        "bjyoungblood/bjy-authorize": "1.4.*",
+        "zf-commons/zfc-user-doctrine-orm": "0.1.*"
     },
     "autoload": {
         "psr-0": {

@@ -1,1 +1,22 @@
-<h1>UserController::register()</h1>
+<?php
+$registerForm = $this->form;
+$registerForm->setAttribute('action', $this->url());
+$registerForm->prepare();
+$registerForm->setAttribute('enctype', 'multipart/form-data');
+
+echo $this->form()->openTag($registerForm);
+
+// Get the form label plugin
+$formLabel = $this->plugin('formLabel');
+
+foreach ($registerForm->get('user-fieldset') as $element)
+{
+    echo '<div class = "form_element">';
+    echo $formLabel->openTag() . $element->getOption('label') . $formLabel->closeTag();
+    echo '<div>';
+    echo $this->formInput($element);
+    echo '</div>';
+    echo '</div>';
+}
+
+echo $this->form()->closeTag();

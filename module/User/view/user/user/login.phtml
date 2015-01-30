@@ -1,1 +1,28 @@
-<h1>UserController::login()</h1>
+
+<h2 class="form-signin-heading">Bitte einloggen</h2>
+
+<div class="alert alert-error">
+    <a class="close" data-dismiss="alert" href="#">×</a><?php var_dump($this->loginForm->get('password')->getMessages()); ?>
+</div>
+<?php
+$this->loginForm->setAttribute('action', $this->url('user'));
+$this->loginForm->setAttribute('class', 'form-signin');
+$this->loginForm->prepare();
+echo $this->form()->openTag($this->loginForm);
+foreach ($this->loginForm as $element)
+{
+    if ($element instanceof Zend\Form\Element\Submit)
+    {
+        $element->setAttribute('class', 'btn btn-lg btn-primary btn-block');
+    } else
+    {
+        echo $this->formElementErrors($element);
+        $label = $element->getOption('label');
+        echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+        $element->setAttribute('class', 'form-control');
+        $element->setAttribute('placeholder', $label);
+    }
+    echo $this->formElement($element) . '<br>';
+}
+echo $this->form()->closeTag($this->loginForm);
+?>
