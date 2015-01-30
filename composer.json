@@ -10,6 +10,7 @@
     "require": {
         "php": ">=5.3.3",
 <<<<<<< HEAD
+<<<<<<< HEAD
         "zendframework/zendframework": "2.3.*",
         "zf-commons/zfc-user-doctrine-orm": "0.1.*",
         "bjyoungblood/bjy-authorize": "1.4.*"
@@ -18,11 +19,19 @@
         "psr-0": {"": "module/Badenfahrt/src/"}
 =======
         "zendframework/zendframework": "2.3.*"
+=======
+        "zendframework/zendframework": "2.3.*",
+        "bjyoungblood/bjy-authorize": "1.4.*",
+        "zf-commons/zfc-user-doctrine-orm": "0.1.*"
+>>>>>>> 41235eb
     },
     "autoload": {
         "psr-0": {
             "User": "module/User/src/"
         }
+<<<<<<< HEAD
 >>>>>>> c55737c
+=======
+>>>>>>> 41235eb
     }
 }
