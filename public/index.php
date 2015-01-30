@@ -1,5 +1,6 @@
 <?php
 
+<<<<<<< HEAD
 /**
 * Zeige detailierten Fehler an, wenn die Umgebungsvariable (Apache) 
 * APPLICATION_ENV auf development gesetzt ist.
@@ -7,6 +8,11 @@
 if($_SERVER['APPLICATION_ENV'] == 'development') {
 	error_reporting(E_ALL);
 	ini_set("display_errors", 1);
+=======
+if ($_SERVER['APPLICATION_ENV'] == 'development') {
+    error_reporting(E_ALL);
+    ini_set("display_errors", 1);
+>>>>>>> c55737c
 }
 
 /**

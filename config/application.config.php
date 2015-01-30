@@ -3,6 +3,7 @@ return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
         'Application',
+<<<<<<< HEAD
 		'DoctrineModule',
 		'DoctrineORMModule',
 		'ZfcBase',
@@ -10,6 +11,9 @@ return array(
 		'ZfcUserDoctrineORM',
 		'BjyAuthorize',
 		'Badenfahrt',
+=======
+        'User',
+>>>>>>> c55737c
     ),
 
     // These are various options for the listeners attached to the ModuleManager

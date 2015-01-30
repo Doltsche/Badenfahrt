@@ -9,11 +9,20 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
+<<<<<<< HEAD
         "zendframework/zendframework": "2.3.*",
         "zf-commons/zfc-user-doctrine-orm": "0.1.*",
         "bjyoungblood/bjy-authorize": "1.4.*"
     },
     "autoload": {
         "psr-0": {"": "module/Badenfahrt/src/"}
+=======
+        "zendframework/zendframework": "2.3.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "User": "module/User/src/"
+        }
+>>>>>>> c55737c
     }
 }
