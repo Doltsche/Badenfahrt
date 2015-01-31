@@ -1,26 +1,24 @@
-<<<<<<< HEAD
-<h1>UserController::register()</h1>
-=======
+<h2>Registrieren</h2>
+
 <?php
-$registerForm = $this->form;
-$registerForm->setAttribute('action', $this->url());
-$registerForm->prepare();
-$registerForm->setAttribute('enctype', 'multipart/form-data');
+$this->registerForm->setAttribute('action', $this->url('user'));
+$this->registerForm->setAttribute('class', 'form-signin');
+$this->registerForm->setAttribute('enctype', 'multipart/form-data');
+$this->registerForm->prepare();
 
-echo $this->form()->openTag($registerForm);
-
-// Get the form label plugin
-$formLabel = $this->plugin('formLabel');
-
-foreach ($registerForm->get('user-fieldset') as $element)
+echo $this->form()->openTag($this->registerForm);
+foreach ($this->registerForm->get('user-fieldset') as $element)
 {
-    echo '<div class = "form_element">';
-    echo $formLabel->openTag() . $element->getOption('label') . $formLabel->closeTag();
-    echo '<div>';
-    echo $this->formInput($element);
-    echo '</div>';
-    echo '</div>';
+    if ($element instanceof Zend\Form\Element\Submit)
+    {
+        $element->setAttribute('class', 'btn btn-lg btn-primary btn-block');
+    } else
+    {
+        $label = $element->getOption('label');
+        echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+        $element->setAttribute('class', 'form-control');
+        $element->setAttribute('placeholder', $label);
+    }
+    echo $this->formElement($element) . '<br>';
 }
-
-echo $this->form()->closeTag();
->>>>>>> 41235eb
+echo $this->form()->closeTag($this->registerForm);

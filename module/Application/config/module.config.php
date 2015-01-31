@@ -25,33 +25,7 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'badenfahrt' => array(
-                'type' => 'Segment',
-                'options' => array(
-<<<<<<< HEAD
-                    'route'    => '/[:action]',
-					'constraints' => array(
-						'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-					),
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Application',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-=======
-                    'route' => '/',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
-                        'action' => 'index',
-                    ),
-                ),
-            ),
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'application' => array(
+            'home' => array(
                 'type' => 'Literal',
                 'options' => array(
                     'route' => '/application',
@@ -77,7 +51,6 @@ return array(
                     ),
                 ),
             ),
->>>>>>> 41235eb
         ),
     ),
     'service_manager' => array(
@@ -111,17 +84,10 @@ return array(
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
         'template_map' => array(
-<<<<<<< HEAD
-            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-			'badenfahrt'	  		  => __DIR__ . '/../view',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
-=======
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
->>>>>>> 41235eb
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

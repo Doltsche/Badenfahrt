@@ -4,8 +4,6 @@ namespace User\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-<<<<<<< HEAD
-=======
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Result;
 use User\Form\LoginForm;
@@ -14,7 +12,6 @@ use User\Model\User;
 use Zend\InputFilter\Factory as InputFilterFactory;
 use Zend\Validator\File\Size;
 use Zend\Validator\File\MimeType;
->>>>>>> 41235eb
 
 /**
  * Description of UserController
@@ -26,9 +23,6 @@ class UserController extends AbstractActionController
 
     public function loginAction()
     {
-<<<<<<< HEAD
-        return new ViewModel();
-=======
         $request = $this->getRequest();
         $loginForm = new LoginForm();
 
@@ -77,14 +71,10 @@ class UserController extends AbstractActionController
     {
         $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
         $authenticationService->clearIdentity();
->>>>>>> 41235eb
     }
 
     public function registerAction()
     {
-<<<<<<< HEAD
-        return new ViewModel();
-=======
         $form = new RegisterForm();
         $user = new User();
 
@@ -143,8 +133,7 @@ class UserController extends AbstractActionController
             }
         }
 
-        return array('form' => $form);
->>>>>>> 41235eb
+        return array('registerForm' => $form);
     }
 
     public function manageAction()
@@ -155,33 +144,20 @@ class UserController extends AbstractActionController
     public function editAction()
     {
         $id = $this->params()->fromRoute('id');
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 41235eb
         return new ViewModel(array('id' => $id));
     }
 
     public function confirmAction()
     {
         $token = $this->params()->fromRoute('token');
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 41235eb
         return new ViewModel(array('token' => $token));
     }
 
     public function deleteAction()
     {
         $id = $this->params()->fromRoute('id');
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> 41235eb
         return new ViewModel(array('id' => $id));
     }
 

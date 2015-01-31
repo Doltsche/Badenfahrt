@@ -25,8 +25,6 @@ return array(
                             ),
                         ),
                     ),
-<<<<<<< HEAD
-=======
                     'logout' => array(
                         'type' => 'literal',
                         'options' => array(
@@ -36,7 +34,6 @@ return array(
                             ),
                         ),
                     ),
->>>>>>> 41235eb
                     'delete' => array(
                         'type' => 'segment',
                         'options' => array(
@@ -87,18 +84,12 @@ return array(
         'invokables' => array(
             'User\Controller\User' => 'User\Controller\UserController',
         ),
-<<<<<<< HEAD
-        'factories' => array()
-=======
->>>>>>> 41235eb
     ),
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
     ),
-<<<<<<< HEAD
-=======
     'service_manager' => array(
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
@@ -146,5 +137,4 @@ return array(
             ),
         ),
     ),
->>>>>>> 41235eb
 );
