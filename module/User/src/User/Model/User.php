@@ -12,12 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
  * An example of how to implement a role aware user entity.
  *
  * @ORM\Entity
- * @ORM\Table(name="users")
+ * @ORM\Table(name="user")
  *
  * @author Samuel Egger
  */
 class User implements ProviderInterface, InputFilterAwareInterface
 {
+
+    protected $inputFilter;
 
     /**
      * @var int
@@ -260,169 +262,136 @@ class User implements ProviderInterface, InputFilterAwareInterface
 
     public function getInputFilter()
     {
-        $inputFilter = new InputFilter();
+        if (!$this->inputFilter)
+        {
+            $this->inputFilter = new InputFilter();
 
-        $inputFilter->add(array(
-            'name' => 'id',
-            'required' => true,
-            'filters' => array(
-                array('name' => 'Int'),
-            ),
-        ));
+            $this->inputFilter->add(array(
+                'name' => 'displayName',
+                'required' => true,
+                'filters' => array(array('name' => 'StringTrim')),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 255,
+                        ),
+                    )
+                ),
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'displayName',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 255,
-                    ),
-                )
-            ),
-        ));
-
-        $inputFilter->add(array(
-            'name' => 'password',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 6,
+            $this->inputFilter->add(array(
+                'name' => 'identity',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'EmailAddress',
                     ),
                 ),
-            ),
-        ));
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'passwordVerify',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 6,
+            $this->inputFilter->add(array(
+                'name' => 'firstname',
+                'required' => true,
+                'filters' => array(array('name' => 'StringTrim')),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 255,
+                        ),
                     ),
                 ),
-            ),
-        ));
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'identity',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'EmailAddress',
-                ),
-            ),
-        ));
-
-        $inputFilter->add(array(
-            'name' => 'firstname',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 255,
+            $this->inputFilter->add(array(
+                'name' => 'lastname',
+                'required' => true,
+                'filters' => array(array('name' => 'StringTrim')),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 255,
+                        ),
                     ),
                 ),
-            ),
-        ));
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'lastname',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 255,
+            $this->inputFilter->add(array(
+                'name' => 'streetAndNr',
+                'required' => true,
+                'filters' => array(array('name' => 'StringTrim')),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 255,
+                        ),
                     ),
                 ),
-            ),
-        ));
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'streetAndNr',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 255,
+            $this->inputFilter->add(array(
+                'name' => 'postalCode',
+                'required' => true,
+                'allowEmpty' => false,
+                'filters' => array(array('name' => 'Digits')),
+                'validators' => array(
+                    array(
+                        'name' => 'Digits',
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 10,
+                        ),
                     ),
                 ),
-            ),
-        ));
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'postalCode',
-            'required' => true,
-            'allowEmpty' => false,
-            'filters' => array(array('name' => 'Digits')),
-            'validators' => array(
-                array(
-                    'name' => 'Digits',
-                ),
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 10,
+            $this->inputFilter->add(array(
+                'name' => 'city',
+                'required' => true,
+                'allowEmpty' => false,
+                'filters' => array(array('name' => 'StringTrim')),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 255,
+                        ),
                     ),
                 ),
-            ),
-        ));
+            ));
 
-        $inputFilter->add(array(
-            'name' => 'city',
-            'required' => true,
-            'allowEmpty' => false,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 255,
+            $this->inputFilter->add(array(
+                'name' => 'phoneNumber',
+                'required' => false,
+                'allowEmpty' => true,
+                'filters' => array(array('name' => 'Digits')),
+                'validators' => array(
+                    array(
+                        'name' => 'Digits',
                     ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 7,
+                            'max' => 13,
+                        ),
+                    )
                 ),
-            ),
-        ));
+            ));
+        }
 
-        $inputFilter->add(array(
-            'name' => 'phoneNumber',
-            'required' => false,
-            'allowEmpty' => true,
-            'filters' => array(array('name' => 'Digits')),
-            'validators' => array(
-                array(
-                    'name' => 'Digits',
-                ),
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 7,
-                        'max' => 13,
-                    ),
-                )
-            ),
-        ));
-
-        return $inputFilter;
+        return $this->inputFilter;
     }
 
     public function setInputFilter(\Zend\InputFilter\InputFilterInterface $inputFilter)
@@ -437,21 +406,12 @@ class User implements ProviderInterface, InputFilterAwareInterface
      */
     public function getRoles()
     {
-//        // TODO
-//        
-//        $guestRole = new Role();
-//        $guestRole->setId(1);
-//        $guestRole->setRoleId('guest');
-//        
-//        $userRole = new Role();
-//        $userRole->setId(2);
-//        $userRole->getParent($guestRole);
-//        $userRole->setRoleId('user');
-//        
-//        return array($userRole);
+        return $this->roles->getValues();
+    }
 
-        $values = $this->roles->getValues();
-        return $values;
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
     }
 
     /**

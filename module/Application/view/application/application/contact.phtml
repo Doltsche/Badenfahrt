@@ -1,0 +1,42 @@
+<hr>
+<div class="jumbotron">
+    <h2>Organisationskomite Kontaktieren </h2>
+    <div id="wrap" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!--col-md-offset-1"-->
+                <form id="register" class="form" enctype="multipart/form-data" name="register" method="post" action="/user/register">
+
+                    <div class="row">
+                        <input class="form-control input-lg" type="text" value="" placeholder="Vorname" required="required" name="firstNameInput">
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <input class="form-control input-lg" type="text" value="" placeholder="Nachname" required="required" name="lastNameInput">
+                    </div>
+            </div>
+
+            <input class="form-control input-lg" type="email" value="" placeholder="Your Email" required="required" name="email">
+            <div class="row">
+                <div class="col-xs-4 col-md-4">
+                    <input class="form-control input-lg" type="text" value="" placeholder="Phonenumber" required="required" name="phonenumber">
+                </div>
+
+                <!-- -->
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <input class="form-control input-lg" type="hidden" value="16a58a1730dbe94d9d72ba9abc2fcf8d" placeholder="Verify you are human" required="required" name="captcha[id]">
+                        <input class="form-control input-lg" type="text" placeholder="Ihr Anliegen, Nachricht eingeben" required="required" name="captcha[input]">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input class="btn btn btn-success btn-lg" type="submit" value="senden" name="submit">
+
+                    </div>
+                </div>
+                <input type="hidden" value="22840dd81fae4088fd6aeeb478ae1f67-d0c09b0b4905b733beacee841db62208" name="csrf">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

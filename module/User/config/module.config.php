@@ -47,14 +47,11 @@ return array(
                         ),
                     ),
                     'edit' => array(
-                        'type' => 'segment',
+                        'type' => 'literal',
                         'options' => array(
-                            'route' => '/edit/:id',
+                            'route' => '/edit',
                             'defaults' => array(
                                 'action' => 'edit',
-                            ),
-                            'constraints' => array(
-                                'id' => '[1-9]\d*',
                             ),
                         ),
                     ),
@@ -91,6 +88,9 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'invokables' => array(
+           'User\Form\Validator\PasswordValidator' => 'User\Form\Validator\PasswordValidator',
+        ),
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
@@ -128,12 +128,27 @@ return array(
                 'role_entity_class' => 'User\Model\Role',
             ),
         ),
+        'resource_providers' => array(
+            'BjyAuthorize\Provider\Resource\Config' => array(
+                '\User\Model\User' => array(),
+            ),
+        ),
+        'rule_providers' => array(
+            'BjyAuthorize\Provider\Rule\Config' => array(
+                'allow' => array(
+                    array(array('administrator'), '\User\Model\User', array('edit', 'manage')),
+                    array(array('user'), '\User\Model\User', 'edit'),
+                ),
+            ),
+        ),
         'guards' => array(
             'BjyAuthorize\Guard\Route' => array(
                 array('route' => 'home', 'roles' => array('guest', 'user', 'administrator')),
-                array('route' => 'user/logout', 'roles' => array('guest', 'user', 'administrator')),
-                array('route' => 'user/register', 'roles' => array('guest', 'user', 'administrator')),
-                array('route' => 'user', 'roles' => array('guest', 'user', 'administrator')),
+                array('route' => 'user', 'roles' => array('guest')),
+                array('route' => 'user/logout', 'roles' => array('user', 'administrator')),
+                array('route' => 'user/register', 'roles' => array('guest')),
+                array('route' => 'user/edit', 'roles' => array('user', 'administrator')),
+                array('route' => 'user/manage', 'roles' => array('administrator')),
             ),
         ),
     ),

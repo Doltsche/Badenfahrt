@@ -14,5 +14,15 @@ namespace User\Mapper;
  */
 interface UserMapperInterface
 {
+    public function findById($id);
+    
     public function findByIdentity($identity);
+    
+    public function findByDisplayName($displayName);
+    
+    public function findAll();
+    
+    public function save($user);
+    
+    public function remove($user);
 }

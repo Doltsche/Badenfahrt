@@ -1,6 +1,6 @@
 <h2 class="form-signin-heading">Bitte einloggen</h2>
 
-<?php if($this->loginForm->getMessages()): ?>
+<?php if($this->loginFailed): ?>
 <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
     <a class="close" data-dismiss="alert" href="#">×</a>Benutzername und/oder Passwort ist falsch.
 </div>

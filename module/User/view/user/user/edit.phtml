@@ -1,1 +1,105 @@
-<h1>UserController::edit(<?php echo $this->id; ?>)</h1>
+<h2>Profil bearbeiten</h2>
+
+<?php if ($this->editError): ?>
+    <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
+        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->editError; ?>
+    </div>
+<?php endif ?>
+
+<?php
+$this->editForm->setAttribute('action', $this->url('user/edit'));
+$this->editForm->setAttribute('class', 'form-signin');
+$this->editForm->setAttribute('enctype', 'multipart/form-data');
+$this->editForm->prepare();
+
+$userFieldset = $this->editForm->get('user-fieldset');
+
+function renderElement($element, $instance)
+{
+    $label = $element->getOption('label');
+    $element->setAttribute('class', 'form-control input-lg');
+    $element->setAttribute('placeholder', $label);
+    echo $instance->formInput($element);
+
+    if ($element->getMessages())
+    {
+        echo array_values($element->getMessages())[0] . '<br>';
+    } else
+    {
+        echo '<br><br>';
+    }
+}
+?>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <?php echo $this->form()->openTag($this->editForm); ?>
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('displayName'), $this); ?>
+            </div>
+
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('avatar'), $this); ?>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('firstname'), $this); ?>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <?php renderElement($userFieldset->get('lastname'), $this); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('streetAndNr'), $this); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('postalCode'), $this); ?>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <?php renderElement($userFieldset->get('city'), $this); ?>
+            </div>
+        </div>    
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('phone'), $this); ?>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('identity'), $this); ?>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <?php renderElement($userFieldset->get('password'), $this); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                &nbsp;
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <?php renderElement($userFieldset->get('passwordVerify'), $this); ?>
+            </div>
+            <?php
+            $element = $this->editForm->get('submit');
+            $element->setAttribute('class', 'btn btn btn-success btn-lg pull-right');
+            echo $this->formElement($element);
+            ?>
+        </div>
+        <?php echo $this->form()->closeTag($this->editForm); ?>
+    </div>
+</div>

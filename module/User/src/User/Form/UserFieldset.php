@@ -42,6 +42,14 @@ class UserFieldset extends Fieldset
         ));
         
         $this->add(array(
+            'type' => 'text',
+            'name' => 'identityVerify',
+            'options' => array(
+                'label' => 'E-Mail bestätigen',
+            ),
+        ));
+        
+        $this->add(array(
             'type' => 'password',
             'name' => 'password',
             'options' => array(

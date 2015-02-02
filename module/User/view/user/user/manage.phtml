@@ -1,1 +1,32 @@
-<h1>UserController::manage()</h1>
+<h1>Benutzer verwalten</h1>
+
+<p><a href="<?php echo $this->url('album', array( 
+        'action'=>'add'));?>">Add new album</a></p>
+
+<table class="table">
+    <tr>
+        <th>Anzeigename</th>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Identität</th>
+        <th>&nbsp;</th>
+    </tr>
+    
+    <?php foreach($this->users as $user) : ?>
+    
+    <tr>
+        <td><?php echo $this->escapeHtml($user->getDisplayName());?></td>
+        <td><?php echo $this->escapeHtml($user->getFirstname());?></td>
+        <td><?php echo $this->escapeHtml($user->getLastname());?></td>
+        <td><?php echo $this->escapeHtml($user->getIdentity());?></td>
+        <td>
+            <a href="<?php echo $this->url('user',
+                array('action'=>'manage', 'id' => $user->id));?>">Bearbeiten</a>
+            <a href="<?php echo $this->url('album',
+                array('action'=>'delete', 'id' => $user->id));?>">Löschen</a>
+        </td>
+    </tr>
+    
+    <?php endforeach; ?>
+    
+</table>

@@ -6,6 +6,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Authentication\AuthenticationService;
 use User\Authentication\UserAuthenticationAdapter;
+use User\Authentication\UserAuthenticationStorage;
 
 /**
  * Description of AuthenticationServiceFactory
@@ -17,12 +18,12 @@ class AuthenticationServiceFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $authenticationService = new AuthenticationService();
-        
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
-        $authenticationService->setAdapter(new UserAuthenticationAdapter($userMapper));
         
-        return $authenticationService;
+        $adapter = new UserAuthenticationAdapter($userMapper);
+        $storage = new UserAuthenticationStorage($userMapper);
+
+        return new AuthenticationService($storage, $adapter);
     }
 
 }

@@ -1,24 +1,105 @@
 <h2>Registrieren</h2>
 
+<?php if ($this->registrationError): ?>
+    <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
+        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->registrationError; ?>
+    </div>
+<?php endif ?>
+
 <?php
-$this->registerForm->setAttribute('action', $this->url('user'));
+$this->registerForm->setAttribute('action', $this->url('user/register'));
 $this->registerForm->setAttribute('class', 'form-signin');
 $this->registerForm->setAttribute('enctype', 'multipart/form-data');
 $this->registerForm->prepare();
 
-echo $this->form()->openTag($this->registerForm);
-foreach ($this->registerForm->get('user-fieldset') as $element)
+$userFieldset = $this->registerForm->get('user-fieldset');
+
+function renderElement($element, $instance)
 {
-    if ($element instanceof Zend\Form\Element\Submit)
+    $label = $element->getOption('label');
+    $element->setAttribute('class', 'form-control input-lg');
+    $element->setAttribute('placeholder', $label);
+    echo $instance->formInput($element);
+
+    if ($element->getMessages())
     {
-        $element->setAttribute('class', 'btn btn-lg btn-primary btn-block');
+        echo array_values($element->getMessages())[0] . '<br>';
     } else
     {
-        $label = $element->getOption('label');
-        echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
-        $element->setAttribute('class', 'form-control');
-        $element->setAttribute('placeholder', $label);
+        echo '<br><br>';
     }
-    echo $this->formElement($element) . '<br>';
 }
-echo $this->form()->closeTag($this->registerForm);
+?>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <?php echo $this->form()->openTag($this->registerForm); ?>
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('displayName'), $this); ?>
+            </div>
+
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('avatar'), $this); ?>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('firstname'), $this); ?>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <?php renderElement($userFieldset->get('lastname'), $this); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('streetAndNr'), $this); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('postalCode'), $this); ?>
+            </div>
+            <div class="col-xs-6 col-md-6">
+                <?php renderElement($userFieldset->get('city'), $this); ?>
+            </div>
+        </div>    
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('phone'), $this); ?>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                <?php renderElement($userFieldset->get('identity'), $this); ?>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <?php renderElement($userFieldset->get('password'), $this); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8 col-md-6">
+                &nbsp;
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <?php renderElement($userFieldset->get('passwordVerify'), $this); ?>
+            </div>
+            <?php
+            $element = $this->registerForm->get('submit');
+            $element->setAttribute('class', 'btn btn btn-success btn-lg pull-right');
+            echo $this->formElement($element);
+            ?>
+        </div>
+        <?php echo $this->form()->closeTag($this->registerForm); ?>
+    </div>
+</div>

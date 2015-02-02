@@ -19,7 +19,7 @@ class ApplicationController extends AbstractActionController
         return new ViewModel();
     }
 	
-	public function kontaktAction()
+	public function contactAction()
     {
         return new ViewModel();
     }

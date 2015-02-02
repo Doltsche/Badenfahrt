@@ -9,13 +9,13 @@ use Zend\Form\Form;
  *
  * @author Dev
  */
-class RegisterForm extends Form
+class EditForm extends Form
 {
 
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);
-
+        
         $this->add(array(
             'name' => 'user-fieldset',
             'type' => 'User\Form\UserFieldset',
@@ -28,7 +28,7 @@ class RegisterForm extends Form
             'type' => 'submit',
             'name' => 'submit',
             'attributes' => array(
-                'value' => 'Registrieren'
+                'value' => 'Änderungen speichern'
             )
         ));
     }

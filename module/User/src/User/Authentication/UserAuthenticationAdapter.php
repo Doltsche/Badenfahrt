@@ -4,8 +4,6 @@ namespace User\Authentication;
 
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
 
 /**
  * Description of BlogAuthAdapter
@@ -30,15 +28,15 @@ class UserAuthenticationAdapter implements AdapterInterface
 
         if (!$user)
         {
-            return new Result(Result::FAILURE_IDENTITY_NOT_FOUND, $user, array());
+            return new Result(Result::FAILURE_IDENTITY_NOT_FOUND, 0, array());
         }
 
         if ($user && $user->getPassword() == $this->password)
         {
-            return new Result(Result::SUCCESS, $user, array());
+            return new Result(Result::SUCCESS, $user->getId(), array());
         }
 
-        return new Result(Result::FAILURE_CREDENTIAL_INVALID, $user, array());
+        return new Result(Result::FAILURE_CREDENTIAL_INVALID, 0, array());
     }
 
     public function setCredentials($identity, $password)

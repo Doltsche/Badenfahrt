@@ -8,44 +8,26 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 return array(
-    'navigation' => array(
-        'default' => array(
-            array(
-                'label' => 'Home',
-                'route' => 'home',
-                'action' => 'index',
-            ),
-            array(
-                'resource' => 'administration',
-                'label' => 'Benutzerverwaltung',
-                'route' => 'user',
-                'action' => 'manage',
-            ),
-        ),
-    ),
     'router' => array(
         'routes' => array(
             'home' => array(
                 'type' => 'Literal',
                 'options' => array(
-                    'route' => '/application',
+                    'route' => '/',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Application\Controller',
-                        'controller' => 'Index',
+                        'controller' => 'Application',
                         'action' => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type' => 'Segment',
+                        'type' => 'segment',
                         'options' => array(
-                            'route' => '/[:controller[/:action]]',
+                            'route' => '/:action',
                             'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
                             ),
                         ),
                     ),
@@ -54,6 +36,9 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'factories' => array(
+            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+        ),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',

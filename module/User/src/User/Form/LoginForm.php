@@ -30,6 +30,32 @@ class LoginForm extends Form
             ),
         ));
 
+        $inputFilter->add(array(
+            'name' => 'identity',
+            'required' => true,
+            'validators' => array(
+                array(
+                    'name' => 'NotEmpty',
+                    'options' => array(
+                        'messages' => array(
+                            \Zend\Validator\NotEmpty::IS_EMPTY => 'Bitte Identität eingeben.'
+                        ),
+                    ),
+                ),
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                        'messages' => array(
+                            \Zend\Validator\StringLength::TOO_LONG => 'Die Identität muss mindestens 3 Zeichen lang sein.',
+                            \Zend\Validator\StringLength::TOO_SHORT => 'Die Identität darf maximal 255 Zeichen lang sein.',
+                        ),
+                    ),
+                ),
+            ),
+        ));
+
         $this->add(array(
             'type' => 'password',
             'name' => 'password',
@@ -49,7 +75,7 @@ class LoginForm extends Form
                     'name' => 'NotEmpty',
                     'options' => array(
                         'messages' => array(
-                            \Zend\Validator\NotEmpty::IS_EMPTY => 'Please enter User Name!'
+                            \Zend\Validator\NotEmpty::IS_EMPTY => 'Bitte Passwort eingeben.'
                         ),
                     ),
                 ),
@@ -59,8 +85,8 @@ class LoginForm extends Form
                         'min' => 3,
                         'max' => 255,
                         'messages' => array(
-                            \Zend\Validator\StringLength::TOO_LONG => 'Please enter User Name between 4 to 20 character!',
-                            \Zend\Validator\StringLength::TOO_SHORT => 'Please enter User Name between 4 to 20 character!'
+                            \Zend\Validator\StringLength::TOO_LONG => 'Das Passwort muss mindestens 3 Zeichen lang sein.',
+                            \Zend\Validator\StringLength::TOO_SHORT => 'Das Passwort darf maximal 255 Zeichen lang sein.',
                         ),
                     ),
                 ),

@@ -21,7 +21,7 @@ USE badenfahrt;
 
 SELECT '-- Schreibe users --' AS ' ';
 
-INSERT INTO users 
+INSERT INTO user
     (identity, 
     displayName, 
     password, 
@@ -48,9 +48,8 @@ SELECT '-- Schreibe user_role_linker --' AS ' ';
 INSERT INTO user_role_linker
     (user_id, role_id) 
 VALUES
-    (1, 1), #guest 
-    (1, 2), #user
-    (1, 3); #admin
+    (1, 1), #guest
+    (1, 2); #user
 SHOW WARNINGS;
 
 #Daten speichern
