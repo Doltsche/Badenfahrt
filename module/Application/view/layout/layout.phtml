@@ -48,6 +48,7 @@
                         <?php
                         if ($this->userIdentity())
                         {
+                            
                             // TODO: Problem with url helper (action).
                             echo '<li><a href="' . $this->url('user') . '\logout">Logout</a></li>';
                         } else
@@ -55,16 +56,17 @@
                             echo '<li><a href="' . $this->url('user') . '">Login</a></li>';
                             echo '<li><a href="' . $this->url('user') . '\register">Registrieren</a></li>';
                         }
-                        if ($this->isAllowed('\User\Model\User', 'edit'))
+                        if ($this->isAllowed('user', 'edit'))
                         {
                             // TODO: Problem with url helper (action).
                             echo '<li><a href="' . $this->url('user') . '\edit">Profil</a></li>';
                         }
-                        if ($this->isAllowed('\User\Model\User', 'manage'))
-                        {
-                            // TODO: Problem with url helper (action).
-                            echo '<li><a href="' . $this->url('user') . '\manage">Benutzer</a></li>';
-                        }
+                        // TODO: isAllowed not working
+                        // if ($this->isAllowed('user', 'manage'))
+                        // {
+                                // TODO: Problem with url helper (action).
+                            echo '<li><a href="' . $this->url('user', array('action' => 'manage'), array()) . '\manage">Benutzer</a></li>';
+                        // }
                         ?>
                     </ul>
                     <?php if ($this->userIdentity()): ?>

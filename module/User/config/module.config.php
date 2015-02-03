@@ -23,9 +23,12 @@ return array(
                             'defaults' => array(
                                 'action' => 'confirm',
                             ),
+                            'constraints' => array(
+                                'token' => '[1-9]\d*',
+                            ),
                         ),
                     ),
-                    'confirm' => array(
+                    'confirmPrompt' => array(
                         'type' => 'literal',
                         'options' => array(
                             'route' => '/confirmPrompt',
@@ -40,18 +43,6 @@ return array(
                             'route' => '/logout',
                             'defaults' => array(
                                 'action' => 'logout',
-                            ),
-                        ),
-                    ),
-                    'delete' => array(
-                        'type' => 'segment',
-                        'options' => array(
-                            'route' => '/delete/:id',
-                            'defaults' => array(
-                                'action' => 'delete',
-                            ),
-                            'constraints' => array(
-                                'id' => '[1-9]\d*',
                             ),
                         ),
                     ),
@@ -70,6 +61,33 @@ return array(
                             'route' => '/manage',
                             'defaults' => array(
                                 'action' => 'manage',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'edit' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/edit/:id',
+                                    'defaults' => array(
+                                        'action' => 'edit',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[1-9]\d*',
+                                    ),
+                                ),
+                            ),
+                            'delete' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/delete/:id',
+                                    'defaults' => array(
+                                        'action' => 'delete',
+                                    ),
+                                    'constraints' => array(
+                                        'id' => '[1-9]\d*',
+                                    ),
+                                ),
                             ),
                         ),
                     ),
@@ -98,7 +116,7 @@ return array(
     ),
     'service_manager' => array(
         'invokables' => array(
-           'User\Service\UserMailServiceInterface' => 'User\Service\UserMailService',
+            'User\Service\UserMailServiceInterface' => 'User\Service\UserMailService',
         ),
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
@@ -131,7 +149,7 @@ return array(
         // set the 'guest' role as default (must be defined in a role provider)
         'default_role' => 'guest',
         // default role for authenticated users
-        'authenticated_role'    => 'registered',
+        'authenticated_role' => 'registered',
         // Using the authentication identity provider, which basically reads the roles from the auth service's identity
         'identity_provider' => 'User\Authentication\IdentityProvider',
         'role_providers' => array(
@@ -143,27 +161,27 @@ return array(
         ),
         'resource_providers' => array(
             'BjyAuthorize\Provider\Resource\Config' => array(
-                '\User\Model\User' => array(),
+                'user' => array(),
             ),
         ),
         'rule_providers' => array(
             'BjyAuthorize\Provider\Rule\Config' => array(
                 'allow' => array(
-                    array(array('administrator'), '\User\Model\User', array('edit', 'manage')),
-                    array(array('user'), '\User\Model\User', 'edit'),
+                    array(array('administrator'), 'user', array('manage')),
+                    array(array('user'), 'user', array('edit')),
                 ),
             ),
         ),
-        'guards' => array(
-            'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'home', 'roles' => array('guest', 'user', 'administrator')),
-                array('route' => 'user', 'roles' => array('guest')),
-                array('route' => 'user/logout', 'roles' => array('registered', 'user', 'administrator')),
-                array('route' => 'user/register', 'roles' => array('guest')),
-                array('route' => 'user/confirm', 'roles' => array('guest', 'registered',)),
-                array('route' => 'user/edit', 'roles' => array('user', 'administrator')),
-                array('route' => 'user/manage', 'roles' => array('administrator')),
-            ),
-        ),
+//        'guards' => array(
+//            'BjyAuthorize\Guard\Controller' => array(
+//                array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user', 'administrator')),
+//                array('controller' => 'user', 'action' => 'login', 'roles' => array('guest')),
+//                array('controller' => 'user', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
+//                array('controller' => 'user', 'action' => 'register', 'roles' => array('guest')),
+//                array('controller' => 'user', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
+//                array('controller' => 'user', 'action' => 'edit', 'roles' => array('user', 'administrator')),
+//                array('controller' => 'user', 'action' => 'manage', 'roles' => array('user', 'administrator')),
+//            ),
+//        ),
     ),
 );
