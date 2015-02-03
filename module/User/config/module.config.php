@@ -168,20 +168,20 @@ return array(
             'BjyAuthorize\Provider\Rule\Config' => array(
                 'allow' => array(
                     array(array('administrator'), 'user', array('manage')),
-                    array(array('user'), 'user', array('edit')),
+                    array(array('guest', 'user'), 'user'),
                 ),
             ),
         ),
-//        'guards' => array(
-//            'BjyAuthorize\Guard\Controller' => array(
-//                array('controller' => 'Application\Controller\Index', 'roles' => array('guest', 'user', 'administrator')),
-//                array('controller' => 'user', 'action' => 'login', 'roles' => array('guest')),
-//                array('controller' => 'user', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
-//                array('controller' => 'user', 'action' => 'register', 'roles' => array('guest')),
-//                array('controller' => 'user', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
-//                array('controller' => 'user', 'action' => 'edit', 'roles' => array('user', 'administrator')),
-//                array('controller' => 'user', 'action' => 'manage', 'roles' => array('user', 'administrator')),
-//            ),
-//        ),
+        'guards' => array(
+            'BjyAuthorize\Guard\Controller' => array(
+                array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
+                array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
+                array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
+                array('controller' => 'User\Controller\User', 'action' => 'register', 'roles' => array('guest')),
+                array('controller' => 'User\Controller\User', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
+                array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user', 'administrator')),
+                array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('user', 'administrator')),
+            ),
+        ),
     ),
 );

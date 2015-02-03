@@ -8,6 +8,19 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 return array(
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'Home',
+                'route' => 'home',
+            ),
+            array(
+                'label' => 'User',
+                'route' => 'user',
+                'resource' => 'user',
+            ),
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(

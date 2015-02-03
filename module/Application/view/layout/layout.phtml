@@ -42,33 +42,15 @@
                     </button>
                     <a class="navbar-brand" href="<?php echo $this->url('home') ?>">Badenfahrt</a>
                 </div>
-                <div class="collapse navbar-collapse">               
-                    <ul class="nav navbar-nav">
-                        <li><a href=" <?php echo $this->url('home') ?>">Start</a></li>
-                        <?php
-                        if ($this->userIdentity())
-                        {
-                            
-                            // TODO: Problem with url helper (action).
-                            echo '<li><a href="' . $this->url('user') . '\logout">Logout</a></li>';
-                        } else
-                        {
-                            echo '<li><a href="' . $this->url('user') . '">Login</a></li>';
-                            echo '<li><a href="' . $this->url('user') . '\register">Registrieren</a></li>';
-                        }
-                        if ($this->isAllowed('user', 'edit'))
-                        {
-                            // TODO: Problem with url helper (action).
-                            echo '<li><a href="' . $this->url('user') . '\edit">Profil</a></li>';
-                        }
-                        // TODO: isAllowed not working
-                        // if ($this->isAllowed('user', 'manage'))
-                        // {
-                                // TODO: Problem with url helper (action).
-                            echo '<li><a href="' . $this->url('user', array('action' => 'manage'), array()) . '\manage">Benutzer</a></li>';
-                        // }
-                        ?>
-                    </ul>
+                <div class="collapse navbar-collapse">
+                    <?php
+                    // <-- Update this !!
+                    echo $this->navigation('navigation')
+                            ->menu()
+                            ->setMinDepth(0)
+                            ->setMaxDepth(0)
+                            ->setUlClass('nav navbar-nav');
+                    ?>
                     <?php if ($this->userIdentity()): ?>
                         <div class="navbar-text navbar-right">Eingeloggt als 
                             <?php echo $this->userIdentity()->getDisplayName() ?> 

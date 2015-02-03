@@ -14,14 +14,14 @@ class Module
 
     public function onBootstrap(\Zend\Mvc\MvcEvent $e)
     {
-//        $sm = $e->getApplication()->getServiceManager();
-//
-//        // Add ACL information to the Navigation view helper
-//        $authorize = $sm->get('BjyAuthorizeServiceAuthorize');
-//        $acl = $authorize->getAcl();
-//        $role = $authorize->getIdentity();
-//        \Zend\View\Helper\Navigation::setDefaultAcl($acl);
-//        \Zend\View\Helper\Navigation::setDefaultRole($role);
+        $sm = $e->getApplication()->getServiceManager();
+
+        // Add ACL information to the Navigation view helper
+        $authorize = $sm->get('BjyAuthorizeServiceAuthorize');
+        $acl = $authorize->getAcl();
+        $role = $authorize->getIdentity();
+        \Zend\View\Helper\Navigation::setDefaultAcl($acl);
+        \Zend\View\Helper\Navigation::setDefaultRole($role);
     }
 
     /**
