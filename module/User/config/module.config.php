@@ -89,12 +89,13 @@ return array(
     ),
     'service_manager' => array(
         'invokables' => array(
-           'User\Form\Validator\PasswordValidator' => 'User\Form\Validator\PasswordValidator',
+           'User\Service\UserMailServiceInterface' => 'User\Service\UserMailService',
         ),
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
+            'user_register_form' => 'User\Form\Factory\RegisterFormFactory',
         )
     ),
     'view_helpers' => array(
@@ -147,6 +148,7 @@ return array(
                 array('route' => 'user', 'roles' => array('guest')),
                 array('route' => 'user/logout', 'roles' => array('user', 'administrator')),
                 array('route' => 'user/register', 'roles' => array('guest')),
+                array('route' => 'user/confirm', 'roles' => array('guest', 'user', 'administrator')),
                 array('route' => 'user/edit', 'roles' => array('user', 'administrator')),
                 array('route' => 'user/manage', 'roles' => array('administrator')),
             ),

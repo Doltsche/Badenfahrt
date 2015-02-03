@@ -1,29 +1,41 @@
 <h2 class="form-signin-heading">Bitte einloggen</h2>
 
-<?php if($this->loginFailed): ?>
-<div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
-    <a class="close" data-dismiss="alert" href="#">×</a>Benutzername und/oder Passwort ist falsch.
-</div>
-<?php endif ?>
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-12">
 
-<?php
-$this->loginForm->setAttribute('action', $this->url('user'));
-$this->loginForm->setAttribute('class', 'form-signin');
-$this->loginForm->prepare();
-echo $this->form()->openTag($this->loginForm);
-foreach ($this->loginForm as $element)
-{
-    if ($element instanceof Zend\Form\Element\Submit)
-    {
-        $element->setAttribute('class', 'btn btn-lg btn-primary btn-block');
-    } else
-    {
-        $label = $element->getOption('label');
-        echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
-        $element->setAttribute('class', 'form-control');
-        $element->setAttribute('placeholder', $label);
-    }
-    echo $this->formElement($element) . '<br>';
-}
-echo $this->form()->closeTag($this->loginForm);
-?>
+            <?php if ($this->loginFailed): ?>
+                <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
+                    <a class="close" data-dismiss="alert" href="#">×</a>Benutzername und/oder Passwort ist falsch.
+                </div>
+            <?php endif ?>
+
+            <?php
+            $this->loginForm->setAttribute('action', $this->url('user'));
+            $this->loginForm->setAttribute('class', 'form-signin');
+            $this->loginForm->prepare();
+            echo $this->form()->openTag($this->loginForm);
+            foreach ($this->loginForm as $element)
+            {
+                echo '<div class="row"><div class="col-xs-8 col-md-6">';
+                
+                if ($element instanceof Zend\Form\Element\Submit)
+                {
+                    $element->setAttribute('class', 'btn btn-lg btn-primary btn-block');
+                } else
+                {
+                    $label = $element->getOption('label');
+                    echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+                    $element->setAttribute('class', 'form-control');
+                    $element->setAttribute('placeholder', $label);
+                }
+                echo $this->formElement($element);
+                
+                echo '</div></div>';
+            }
+            echo $this->form()->closeTag($this->loginForm);
+            ?>
+
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\Result;
 use User\Form\LoginForm;
-use User\Form\RegisterForm;
+use Zend\File\Transfer\Adapter\Http as HttpAdapter;
 use User\Form\EditForm;
 use User\Model\User;
 use Zend\Validator\File\Size;
@@ -71,51 +71,10 @@ class UserController extends AbstractActionController
 
     public function registerAction()
     {
-        $form = new RegisterForm();
-        $user = new User();
         $registrationError = '';
 
-        // test values;
-        $user->setId(0);
-        $user->setIdentity('samuel.egger@gmail.com');
-        $user->setPassword('test123');
-        $user->setDisplayName('UVAS');
-        $user->setFirstname('Samuel');
-        $user->setLastname('Egger');
-        $user->setStreetAndNr('Parkstrasse 1');
-        $user->setCity('Ostermundigen');
-        $user->setPostalCode('3072');
-        $user->setPhone('0794288465');
-
-        $user->getInputFilter()->add(array(
-            'name' => 'password',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 6,
-                    ),
-                ),
-            ),
-        ));
-
-        $user->getInputFilter()->add(array(
-            'name' => 'passwordVerify',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 6,
-                    ),
-                ),
-            ),
-        ));
-
-        $form->bind($user);
+        $form = $this->getServiceLocator()->get('user_register_form');
+        $form->bind(new User());
 
         $request = $this->getRequest();
         if ($request->isPost())
@@ -125,59 +84,16 @@ class UserController extends AbstractActionController
             {
                 $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
                 $user = $form->getData();
-                if ($userMapper->findByIdentity($user->getIdentity()))
-                {
-                    $registrationError = "Die E-Mail '{$user->getIdentity()}' wurde bereits registriert.";
+                $this->handleAvatar($user);
 
-                    $user->setIdentity('');
-                    $user->setIdentityVerify('');
-                    $form->bind($user);
-                } else if ($userMapper->findByDisplayName($user->getDisplayName()))
-                {
-                    $registrationError = "Der Anzeigename '{$user->getDisplayName()}' wurde bereits registriert.";
+                $user->setToken($user->getId()); // TODO: Generate real token
+                $userMapper->save($user);
 
-                    $user->setDisplayName('');
-                    $form->bind($user);
-                } else
-                {
-                    if ($user->getAvatar())
-                    {
-                        // IMPORTANT: Enable the php_fileinfo.dll extension.
-                        $isImageValidator = new MimeType();
-                        $isImageValidator->setMimeType(array(
-                            'image/png',
-                            'image/jpeg',
-                        ));
-
-                        $adapter = new \Zend\File\Transfer\Adapter\Http();
-                        $adapter->setValidators(array(
-                            $isImageValidator,
-                            new Size(array('min' => 1024, 'max' => 51200,)),
-                        ));
-
-                        if (!$adapter->isValid())
-                        {
-                            $form->get('user-fieldset')->setMessages(array('avatar' => $adapter->getMessages()));
-                        } else
-                        {
-                            $avatarDir = dirname(__DIR__) . '/Assets';
-                            $adapter->setDestination($avatarDir);
-                            if ($adapter->receive($user->getAvatar()))
-                            {
-                                $user->setAvatar($avatarDir . '/' . $user->getAvatar());
-                            } else
-                            {
-                                $messages = $adapter->getMessages();
-                            }
-                        }
-                    }
-
-                    $userMapper->save($user);
-                }
+                $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface');
+                $userMailService->sendConfirmationRequest($user);
             }
         }
 
-        $msgs = $form->getMessages();
         return array(
             'registerForm' => $form,
             'registrationError' => $registrationError,
@@ -305,7 +221,16 @@ class UserController extends AbstractActionController
     public function confirmAction()
     {
         $token = $this->params()->fromRoute('token');
-        return new ViewModel(array('token' => $token));
+
+        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+        $user = $userMapper->findByToken($token);
+        if ($user)
+        {
+            $user->setState(1);
+            $userMapper->save($user);
+        }
+
+        return $this->redirect()->toRoute('user');
     }
 
     public function deleteAction()
@@ -313,6 +238,39 @@ class UserController extends AbstractActionController
         $id = $this->params()->fromRoute('id');
 
         return new ViewModel(array('id' => $id));
+    }
+
+    protected function handleAvatar($user, $crop = array('x' => 0, 'y' => 0, 'w' => 100, 'h' => 100))
+    {
+        if ($user->getAvatar())
+        {
+            // IMPORTANT: Enable the php_fileinfo.dll extension.
+            $isImageValidator = new MimeType();
+            $isImageValidator->setMimeType(array(
+                'image/png',
+                'image/jpeg',
+            ));
+
+            $adapter = new HttpAdapter();
+            $adapter->setValidators(array(
+                $isImageValidator,
+                new Size(array('min' => 1024, 'max' => 51200,)),
+            ));
+
+            if (!$adapter->isValid())
+            {
+                return false;
+            } else
+            {
+                $avatarDir = dirname(__DIR__) . '../../avatars';
+                $adapter->setDestination($avatarDir);
+
+                if ($adapter->receive($user->getAvatar()))
+                {
+                    $user->setAvatar($avatarDir . '/' . $user->getAvatar());
+                }
+            }
+        }
     }
 
 }

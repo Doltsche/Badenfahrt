@@ -20,6 +20,8 @@ interface UserMapperInterface
     
     public function findByDisplayName($displayName);
     
+    public function findByToken($token);
+    
     public function findAll();
     
     public function save($user);

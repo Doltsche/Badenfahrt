@@ -12,8 +12,6 @@ $this->registerForm->setAttribute('class', 'form-signin');
 $this->registerForm->setAttribute('enctype', 'multipart/form-data');
 $this->registerForm->prepare();
 
-$userFieldset = $this->registerForm->get('user-fieldset');
-
 function renderElement($element, $instance)
 {
     $label = $element->getOption('label');
@@ -37,42 +35,42 @@ function renderElement($element, $instance)
         <?php echo $this->form()->openTag($this->registerForm); ?>
         <div class="row">
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('displayName'), $this); ?>
+                <?php renderElement($this->registerForm->get('displayName'), $this); ?>
             </div>
 
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('avatar'), $this); ?>
+                <?php renderElement($this->registerForm->get('avatar'), $this); ?>
             </div>
 
         </div>
 
         <div class="row">
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('firstname'), $this); ?>
+                <?php renderElement($this->registerForm->get('firstname'), $this); ?>
             </div>
             <div class="col-xs-6 col-md-6">
-                <?php renderElement($userFieldset->get('lastname'), $this); ?>
+                <?php renderElement($this->registerForm->get('lastname'), $this); ?>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('streetAndNr'), $this); ?>
+                <?php renderElement($this->registerForm->get('streetAndNr'), $this); ?>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('postalCode'), $this); ?>
+                <?php renderElement($this->registerForm->get('postalCode'), $this); ?>
             </div>
             <div class="col-xs-6 col-md-6">
-                <?php renderElement($userFieldset->get('city'), $this); ?>
+                <?php renderElement($this->registerForm->get('city'), $this); ?>
             </div>
         </div>    
 
         <div class="row">
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('phone'), $this); ?>
+                <?php renderElement($this->registerForm->get('phone'), $this); ?>
             </div>
         </div>
 
@@ -80,10 +78,10 @@ function renderElement($element, $instance)
 
         <div class="row">
             <div class="col-xs-8 col-md-6">
-                <?php renderElement($userFieldset->get('identity'), $this); ?>
+                <?php renderElement($this->registerForm->get('identity'), $this); ?>
             </div>
             <div class="col-xs-4 col-md-4">
-                <?php renderElement($userFieldset->get('password'), $this); ?>
+                <?php renderElement($this->registerForm->get('password'), $this); ?>
             </div>
         </div>
 
@@ -92,7 +90,7 @@ function renderElement($element, $instance)
                 &nbsp;
             </div>
             <div class="col-xs-4 col-md-4">
-                <?php renderElement($userFieldset->get('passwordVerify'), $this); ?>
+                <?php renderElement($this->registerForm->get('passwordVerify'), $this); ?>
             </div>
             <?php
             $element = $this->registerForm->get('submit');

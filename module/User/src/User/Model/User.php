@@ -3,8 +3,6 @@
 namespace User\Model;
 
 use BjyAuthorize\Provider\Role\ProviderInterface;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,10 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Samuel Egger
  */
-class User implements ProviderInterface, InputFilterAwareInterface
+class User implements ProviderInterface
 {
-
-    protected $inputFilter;
 
     /**
      * @var int
@@ -34,7 +30,6 @@ class User implements ProviderInterface, InputFilterAwareInterface
      * @ORM\Column(type="string", length=128)
      */
     protected $password;
-    protected $passwordVerify;
 
     /**
      * @var string
@@ -118,6 +113,8 @@ class User implements ProviderInterface, InputFilterAwareInterface
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->id = 0;
+        $this->state = 0;
     }
 
     public function getId()
@@ -138,16 +135,6 @@ class User implements ProviderInterface, InputFilterAwareInterface
     public function setPassword($password)
     {
         $this->password = $password;
-    }
-
-    public function getPasswordVerify()
-    {
-        return $this->passwordVerify;
-    }
-
-    public function setPasswordVerify($passwordVerify)
-    {
-        $this->passwordVerify = $passwordVerify;
     }
 
     public function getIdentity()
@@ -258,145 +245,6 @@ class User implements ProviderInterface, InputFilterAwareInterface
     public function setToken($token)
     {
         $this->token = $token;
-    }
-
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter)
-        {
-            $this->inputFilter = new InputFilter();
-
-            $this->inputFilter->add(array(
-                'name' => 'displayName',
-                'required' => true,
-                'filters' => array(array('name' => 'StringTrim')),
-                'validators' => array(
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 3,
-                            'max' => 255,
-                        ),
-                    )
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'identity',
-                'required' => true,
-                'validators' => array(
-                    array(
-                        'name' => 'EmailAddress',
-                    ),
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'firstname',
-                'required' => true,
-                'filters' => array(array('name' => 'StringTrim')),
-                'validators' => array(
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 3,
-                            'max' => 255,
-                        ),
-                    ),
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'lastname',
-                'required' => true,
-                'filters' => array(array('name' => 'StringTrim')),
-                'validators' => array(
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 3,
-                            'max' => 255,
-                        ),
-                    ),
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'streetAndNr',
-                'required' => true,
-                'filters' => array(array('name' => 'StringTrim')),
-                'validators' => array(
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 3,
-                            'max' => 255,
-                        ),
-                    ),
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'postalCode',
-                'required' => true,
-                'allowEmpty' => false,
-                'filters' => array(array('name' => 'Digits')),
-                'validators' => array(
-                    array(
-                        'name' => 'Digits',
-                    ),
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 3,
-                            'max' => 10,
-                        ),
-                    ),
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'city',
-                'required' => true,
-                'allowEmpty' => false,
-                'filters' => array(array('name' => 'StringTrim')),
-                'validators' => array(
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 3,
-                            'max' => 255,
-                        ),
-                    ),
-                ),
-            ));
-
-            $this->inputFilter->add(array(
-                'name' => 'phoneNumber',
-                'required' => false,
-                'allowEmpty' => true,
-                'filters' => array(array('name' => 'Digits')),
-                'validators' => array(
-                    array(
-                        'name' => 'Digits',
-                    ),
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'min' => 7,
-                            'max' => 13,
-                        ),
-                    )
-                ),
-            ));
-        }
-
-        return $this->inputFilter;
-    }
-
-    public function setInputFilter(\Zend\InputFilter\InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Not used");
     }
 
     /**
