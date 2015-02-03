@@ -50,7 +50,12 @@ class UserController extends AbstractActionController
                 $code = $result->getCode();
                 if ($code == Result::SUCCESS)
                 {
-                    return $this->redirect()->toRoute('home');
+                    if ($authenticationService->getIdentity()->getState() == 0)
+                    {
+                        return $this->redirect()->toRoute('user', array('action' => 'confirmPrompt'), array(), true);
+                    }
+
+                    return $this->redirect()->toRoute('home', array('action' => ''), array(), true);
                 }
             }
         }
@@ -86,7 +91,14 @@ class UserController extends AbstractActionController
                 $user = $form->getData();
                 $this->handleAvatar($user);
 
-                $user->setToken($user->getId()); // TODO: Generate real token
+                $roleMapper = $this->getServiceLocator()->get('User\Mapper\RoleMapperInterface');
+                $registeredRole = $roleMapper->findByRoleId('registered');
+
+                $user->addRole($registeredRole);
+                $userMapper->save($user);
+
+                // TODO: Generate real token
+                $user->setToken($user->getId());
                 $userMapper->save($user);
 
                 $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface');
@@ -226,11 +238,21 @@ class UserController extends AbstractActionController
         $user = $userMapper->findByToken($token);
         if ($user)
         {
+            $roleMapper = $this->getServiceLocator()->get('User\Mapper\RoleMapperInterface');
+            $userRole = $roleMapper->findByRoleId('user');
+
+            $user->addRole($userRole);
             $user->setState(1);
+
             $userMapper->save($user);
         }
 
         return $this->redirect()->toRoute('user');
+    }
+
+    public function confirmPromptAction()
+    {
+        return new ViewModel();
     }
 
     public function deleteAction()

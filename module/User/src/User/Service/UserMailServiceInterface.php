@@ -6,7 +6,7 @@ namespace User\Service;
  *
  * @author Dev
  */
-interface MailServiceInterface
+interface UserMailServiceInterface
 {
     public function sendConfirmationRequest($user);
     

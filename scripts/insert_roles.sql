@@ -19,14 +19,19 @@ SELECT IF(EXISTS (SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHE
 #Wähle Datenbank
 USE badenfahrt;
 
+SELECT '-- Leere Rollen --' AS ' ';
+
+DELETE FROM role;
+
 SELECT '-- Schreibe Rollen --' AS ' ';
 
 INSERT INTO role 
     (id, parent_id, role_id) 
 VALUES
     (1, NULL, 'guest'),
-    (2, 1, 'user'),
-    (3, 2, 'administrator');
+    (2, 1, 'registered'),
+    (3, 2, 'user'),
+    (4, 3, 'administrator');
 
 SHOW WARNINGS;
 

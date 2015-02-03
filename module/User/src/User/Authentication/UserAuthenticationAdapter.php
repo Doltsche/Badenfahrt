@@ -21,7 +21,7 @@ class UserAuthenticationAdapter implements AdapterInterface
     {
         $this->userMapper = $userMapper;
     }
-    
+
     public function authenticate()
     {
         $user = $this->userMapper->findByIdentity($this->identity);

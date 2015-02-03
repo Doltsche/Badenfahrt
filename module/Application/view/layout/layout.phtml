@@ -45,7 +45,6 @@
                 <div class="collapse navbar-collapse">               
                     <ul class="nav navbar-nav">
                         <li><a href=" <?php echo $this->url('home') ?>">Start</a></li>
-
                         <?php
                         if ($this->userIdentity())
                         {
@@ -54,6 +53,7 @@
                         } else
                         {
                             echo '<li><a href="' . $this->url('user') . '">Login</a></li>';
+                            echo '<li><a href="' . $this->url('user') . '\register">Registrieren</a></li>';
                         }
                         if ($this->isAllowed('\User\Model\User', 'edit'))
                         {
@@ -68,18 +68,20 @@
                         ?>
                     </ul>
                     <?php if ($this->userIdentity()): ?>
-                        <div class="navbar-text navbar-right">Eingeloggt als <?php echo $this->userIdentity()->getDisplayName() ?> </div>
-<?php endif; ?>
+                        <div class="navbar-text navbar-right">Eingeloggt als 
+                            <?php echo $this->userIdentity()->getDisplayName() ?> 
+                        </div>
+                    <?php endif; ?>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
         <div class="container">
-<?php echo $this->content; ?>
+            <?php echo $this->content; ?>
             <hr>
             <footer>
                 <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. </p>
             </footer>
         </div> <!-- /container -->
-<?php echo $this->inlineScript() ?>
+        <?php echo $this->inlineScript() ?>
     </body>
 </html>

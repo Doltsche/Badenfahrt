@@ -80,7 +80,7 @@ abstract class UserFormBase extends Form
             'type' => 'text',
             'name' => 'postalCode',
             'options' => array(
-                'label' => 'Ort / Stadt',
+                'label' => 'Postleitzahl',
             ),
         ));
         

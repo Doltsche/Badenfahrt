@@ -2,7 +2,6 @@
 
 namespace User\Form;
 
-use Zend\Form\Form;
 use User\Form\UserFormBase;
 
 /**

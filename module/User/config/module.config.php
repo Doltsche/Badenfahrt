@@ -25,6 +25,15 @@ return array(
                             ),
                         ),
                     ),
+                    'confirm' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => '/confirmPrompt',
+                            'defaults' => array(
+                                'action' => 'confirmPrompt',
+                            ),
+                        ),
+                    ),
                     'logout' => array(
                         'type' => 'literal',
                         'options' => array(
@@ -93,6 +102,7 @@ return array(
         ),
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
+            'User\Mapper\RoleMapperInterface' => 'User\Mapper\Factory\RoleMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
             'user_register_form' => 'User\Form\Factory\RegisterFormFactory',
@@ -120,6 +130,8 @@ return array(
     'bjyauthorize' => array(
         // set the 'guest' role as default (must be defined in a role provider)
         'default_role' => 'guest',
+        // default role for authenticated users
+        'authenticated_role'    => 'registered',
         // Using the authentication identity provider, which basically reads the roles from the auth service's identity
         'identity_provider' => 'User\Authentication\IdentityProvider',
         'role_providers' => array(
@@ -146,9 +158,9 @@ return array(
             'BjyAuthorize\Guard\Route' => array(
                 array('route' => 'home', 'roles' => array('guest', 'user', 'administrator')),
                 array('route' => 'user', 'roles' => array('guest')),
-                array('route' => 'user/logout', 'roles' => array('user', 'administrator')),
+                array('route' => 'user/logout', 'roles' => array('registered', 'user', 'administrator')),
                 array('route' => 'user/register', 'roles' => array('guest')),
-                array('route' => 'user/confirm', 'roles' => array('guest', 'user', 'administrator')),
+                array('route' => 'user/confirm', 'roles' => array('guest', 'registered',)),
                 array('route' => 'user/edit', 'roles' => array('user', 'administrator')),
                 array('route' => 'user/manage', 'roles' => array('administrator')),
             ),
