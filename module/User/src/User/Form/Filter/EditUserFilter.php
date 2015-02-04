@@ -40,7 +40,7 @@ class EditUserFilter extends InputFilter
                 array(
                     'name' => 'EmailAddress',
                 ),
-                new IdentityUniqueValidator($this->userMapper),
+                new IdentityUniqueValidator($userMapper),
             ),
         ));
 

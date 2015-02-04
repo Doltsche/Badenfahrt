@@ -21,27 +21,6 @@ use Zend\View\Resolver;
 class UserController extends AbstractActionController
 {
 
-    public function testAction()
-    {
-        $renderer = new PhpRenderer();
-        $testdir = realpath(__DIR__ . '/../../../view/user/dialog/test-dialog.phtml');
-
-        $resolver = new Resolver\TemplateMapResolver(array(
-            'test' => $testdir,
-        ));
-
-        $renderer->setResolver($resolver);
-
-        $model = new ViewModel(array('foo' => 'bar'));
-        $model->setTemplate('test');
-
-        $dialog = $renderer->render($model);
-
-        return new ViewModel(array(
-            'dialog' => $dialog,
-        ));
-    }
-
     public function loginAction()
     {
         $request = $this->getRequest();
@@ -92,12 +71,6 @@ class UserController extends AbstractActionController
         ));
     }
 
-    public function profileAction()
-    {
-        return new ViewModel(array(
-        ));
-    }
-
     public function logoutAction()
     {
         $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
@@ -113,6 +86,38 @@ class UserController extends AbstractActionController
 
         return new ViewModel(array(
             'users' => $users));
+    }
+
+    public function profileAction()
+    {
+        $runModal = '';
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $editUserForm = $this->getServiceLocator()->get('edit_user_form');
+
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+            $editUserForm->setData($request->getPost());
+            if ($editUserForm->isValid())
+            {
+                $user = $editUserForm->getData();
+                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+                $userMapper->save($user);
+            } else
+            {
+                $runModal = 'editUserModal';
+            }
+        }
+
+        $editUserModel = new ViewModel(array('form' => $editUserForm));
+        $editUserModel->setTemplate('editUserModal');
+
+        $editUserModal = $renderer->render($editUserModel);
+
+        return new ViewModel(array(
+            'runModal' => $runModal,
+            'editUserModal' => $editUserModal,
+        ));
     }
 
     public function editAction()

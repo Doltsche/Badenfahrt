@@ -139,6 +139,9 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+        'template_map' => array(
+            'editUserModal' => __DIR__ . '/../view/user/dialog/edit-user-modal.phtml'
+        ),
     ),
     'service_manager' => array(
         'invokables' => array(

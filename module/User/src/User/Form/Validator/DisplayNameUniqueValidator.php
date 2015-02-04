@@ -34,13 +34,18 @@ class DisplayNameUniqueValidator extends AbstractValidator
     {
         $value = (string) $value;
 
+        $identity = $this->authenticationService->getIdentity();
+
+
         if (!$value)
         {
             $this->error(self::DISPLAYNAMEISEMPTY);
             return false;
-        } else if (($this->authenticationService->hasIdentity() && $this->authenticationService->getIdentity()->getDisplayName() != $value && $this->userMapper->findByDisplayName($value)) ||
-                (!$this->authenticationService->hasIdentity() && $this->userMapper->findByDisplayName($value)))
-            ;
+        } else if ($identity && $identity->getDisplayName() != $value && $this->userMapper->findByDisplayName($value))
+        {
+            $this->error(self::NOTUNIQUE);
+            return false;
+        } else if (!$this->authenticationService->hasIdentity() && $this->userMapper->findByDisplayName($value))
         {
             $this->error(self::NOTUNIQUE);
             return false;

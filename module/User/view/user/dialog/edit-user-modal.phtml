@@ -5,33 +5,38 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Modal title</h4>
             </div>
+            <?php
+            $this->form->setAttribute('action', $this->url('user/profile'));
+            $this->form->prepare();
+            echo $this->form()->openTag($this->form);
+            ?>
             <div class="modal-body">
                 <?php
-                $this->form->setAttribute('action', $this->url('user/edit'));
-                $this->form->setAttribute('class', 'form-signin');
-                $this->form->prepare();
-
-                function renderElement($element, $instance)
+                foreach ($this->form as $element)
                 {
-                    $label = $element->getOption('label');
-                    $element->setAttribute('class', 'form-control input-lg');
-                    $element->setAttribute('placeholder', $label);
-                    echo $instance->formInput($element);
-
-                    if ($element->getMessages())
+                    if (!($element instanceof Zend\Form\Element\Submit))
                     {
-                        echo array_values($element->getMessages())[0] . '<br>';
-                    } else
-                    {
-                        echo '<br><br>';
+                        echo '<div class="form-group">';
+                        $label = $element->getOption('label');
+                        echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+                        echo $this->formElementErrors($element);
+                        $element->setAttribute('class', 'form-control');
+                        $element->setAttribute('placeholder', $label);
+                        echo $this->formElement($element);
+                        echo '</div>';
                     }
                 }
                 ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <?php
+                $submit = $this->form->get('submit');
+                $submit->setAttribute('class', 'btn btn-primary');
+                echo $this->formElement($submit);
+                ?>
             </div>
+            <?php echo $this->form()->closeTag($this->form); ?>
         </div>
     </div>
 </div>

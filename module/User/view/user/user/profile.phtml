@@ -2,7 +2,14 @@
 $user = $this->userIdentity();
 $personal = $user->getPersonal();
 
-$this->inlineScript()->prependFile($this->basePath('js/profile.js'))
+if ($this->runModal)
+{
+    $script = "$( document ).ready(function() {" .
+            "$('#$this->runModal').modal('show');" .
+            "});";
+    
+    $this->inlineScript()->appendScript($script);
+}
 ?>
 
 <div class="page-header">
@@ -25,3 +32,4 @@ $this->inlineScript()->prependFile($this->basePath('js/profile.js'))
     Telefon: <?php echo $personal->getPhone(); ?>
 </p>
 
+<?php echo $this->editUserModal; ?>
