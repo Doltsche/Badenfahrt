@@ -8,9 +8,10 @@ use Zend\Authentication\Result;
 use User\Form\LoginForm;
 use Zend\File\Transfer\Adapter\Http as HttpAdapter;
 use User\Form\EditForm;
-use User\Model\User;
 use Zend\Validator\File\Size;
 use Zend\Validator\File\MimeType;
+use Zend\View\Renderer\PhpRenderer;
+use Zend\View\Resolver;
 
 /**
  * Description of UserController
@@ -19,6 +20,27 @@ use Zend\Validator\File\MimeType;
  */
 class UserController extends AbstractActionController
 {
+
+    public function testAction()
+    {
+        $renderer = new PhpRenderer();
+        $testdir = realpath(__DIR__ . '/../../../view/user/dialog/test-dialog.phtml');
+
+        $resolver = new Resolver\TemplateMapResolver(array(
+            'test' => $testdir,
+        ));
+
+        $renderer->setResolver($resolver);
+
+        $model = new ViewModel(array('foo' => 'bar'));
+        $model->setTemplate('test');
+
+        $dialog = $renderer->render($model);
+
+        return new ViewModel(array(
+            'dialog' => $dialog,
+        ));
+    }
 
     public function loginAction()
     {
@@ -67,6 +89,12 @@ class UserController extends AbstractActionController
         return new ViewModel(array(
             'loginForm' => $loginForm,
             'loginFailed' => $loginFailed,
+        ));
+    }
+
+    public function profileAction()
+    {
+        return new ViewModel(array(
         ));
     }
 

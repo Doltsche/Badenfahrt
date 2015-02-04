@@ -9,7 +9,7 @@ use User\Form\UserFormBase;
  *
  * @author Dev
  */
-class EditForm extends UserFormBase
+class EditUserForm extends UserFormBase
 {
 
     public function __construct($name = null, $options = array())

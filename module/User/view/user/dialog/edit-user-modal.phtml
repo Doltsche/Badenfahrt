@@ -1,0 +1,37 @@
+<div class="modal" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <?php
+                $this->form->setAttribute('action', $this->url('user/edit'));
+                $this->form->setAttribute('class', 'form-signin');
+                $this->form->prepare();
+
+                function renderElement($element, $instance)
+                {
+                    $label = $element->getOption('label');
+                    $element->setAttribute('class', 'form-control input-lg');
+                    $element->setAttribute('placeholder', $label);
+                    echo $instance->formInput($element);
+
+                    if ($element->getMessages())
+                    {
+                        echo array_values($element->getMessages())[0] . '<br>';
+                    } else
+                    {
+                        echo '<br><br>';
+                    }
+                }
+                ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

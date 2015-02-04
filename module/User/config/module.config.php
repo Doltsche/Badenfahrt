@@ -39,6 +39,15 @@ return array(
                             ),
                         ),
                     ),
+                    'profile' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => '/profile',
+                            'defaults' => array(
+                                'action' => 'profile',
+                            ),
+                        ),
+                    ),
                     'confirm' => array(
                         'type' => 'segment',
                         'options' => array(
@@ -142,6 +151,7 @@ return array(
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
             'register_user_form' => 'User\Form\Factory\RegisterUserFormFactory',
+            'edit_user_form' => 'User\Form\Factory\EditUserFormFactory',
             'register_personal_form' => 'User\Form\Factory\RegisterPersonalFormFactory',
         )
     ),
@@ -200,6 +210,8 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
                 array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
+                array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('registered', 'user')), // TODO: remove registered
+                array('controller' => 'User\Controller\User', 'action' => 'test', 'roles' => array('guest', 'user')),
                 array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
                 array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),

@@ -19,14 +19,15 @@ class DisplayNameUniqueValidator extends AbstractValidator
         self::NOTUNIQUE => "Nicht einmalig.",
         self::DISPLAYNAMEISEMPTY => "Leer"
     );
-    
     protected $userMapper;
+    protected $authenticationService;
 
-    public function __construct($userMapper, array $options = array())
+    public function __construct($userMapper, $authenticationService = null, array $options = array())
     {
         parent::__construct($options);
 
         $this->userMapper = $userMapper;
+        $this->authenticationService = $authenticationService;
     }
 
     public function isValid($value, $context = null)
@@ -37,7 +38,9 @@ class DisplayNameUniqueValidator extends AbstractValidator
         {
             $this->error(self::DISPLAYNAMEISEMPTY);
             return false;
-        } else if ($this->userMapper->findByDisplayName($value))
+        } else if (($this->authenticationService->hasIdentity() && $this->authenticationService->getIdentity()->getDisplayName() != $value && $this->userMapper->findByDisplayName($value)) ||
+                (!$this->authenticationService->hasIdentity() && $this->userMapper->findByDisplayName($value)))
+            ;
         {
             $this->error(self::NOTUNIQUE);
             return false;

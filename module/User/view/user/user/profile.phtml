@@ -1,0 +1,27 @@
+<?php
+$user = $this->userIdentity();
+$personal = $user->getPersonal();
+
+$this->inlineScript()->prependFile($this->basePath('js/profile.js'))
+?>
+
+<div class="page-header">
+    <h1>Mein Benutzerprofil</h1>
+</div>
+
+<p class="lead">
+    <img src="<?php echo $this->basePath() . '/img/avatar-placeholder.jpg' ?>" 
+         alt="avatar placeholder"  style="float:left;" />
+         <?php echo $user->getIdentity(); ?>
+</p>
+<button type="button" class="btn btn-default" onclick="$('#editUserModal').modal('show');">Bearbeiten</button>
+<p style="clear: both;" />
+
+<h2>Persönliche Angaben</h2>
+<p class="lead">
+    <?php echo $personal->getFirstname() . ' ' . $personal->getLastname(); ?><br>
+    <?php echo $personal->getStreetAndNr(); ?><br>
+    <?php echo $personal->getPostalCode() . ' ' . $personal->getCity(); ?><br><br>
+    Telefon: <?php echo $personal->getPhone(); ?>
+</p>
+
