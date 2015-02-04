@@ -12,6 +12,7 @@ use Zend\Validator\File\Size;
 use Zend\Validator\File\MimeType;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\View\Resolver;
+use Zend\View\Model\JsonModel;
 
 /**
  * Description of UserController
@@ -81,157 +82,184 @@ class UserController extends AbstractActionController
 
     public function manageAction()
     {
-        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-        $users = $userMapper->findAll();
+//        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+//        $users = $userMapper->findAll();
+//
+//        return new ViewModel(array(
+//            'users' => $users));
+        
+        $request = $this->getRequest();
+        
+        $result = new JsonModel(array(
+	    'ispost' => $request->isPost(),
+            'success'=>true,
+        ));
 
-        return new ViewModel(array(
-            'users' => $users));
+        return $result;
     }
 
     public function profileAction()
     {
-        $runModal = '';
-        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-        $editUserForm = $this->getServiceLocator()->get('edit_user_form');
-
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
-            $editUserForm->setData($request->getPost());
-            if ($editUserForm->isValid())
-            {
-                $user = $editUserForm->getData();
-                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-                $userMapper->save($user);
-            } else
-            {
-                $runModal = 'editUserModal';
-            }
+        
+        if (!$request->isXmlHttpRequest()){
+            return new ViewModel(array());
         }
-
-        $editUserModel = new ViewModel(array('form' => $editUserForm));
-        $editUserModel->setTemplate('editUserModal');
-
-        $editUserModal = $renderer->render($editUserModel);
-
-        return new ViewModel(array(
-            'runModal' => $runModal,
-            'editUserModal' => $editUserModal,
-        ));
+        
+        return $this->editAction();
     }
 
     public function editAction()
     {
-        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-        if (!$authenticationService->hasIdentity())
-        {
-            return $this->redirect()->toRoute('user');
-        }
+        $editUserForm = $this->getServiceLocator()->get('edit_user_form');
 
-        $editError = false;
-        $form = new EditForm();
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $editUserModel = new ViewModel(array('form' => $editUserForm));
+        $editUserModel->setTemplate('editUserModal');
+        $editUserModal = $renderer->render($editUserModel);
 
-        $user = $userMapper->findById($authenticationService->getIdentity()->getId());
-        $oldIdentity = $user->getIdentity();
-        $oldDisplayName = $user->getDisplayName();
-
-        $form->bind($user);
-
+        $messages = array();
         $request = $this->getRequest();
         if ($request->isPost())
         {
-            if ($request->getPost()['user-fieldset']['password'])
+            $editUserForm->setData($request->getPost());
+            if (!$editUserForm->isValid())
             {
-                $user->getInputFilter()->add(array(
-                    'name' => 'password',
-                    'required' => true,
-                    'filters' => array(array('name' => 'StringTrim')),
-                    'validators' => array(
-                        array(
-                            'name' => 'StringLength',
-                            'options' => array(
-                                'min' => 6,
-                            ),
-                        ),
-                    ),
-                ));
-
-                $user->getInputFilter()->add(array(
-                    'name' => 'passwordVerify',
-                    'required' => true,
-                    'filters' => array(array('name' => 'StringTrim')),
-                    'validators' => array(
-                        array(
-                            'name' => 'StringLength',
-                            'options' => array(
-                                'min' => 6,
-                            ),
-                        ),
-                    ),
-                ));
-            }
-
-            $form->setData($request->getPost());
-            if ($form->isValid())
-            {
-                $user = $form->getData();
-                if ($user->getIdentity() != $oldIdentity && $userMapper->findByIdentity($user->getIdentity()))
+                $errors = $editUserForm->getMessages();
+                foreach ($errors as $key => $row)
                 {
-                    $editError = "Die E-Mail '{$user->getIdentity()}' wurde bereits registriert.";
-                    $user->setIdentity('');
-                    $user->setIdentityVerify('');
-                    $form->bind($user);
-                } else if ($user->getDisplayName() != $oldDisplayName && $userMapper->findByDisplayName($user->getDisplayName()))
-                {
-                    $editError = "Der Anzeigename '{$user->getDisplayName()}' wurde bereits registriert.";
-                    $user->setDisplayName('');
-                    $form->bind($user);
-                } else
-                {
-                    if ($user->getAvatar())
+                    if (!empty($row) && $key != 'submit')
                     {
-                        // IMPORTANT: Enable the php_fileinfo.dll extension.
-                        $isImageValidator = new MimeType();
-                        $isImageValidator->setMimeType(array(
-                            'image/png',
-                            'image/jpeg',
-                        ));
-
-                        $adapter = new \Zend\File\Transfer\Adapter\Http();
-                        $adapter->setValidators(array(
-                            $isImageValidator,
-                            new Size(array('min' => 1024, 'max' => 51200,)),
-                        ));
-
-                        if (!$adapter->isValid())
+                        foreach ($row as $keyer => $rower)
                         {
-                            $form->get('user-fieldset')->setMessages(array('avatar' => $adapter->getMessages()));
-                        } else
-                        {
-                            $avatarDir = dirname(__DIR__) . '/Assets';
-                            $adapter->setDestination($avatarDir);
-                            if ($adapter->receive($user->getAvatar()))
-                            {
-                                $user->setAvatar($avatarDir . '/' . $user->getAvatar());
-                            } else
-                            {
-                                $messages = $adapter->getMessages();
-                            }
+                            //save error(s) per-element that
+                            //needed by Javascript
+                            $messages[$key][] = $rower;
                         }
                     }
-
-                    // $userMapper->save($user);
                 }
             }
         }
 
-        $msgs = $form->getMessages();
-        return array(
-            'editForm' => $form,
-            'editError' => $editError,
-        );
+        return new JsonModel(array(
+            'success' => $messages ? false : true,
+            'messages' => $messages,
+            'form' => $editUserModal,
+        ));
     }
+
+//    public function editAction()
+//    {
+//        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+//        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
+//        if (!$authenticationService->hasIdentity())
+//        {
+//            return $this->redirect()->toRoute('user');
+//        }
+//
+//        $editError = false;
+//        $form = new EditForm();
+//
+//        $user = $userMapper->findById($authenticationService->getIdentity()->getId());
+//        $oldIdentity = $user->getIdentity();
+//        $oldDisplayName = $user->getDisplayName();
+//
+//        $form->bind($user);
+//
+//        $request = $this->getRequest();
+//        if ($request->isPost())
+//        {
+//            if ($request->getPost()['user-fieldset']['password'])
+//            {
+//                $user->getInputFilter()->add(array(
+//                    'name' => 'password',
+//                    'required' => true,
+//                    'filters' => array(array('name' => 'StringTrim')),
+//                    'validators' => array(
+//                        array(
+//                            'name' => 'StringLength',
+//                            'options' => array(
+//                                'min' => 6,
+//                            ),
+//                        ),
+//                    ),
+//                ));
+//
+//                $user->getInputFilter()->add(array(
+//                    'name' => 'passwordVerify',
+//                    'required' => true,
+//                    'filters' => array(array('name' => 'StringTrim')),
+//                    'validators' => array(
+//                        array(
+//                            'name' => 'StringLength',
+//                            'options' => array(
+//                                'min' => 6,
+//                            ),
+//                        ),
+//                    ),
+//                ));
+//            }
+//
+//            $form->setData($request->getPost());
+//            if ($form->isValid())
+//            {
+//                $user = $form->getData();
+//                if ($user->getIdentity() != $oldIdentity && $userMapper->findByIdentity($user->getIdentity()))
+//                {
+//                    $editError = "Die E-Mail '{$user->getIdentity()}' wurde bereits registriert.";
+//                    $user->setIdentity('');
+//                    $user->setIdentityVerify('');
+//                    $form->bind($user);
+//                } else if ($user->getDisplayName() != $oldDisplayName && $userMapper->findByDisplayName($user->getDisplayName()))
+//                {
+//                    $editError = "Der Anzeigename '{$user->getDisplayName()}' wurde bereits registriert.";
+//                    $user->setDisplayName('');
+//                    $form->bind($user);
+//                } else
+//                {
+//                    if ($user->getAvatar())
+//                    {
+//                        // IMPORTANT: Enable the php_fileinfo.dll extension.
+//                        $isImageValidator = new MimeType();
+//                        $isImageValidator->setMimeType(array(
+//                            'image/png',
+//                            'image/jpeg',
+//                        ));
+//
+//                        $adapter = new \Zend\File\Transfer\Adapter\Http();
+//                        $adapter->setValidators(array(
+//                            $isImageValidator,
+//                            new Size(array('min' => 1024, 'max' => 51200,)),
+//                        ));
+//
+//                        if (!$adapter->isValid())
+//                        {
+//                            $form->get('user-fieldset')->setMessages(array('avatar' => $adapter->getMessages()));
+//                        } else
+//                        {
+//                            $avatarDir = dirname(__DIR__) . '/Assets';
+//                            $adapter->setDestination($avatarDir);
+//                            if ($adapter->receive($user->getAvatar()))
+//                            {
+//                                $user->setAvatar($avatarDir . '/' . $user->getAvatar());
+//                            } else
+//                            {
+//                                $messages = $adapter->getMessages();
+//                            }
+//                        }
+//                    }
+//
+//                    // $userMapper->save($user);
+//                }
+//            }
+//        }
+//
+//        $msgs = $form->getMessages();
+//        return array(
+//            'editForm' => $form,
+//            'editError' => $editError,
+//        );
+//    }
 
     public function deleteAction()
     {

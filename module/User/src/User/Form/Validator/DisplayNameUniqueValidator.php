@@ -13,12 +13,13 @@ class DisplayNameUniqueValidator extends AbstractValidator
 {
 
     const NOTUNIQUE = 'notunique';
-    const DISPLAYNAMEISEMPTY = 'isempty';
+    const ISEMPTY = 'isempty';
 
     protected $messageTemplates = array(
         self::NOTUNIQUE => "Nicht einmalig.",
-        self::DISPLAYNAMEISEMPTY => "Leer"
+        self::ISEMPTY => "Leer"
     );
+    
     protected $userMapper;
     protected $authenticationService;
 
@@ -32,20 +33,23 @@ class DisplayNameUniqueValidator extends AbstractValidator
 
     public function isValid($value, $context = null)
     {
-        $value = (string) $value;
-
-        $identity = $this->authenticationService->getIdentity();
-
+        $identity = null;
+        if ($this->authenticationService)
+        {
+            $identity = $this->authenticationService->getIdentity();
+        }
 
         if (!$value)
         {
-            $this->error(self::DISPLAYNAMEISEMPTY);
+            $this->error(self::ISEMPTY);
             return false;
-        } else if ($identity && $identity->getDisplayName() != $value && $this->userMapper->findByDisplayName($value))
+        } 
+        if ($identity && $identity->getDisplayName() != $value && $this->userMapper->findByDisplayName($value))
         {
             $this->error(self::NOTUNIQUE);
             return false;
-        } else if (!$this->authenticationService->hasIdentity() && $this->userMapper->findByDisplayName($value))
+        } 
+        if (!($identity) && $this->userMapper->findByDisplayName($value))
         {
             $this->error(self::NOTUNIQUE);
             return false;

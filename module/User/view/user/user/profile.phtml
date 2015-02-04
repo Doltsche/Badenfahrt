@@ -1,3 +1,7 @@
+<script type="text/javascript">
+    var urlform = '<?php echo $this->url('user/profile'); ?>';
+</script>
+
 <?php
 $user = $this->userIdentity();
 $personal = $user->getPersonal();
@@ -7,7 +11,7 @@ if ($this->runModal)
     $script = "$( document ).ready(function() {" .
             "$('#$this->runModal').modal('show');" .
             "});";
-    
+
     $this->inlineScript()->appendScript($script);
 }
 ?>
@@ -21,7 +25,7 @@ if ($this->runModal)
          alt="avatar placeholder"  style="float:left;" />
          <?php echo $user->getIdentity(); ?>
 </p>
-<button type="button" class="btn btn-default" onclick="$('#editUserModal').modal('show');">Bearbeiten</button>
+<button type="button" class="btn btn-default" onclick="showForm('\\user\\edit');">Bearbeiten</button>
 <p style="clear: both;" />
 
 <h2>Persönliche Angaben</h2>
@@ -32,4 +36,4 @@ if ($this->runModal)
     Telefon: <?php echo $personal->getPhone(); ?>
 </p>
 
-<?php echo $this->editUserModal; ?>
+<div id="badenfahrtmodal"></div>

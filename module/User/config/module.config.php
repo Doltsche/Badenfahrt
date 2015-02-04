@@ -142,6 +142,9 @@ return array(
         'template_map' => array(
             'editUserModal' => __DIR__ . '/../view/user/dialog/edit-user-modal.phtml'
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     ),
     'service_manager' => array(
         'invokables' => array(
@@ -209,19 +212,19 @@ return array(
                 ),
             ),
         ),
-        'guards' => array(
-            'BjyAuthorize\Guard\Controller' => array(
-                array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
-                array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
-                array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('registered', 'user')), // TODO: remove registered
-                array('controller' => 'User\Controller\User', 'action' => 'test', 'roles' => array('guest', 'user')),
-                array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
-                array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
-                array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),
-                array('controller' => 'User\Controller\Register', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
-                array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user', 'administrator')),
-                array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('user', 'administrator')),
-            ),
-        ),
+//        'guards' => array(
+//            'BjyAuthorize\Guard\Controller' => array(
+//                array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
+//                array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
+//                array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('registered', 'user')), // TODO: remove registered
+//                array('controller' => 'User\Controller\User', 'action' => 'test', 'roles' => array('guest', 'user')),
+//                array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
+//                array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
+//                array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),
+//                array('controller' => 'User\Controller\Register', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
+//                array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user', 'administrator')),
+//                array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('user', 'administrator')),
+//            ),
+//        ),
     ),
 );

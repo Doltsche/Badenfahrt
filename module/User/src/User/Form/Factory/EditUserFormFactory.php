@@ -28,6 +28,8 @@ class EditUserFormFactory implements FactoryInterface
         $user = $authenticationService->getIdentity();
         $form->bind($user);
 
+        $form->setAttribute('id', 'formid');
+        
         return $form;
     }
 

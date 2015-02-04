@@ -29,8 +29,8 @@ INSERT INTO role
     (id, parent_id, role_id) 
 VALUES
     (1, NULL, 'guest'),
-    (2, 1, 'registered'),
-    (3, 2, 'user'),
+    (2, NULL, 'registered'),
+    (3, NULL, 'user'),
     (4, 3, 'administrator');
 
 SHOW WARNINGS;
