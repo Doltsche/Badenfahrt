@@ -16,15 +16,39 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    'register' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => '/register',
+                            'defaults' => array(
+                                'controller' => 'User\Controller\Register',
+                                'action' => 'registerUser',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'personal' => array(
+                                'type' => 'literal',
+                                'options' => array(
+                                    'route' => '/personal',
+                                    'defaults' => array(
+                                        'controller' => 'User\Controller\Register',
+                                        'action' => 'registerPersonal',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
                     'confirm' => array(
                         'type' => 'segment',
                         'options' => array(
                             'route' => '/confirm/:token',
                             'defaults' => array(
+                                'controller' => 'User\Controller\Register',
                                 'action' => 'confirm',
                             ),
                             'constraints' => array(
-                                'token' => '[1-9]\d*',
+                                'token' => '[a-zA-Z0-9_-]+',
                             ),
                         ),
                     ),
@@ -33,6 +57,7 @@ return array(
                         'options' => array(
                             'route' => '/confirmPrompt',
                             'defaults' => array(
+                                'controller' => 'User\Controller\Register',
                                 'action' => 'confirmPrompt',
                             ),
                         ),
@@ -91,15 +116,6 @@ return array(
                             ),
                         ),
                     ),
-                    'register' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => '/register',
-                            'defaults' => array(
-                                'action' => 'register',
-                            ),
-                        ),
-                    ),
                 ),
             ),
         ),
@@ -107,6 +123,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'User\Controller\User' => 'User\Controller\UserController',
+            'User\Controller\Register' => 'User\Controller\RegisterController',
         ),
     ),
     'view_manager' => array(
@@ -121,9 +138,11 @@ return array(
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
             'User\Mapper\RoleMapperInterface' => 'User\Mapper\Factory\RoleMapperFactory',
+            'User\Mapper\PersonalMapperInterface' => 'User\Mapper\Factory\PersonalMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
-            'user_register_form' => 'User\Form\Factory\RegisterFormFactory',
+            'register_user_form' => 'User\Form\Factory\RegisterUserFormFactory',
+            'register_personal_form' => 'User\Form\Factory\RegisterPersonalFormFactory',
         )
     ),
     'view_helpers' => array(
@@ -161,14 +180,19 @@ return array(
         ),
         'resource_providers' => array(
             'BjyAuthorize\Provider\Resource\Config' => array(
+                'guest' => array(),
+                'registered' => array(),
                 'user' => array(),
+                'administrator' => array(),
             ),
         ),
         'rule_providers' => array(
             'BjyAuthorize\Provider\Rule\Config' => array(
                 'allow' => array(
-                    array(array('administrator'), 'user', array('manage')),
-                    array(array('guest', 'user'), 'user'),
+                    array(array('guest'), 'guest'),
+                    array(array('registered'), 'registered'),
+                    array(array('user'), 'user'),
+                    array(array('administrator'), 'administrator'),
                 ),
             ),
         ),
@@ -177,8 +201,9 @@ return array(
                 array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
                 array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
-                array('controller' => 'User\Controller\User', 'action' => 'register', 'roles' => array('guest')),
-                array('controller' => 'User\Controller\User', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
+                array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
+                array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),
+                array('controller' => 'User\Controller\Register', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
                 array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user', 'administrator')),
                 array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('user', 'administrator')),
             ),

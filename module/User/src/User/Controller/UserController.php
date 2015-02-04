@@ -52,10 +52,14 @@ class UserController extends AbstractActionController
                 {
                     if ($authenticationService->getIdentity()->getState() == 0)
                     {
+                        // TODO
                         return $this->redirect()->toRoute('user', array('action' => 'confirmPrompt'), array(), true);
+                    } else if ($authenticationService->getIdentity()->getState() == 1)
+                    {
+                        return $this->redirect()->toRoute('user/register/personal');
                     }
 
-                    return $this->redirect()->toRoute('home', array('action' => 'home'), array(), true);
+                    return $this->redirect()->toRoute('user/profile');
                 }
             }
         }
@@ -72,58 +76,6 @@ class UserController extends AbstractActionController
         $authenticationService->clearIdentity();
 
         return $this->redirect()->toRoute('home');
-    }
-
-    public function registerAction()
-    {
-        $registrationError = '';
-
-        $form = $this->getServiceLocator()->get('user_register_form');
-        $form->bind(new User());
-
-        $request = $this->getRequest();
-        if ($request->isPost())
-        {
-            $data = $request->getPost()->toArray();
-            $file = $this->params()->fromFiles('avatar');
-
-            $form->setData($request->getPost());
-            if ($form->isValid())
-            {
-                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-                $user = $form->getData();
-
-                if ($file)
-                {
-                    $avatar = $this->prepareAvatar($file);
-                    $user->setAvatar($avatar);
-                }
-
-                $roleMapper = $this->getServiceLocator()->get('User\Mapper\RoleMapperInterface');
-                $registeredRole = $roleMapper->findByRoleId('registered');
-
-                $token = md5(uniqid(mt_rand(), true));
-
-                $user->setToken($token);
-                $user->addRole($registeredRole);
-                $userMapper->save($user);
-
-                $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface');
-                $userMailService->sendConfirmationRequest($user);
-
-                return $this->redirect()->toRoute('user', array('action' => 'registerSuccess'), array(), true);
-            }
-        }
-
-        return array(
-            'registerForm' => $form,
-            'registrationError' => $registrationError,
-        );
-    }
-
-    public function registerSuccessAction()
-    {
-        return new ViewModel(array());
     }
 
     public function manageAction()
@@ -248,38 +200,13 @@ class UserController extends AbstractActionController
         );
     }
 
-    public function confirmAction()
-    {
-        $token = $this->params()->fromRoute('token');
-
-        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-        $user = $userMapper->findByToken($token);
-        if ($user)
-        {
-            $roleMapper = $this->getServiceLocator()->get('User\Mapper\RoleMapperInterface');
-            $userRole = $roleMapper->findByRoleId('user');
-
-            $user->addRole($userRole);
-            $user->setState(1);
-
-            $userMapper->save($user);
-        }
-
-        return $this->redirect()->toRoute('user');
-    }
-
-    public function confirmPromptAction()
-    {
-        return new ViewModel();
-    }
-
     public function deleteAction()
     {
         $id = $this->params()->fromRoute('id');
 
         $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-        
+
         $user = $userMapper->findById($id);
 
         if ($user && $user->getId() != $authenticationService->getIdentity()->getId())

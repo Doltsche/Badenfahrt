@@ -4,24 +4,24 @@ namespace User\Form\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use User\Form\RegisterForm;
-use User\Form\Filter\RegisterFilter;
+use User\Form\RegisterPersonalForm;
+use User\Form\Filter\RegisterPersonalFilter;
 
 /**
  * Description of AuthenticationServiceFactory
  *
  * @author Dev
  */
-class RegisterFormFactory implements FactoryInterface
+class RegisterPersonalFormFactory implements FactoryInterface
 {
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
 
-        $registerFilter = new RegisterFilter($userMapper);
+        $registerFilter = new RegisterPersonalFilter($userMapper);
 
-        $registerForm = new RegisterForm();
+        $registerForm = new RegisterPersonalForm();
         $registerForm->setInputFilter($registerFilter);
 
         return $registerForm;

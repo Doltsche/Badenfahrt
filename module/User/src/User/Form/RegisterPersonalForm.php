@@ -2,14 +2,14 @@
 
 namespace User\Form;
 
-use User\Form\UserFormBase;
+use User\Form\PersonalFormBase;
 
 /**
  * Description of PostForm
  *
  * @author Dev
  */
-class RegisterForm extends UserFormBase
+class RegisterPersonalForm extends PersonalFormBase
 {
 
     public function __construct($name = null, $options = array())
@@ -20,7 +20,7 @@ class RegisterForm extends UserFormBase
             'type' => 'submit',
             'name' => 'submit',
             'attributes' => array(
-                'value' => 'Registrieren'
+                'value' => 'Speichern'
             )
         ));
     }

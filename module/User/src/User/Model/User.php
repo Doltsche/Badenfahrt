@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An example of how to implement a role aware user entity.
+ * The User entity.
  *
  * @ORM\Entity
  * @ORM\Table(name="user")
@@ -44,40 +44,10 @@ class User implements ProviderInterface
     protected $displayName;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $firstname;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $lastname;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $streetAndNr;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=100)
-     */
-    protected $city;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=4)
-     */
-    protected $postalCode;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=10)
-     */
-    protected $phone;
+     * @ORM\OneToOne(targetEntity="User\Model\Personal")
+     * @ORM\JoinColumn(name="personal_id", referencedColumnName="id")
+     * */
+    protected $personal;
 
     /**
      * @var string
@@ -157,64 +127,14 @@ class User implements ProviderInterface
         $this->displayName = $displayName;
     }
 
-    public function getFirstname()
+    public function getPersonal()
     {
-        return $this->firstname;
+        return $this->personal;
     }
 
-    public function setFirstname($firstname)
+    public function setPersonal($personal)
     {
-        $this->firstname = $firstname;
-    }
-
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-    }
-
-    public function getStreetAndNr()
-    {
-        return $this->streetAndNr;
-    }
-
-    public function setStreetAndNr($streetAndNr)
-    {
-        $this->streetAndNr = $streetAndNr;
-    }
-
-    public function getPostalCode()
-    {
-        return $this->postalCode;
-    }
-
-    public function setPostalCode($postalCode)
-    {
-        $this->postalCode = $postalCode;
-    }
-
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    public function setCity($city)
-    {
-        $this->city = $city;
-    }
-
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
+        $this->personal = $personal;
     }
 
     public function getAvatar()

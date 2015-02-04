@@ -1,19 +1,19 @@
-<h2 class="form-signin-heading">Bitte einloggen</h2>
+<h2>Registrieren</h2>
 
-<?php if ($this->loginFailed): ?>
+<?php if ($this->error): ?>
     <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
-        <a class="close" data-dismiss="alert" href="#">×</a>Benutzername und/oder Passwort ist falsch.
+        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->registrationError; ?>
     </div>
 <?php endif ?>
 
 <div class="row">
     <div class="col-xs-4">
+
         <?php
-        $this->loginForm->setAttribute('action', $this->url('user'));
-        $this->loginForm->setAttribute('class', 'form-signin');
-        $this->loginForm->prepare();
-        echo $this->form()->openTag($this->loginForm);
-        foreach ($this->loginForm as $element)
+        $this->form->setAttribute('action', $this->url('user/register'));
+        $this->form->prepare();
+        echo $this->form()->openTag($this->form);
+        foreach ($this->form as $element)
         {
             if ($element instanceof Zend\Form\Element\Submit)
             {
@@ -24,6 +24,7 @@
                 echo '<div class="form-group">';
                 $label = $element->getOption('label');
                 echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+                echo $this->formElementErrors($element);
                 $element->setAttribute('class', 'form-control');
                 $element->setAttribute('placeholder', $label);
             }
@@ -31,8 +32,7 @@
 
             echo '</div>';
         }
-        echo $this->form()->closeTag($this->loginForm);
+        echo $this->form()->closeTag($this->form);
         ?>
-
     </div>
 </div>
