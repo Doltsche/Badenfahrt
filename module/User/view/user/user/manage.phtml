@@ -13,8 +13,13 @@
 
         <tr>
             <td><?php echo $this->escapeHtml($user->getDisplayName()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getFirstname()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getLastname()); ?></td>
+            <?php if ($user->getPersonal()): ?>
+                <td><?php echo $this->escapeHtml($user->getPersonal()->getFirstname()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getPersonal()->getLastname()); ?></td>
+            <?php else: ?>
+                <td>-</td>
+                <td>-</td>
+            <?php endif; ?>
             <td><?php echo $this->escapeHtml($user->getIdentity()); ?></td>
             <td>
                 <a href="<?php echo $this->url('user/manage/edit', array('id' => $user->getId())); ?>">Bearbeiten</a>

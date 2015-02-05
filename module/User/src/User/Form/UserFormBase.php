@@ -48,7 +48,7 @@ abstract class UserFormBase extends Form
             'type' => 'password',
             'name' => 'passwordVerify',
             'options' => array(
-                'label' => 'Passwort best�tigen',
+                'label' => 'Passwort bestätigen',
             ),
         ));
     }
