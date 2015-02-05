@@ -19,8 +19,9 @@ class AuthenticationServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
+        $passwordService = $serviceLocator->get('User\Service\UserPasswordServiceInterface');
         
-        $adapter = new UserAuthenticationAdapter($userMapper);
+        $adapter = new UserAuthenticationAdapter($userMapper, $passwordService);
         $storage = new UserAuthenticationStorage($userMapper);
 
         return new AuthenticationService($storage, $adapter);

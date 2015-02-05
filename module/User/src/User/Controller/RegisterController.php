@@ -42,6 +42,9 @@ class RegisterController extends AbstractActionController
                 $token = md5(uniqid(mt_rand(), true));
                 $user->setToken($token);
 
+                $passwordService = $this->getServiceLocator()->get('User\Service\UserPasswordServiceInterface');
+                $passwordService->updatePassword($user, $user->getPassword());
+
                 // Save the registration.
                 $userMapper->save($user);
 
@@ -98,7 +101,7 @@ class RegisterController extends AbstractActionController
 
                 // Active the user
                 $user->setState(2);
-                
+
                 // Save the user.
                 $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
                 $userMapper->save($user);

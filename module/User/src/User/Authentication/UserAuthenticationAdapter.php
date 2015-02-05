@@ -17,10 +17,12 @@ class UserAuthenticationAdapter implements AdapterInterface
     protected $identity;
     protected $password;
     protected $user;
+    protected $passwordService;
 
-    public function __construct($userMapper)
+    public function __construct($userMapper, $passwordService)
     {
         $this->userMapper = $userMapper;
+        $this->passwordService = $passwordService;
     }
 
     public function authenticate()
@@ -36,8 +38,8 @@ class UserAuthenticationAdapter implements AdapterInterface
         {
             return new Result(Result::FAILURE_IDENTITY_NOT_FOUND, 0, array());
         }
-
-        if ($user && $user->getPassword() == $this->password)
+        
+        if ($this->passwordService->isSatisfied($user, $this->password))
         {
             return new Result(Result::SUCCESS, $user->getId(), array());
         }

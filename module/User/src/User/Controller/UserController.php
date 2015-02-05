@@ -129,19 +129,29 @@ class UserController extends AbstractActionController
             }
 
             $editUserForm->setData($formdata);
-            if (!$editUserForm->isValid())
+            if ($editUserForm->isValid())
             {
-                $errors = $editUserForm->getMessages();
-                foreach ($errors as $key => $row)
+                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+                $editedUser = $editUserForm->getData();
+
+                if ($editedUser->getPassword())
                 {
-                    if (!empty($row) && $key != 'submit')
+                    $passwordService = $this->getServiceLocator()->get('User\Service\UserPasswordServiceInterface');
+                    $passwordService->updatePassword($editedUser, $editedUser->getPassword());
+                }
+
+                $userMapper->save($editedUser);
+            }
+        } else
+        {
+            $errors = $editUserForm->getMessages();
+            foreach ($errors as $key => $row)
+            {
+                if (!empty($row) && $key != 'submit')
+                {
+                    foreach ($row as $keyer => $rower)
                     {
-                        foreach ($row as $keyer => $rower)
-                        {
-                            //save error(s) per-element that
-                            //needed by Javascript
-                            $messages[$key][] = $rower;
-                        }
+                        $messages[$key][] = $rower;
                     }
                 }
             }
