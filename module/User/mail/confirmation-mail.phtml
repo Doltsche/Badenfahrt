@@ -1,0 +1,89 @@
+<?php
+
+use User\Service\UserMailService;
+?>
+
+
+<?php echo $this->doctype(); ?>
+
+
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width"/>
+        <style> 
+
+            body, table.body, p, td {
+                font-size: 14px;
+                line-height: 19px;
+            }
+            body, table.body, h1, h2, h3, h4, h5, h6, p, td {
+                color: #222222;
+                font-family: "Helvetica","Arial",sans-serif;
+                font-weight: normal;
+                line-height: 1.3;
+                margin: 0;
+                padding: 0;
+                text-align: left;
+            }
+            body {
+                margin: 0;
+                min-width: 100%;
+                padding: 0;
+                width: 100% !important;
+            }
+            body:not([id]) {
+                cursor: auto !important;
+            }
+        </style>
+    </head>
+    <body>
+    <center>
+        <table class="body">
+
+            <table class="row">
+                <tr>
+                    <td class="wrapper last">
+
+                        <table class="twelve columns">
+                            <tr>
+                                <td>
+                                    <h1>Hallo, <?php echo $this->user->getFirstName() . " " . $this->user->getLastName(); ?></h1>
+
+                                    <br>
+                                    <p class="lead">Vielen Dank für Ihre Anmeldung bei Badenfahrt.local.</p>
+                                    <p>Um Ihre Registrierung erfolgreich abzuschliessen, bitte den nachfolgenden Link anw&auml;hlen:</p>
+                                    <br>
+                                    <a id="link" href="<?php echo "http://badenfahrt.local/user/confirm/" . $this->user->getToken() ?>">Anmeldung best&auml;tigen.</a>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+
+
+
+            <table class="row footer">
+                <tr>
+                    <td class="wrapper last">
+
+                        <table class="six columns">
+                            <tr>
+                                <td class="last right-text-pad">
+                                    <p>Webseite:</p>
+                                    <p>HTTP://badenfahrt.local</p>
+                                    <p>Email: </p><a href="<?php echo "mailto:" . $this->sender ?>"><?php echo $this->sender ?></a>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+        </table>
+    </center>
+</body>
+</html>
+
