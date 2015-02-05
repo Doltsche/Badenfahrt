@@ -24,6 +24,16 @@ return array(
                 'route' => 'user/register',
                 'resource' => 'guest',
             ),
+            array(
+                'label' => 'Profil',
+                'route' => 'user/profile',
+                'resource' => 'user',
+            ),
+            array(
+                'label' => 'Administration',
+                'route' => 'user/manage',
+                'resource' => 'administrator',
+            ),
         ),
     ),
     'router' => array(

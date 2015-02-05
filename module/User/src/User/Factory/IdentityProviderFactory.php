@@ -17,7 +17,8 @@ class IdentityProviderFactory implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $simpleIdentityProvider = new AuthenticationIdentityProvider(new AuthenticationService());
+        $authenticationService = $serviceLocator->get('user_authentication_service');
+        $simpleIdentityProvider = new AuthenticationIdentityProvider($authenticationService);
         
         $config = $serviceLocator->get('BjyAuthorize\Config');
         $simpleIdentityProvider->setDefaultRole($config['default_role']);

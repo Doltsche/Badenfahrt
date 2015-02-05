@@ -29,7 +29,17 @@ class DoctrineUserMapper implements UserMapperInterface
 
     public function findById($id)
     {
-        return $this->entityManager->find('User\Model\User', $id);
+        $tmpUser = $this->entityManager->find('User\Model\User', $id);
+
+        // Some workaround for Doctrine problem.
+        if ($tmpUser)
+        {
+            $user = $this->entityManager->find('User\Model\User', $tmpUser->getId());
+            $roles = $user->getRoles();
+            return $user;
+        }
+
+        return null;
     }
 
     public function findByIdentity($identity)
