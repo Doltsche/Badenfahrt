@@ -15,11 +15,6 @@ return array(
                 'route' => 'home',
             ),
             array(
-                'label' => 'Login',
-                'route' => 'user',
-                'resource' => 'guest',
-            ),
-            array(
                 'label' => 'Registrieren',
                 'route' => 'user/register',
                 'resource' => 'guest',
