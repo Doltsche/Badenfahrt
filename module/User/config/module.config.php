@@ -218,7 +218,7 @@ return array(
                 array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('registered', 'user')), // TODO: remove registered
                 array('controller' => 'User\Controller\User', 'action' => 'test', 'roles' => array('guest', 'user')),
-                array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array('registered', 'user', 'administrator')),
+                array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array()),
                 array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),
                 array('controller' => 'User\Controller\Register', 'action' => 'confirm', 'roles' => array('guest', 'registered')),

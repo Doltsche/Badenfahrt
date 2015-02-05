@@ -75,27 +75,25 @@ class UserController extends AbstractActionController
     public function logoutAction()
     {
         $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-        $authenticationService->clearIdentity();
+        if ($authenticationService->hasIdentity())
+        {
+            $authenticationService->clearIdentity();
+        }
 
         return $this->redirect()->toRoute('home');
     }
 
     public function manageAction()
     {
-//        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-//        $users = $userMapper->findAll();
-//
-//        return new ViewModel(array(
-//            'users' => $users));
+        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+        $users = $userMapper->findAll();
+//        foreach ($users as $user)
+//        {
+//            $user->getPersonal();
+//        }
 
-        $request = $this->getRequest();
-
-        $result = new JsonModel(array(
-            'ispost' => $request->isPost(),
-            'success' => true,
-        ));
-
-        return $result;
+        return new ViewModel(array(
+            'users' => $users));
     }
 
     public function profileAction()
