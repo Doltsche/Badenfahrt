@@ -13,7 +13,7 @@
         <!-- Le styles -->
         <?php
         echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-        				->prependStylesheet($this->basePath() . '/css/badenfahrt.css')
+                ->prependStylesheet($this->basePath() . '/css/badenfahrt.css')
                 ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
                 ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
                 ->prependStylesheet($this->basePath() . 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.1/css/bootstrap-dialog.min.css')
@@ -54,8 +54,14 @@
                             ->setUlClass('nav navbar-nav');
                     ?>
                     <?php if ($this->userIdentity()): ?>
-                        <div class="navbar-text navbar-right">Eingeloggt als 
-                            <?php echo $this->userIdentity()->getDisplayName() ?> 
+                        <div class="nav navbar-right">Eingeloggt als 
+                            <?php echo $this->userIdentity()->getDisplayName() ?>
+                            <?php echo '<a id="logout-btn" class="btn btn-info" type="button" href="' . $this->url('user/logout') . '">Logout</a>'; ?> 
+                        </div>
+                    <?php else: ?>
+                       
+                        <div class="nav navbar-right">
+                            <?php echo '<a id="login-btn" class="btn btn-success" type="button" href="' . $this->url('user') . '">Login</a>'; ?>
                         </div>
                     <?php endif; ?>
                 </div><!--/.nav-collapse -->
@@ -65,7 +71,7 @@
             <?php echo $this->content; ?>
             <hr>
             <footer>
-                 <p>&copy; 2014 - <?php echo date('Y') ?> by ABBTS <?php echo $this->translate('All rights reserved.') ?></p> 
+                <p>&copy; 2014 - <?php echo date('Y') ?> by ABBTS <?php echo $this->translate('All rights reserved.') ?></p> 
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>
