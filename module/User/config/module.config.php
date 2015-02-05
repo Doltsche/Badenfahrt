@@ -155,6 +155,7 @@ return array(
             'User\Mapper\RoleMapperInterface' => 'User\Mapper\Factory\RoleMapperFactory',
             'User\Mapper\PersonalMapperInterface' => 'User\Mapper\Factory\PersonalMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
+            'User\Service\UserPasswordServiceInterface' => 'User\Service\Factory\UserPasswordServiceFactory',
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
             'register_user_form' => 'User\Form\Factory\RegisterUserFormFactory',
             'edit_user_form' => 'User\Form\Factory\EditUserFormFactory',
