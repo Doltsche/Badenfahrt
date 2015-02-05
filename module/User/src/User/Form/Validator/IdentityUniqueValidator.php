@@ -13,30 +13,43 @@ class IdentityUniqueValidator extends AbstractValidator
 {
 
     const NOTUNIQUE = 'notunique';
-    const IDENTIYISEMPTY = 'isempty';
+    const ISEMPTY = 'isempty';
 
     protected $messageTemplates = array(
         self::NOTUNIQUE => "Nicht einmalig.",
-        self::IDENTIYISEMPTY => "Leer"
+        self::ISEMPTY => "Leer"
     );
+    
     protected $userMapper;
+    protected $authenticationService;
 
-    public function __construct($userMapper, array $options = array())
+    public function __construct($userMapper, $authenticationService = null, array $options = array())
     {
         parent::__construct($options);
 
         $this->userMapper = $userMapper;
+        $this->authenticationService = $authenticationService;
     }
 
     public function isValid($value, $context = null)
     {
-        $value = (string) $value;
+        $identity = null;
+        if ($this->authenticationService)
+        {
+            $identity = $this->authenticationService->getIdentity();
+        }
 
         if (!$value)
         {
-            $this->error(self::IDENTIYISEMPTY);
+            $this->error(self::ISEMPTY);
             return false;
-        } else if ($this->userMapper->findByIdentity($value))
+        } 
+        if ($identity && $identity->getIdentity() != $value && $this->userMapper->findByIdentity($value))
+        {
+            $this->error(self::NOTUNIQUE);
+            return false;
+        } 
+        if (!($identity) && $this->userMapper->findByIdentity($value))
         {
             $this->error(self::NOTUNIQUE);
             return false;

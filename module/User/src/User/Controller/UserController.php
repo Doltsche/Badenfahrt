@@ -87,12 +87,12 @@ class UserController extends AbstractActionController
 //
 //        return new ViewModel(array(
 //            'users' => $users));
-        
+
         $request = $this->getRequest();
-        
+
         $result = new JsonModel(array(
-	    'ispost' => $request->isPost(),
-            'success'=>true,
+            'ispost' => $request->isPost(),
+            'success' => true,
         ));
 
         return $result;
@@ -101,11 +101,12 @@ class UserController extends AbstractActionController
     public function profileAction()
     {
         $request = $this->getRequest();
-        
-        if (!$request->isXmlHttpRequest()){
+
+        if (!$request->isXmlHttpRequest())
+        {
             return new ViewModel(array());
         }
-        
+
         return $this->editAction();
     }
 
@@ -122,7 +123,14 @@ class UserController extends AbstractActionController
         $request = $this->getRequest();
         if ($request->isPost())
         {
-            $editUserForm->setData($request->getPost());
+            $formdata = array();
+            $ajaxdata = \Zend\Json\Json::decode($request->getContent(), \Zend\Json\Json::TYPE_ARRAY);
+            foreach ($ajaxdata as $value)
+            {
+                $formdata[$value['name']] = $value['value'];
+            }
+
+            $editUserForm->setData($formdata);
             if (!$editUserForm->isValid())
             {
                 $errors = $editUserForm->getMessages();

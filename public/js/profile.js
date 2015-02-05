@@ -2,14 +2,14 @@ function validateForm() {
     $.ajax({
         type: 'POST',
         url: '/user/edit',
-        data: {user: $('#formid').val()},
+        data: JSON.stringify($('#formid').serializeArray()),
         dataType: 'json',
         contentType: "application/json",
         success: function (data) {
             decorate(data);
         },
         error: function (xhr, textStatus, errorThrown) {
-            alert('request failed' + errorThrown + '. Status: ' + textStatus);
+            alert(xhr.responseText + 'request failed' + errorThrown + '. Status: ' + textStatus);
         },
     });
 }

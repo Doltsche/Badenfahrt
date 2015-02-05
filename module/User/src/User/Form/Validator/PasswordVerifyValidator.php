@@ -29,7 +29,7 @@ class PasswordVerifyValidator extends AbstractValidator
     {
         $value = (string) $value;
 
-        if ($context['password'])
+        if (strlen($context['password']) > 0)
         {
             if (!$value)
             {

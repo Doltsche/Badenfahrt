@@ -5,6 +5,7 @@ namespace User\Form\Filter;
 use Zend\InputFilter\InputFilter;
 use User\Form\Validator\PasswordVerifyValidator;
 use User\Form\Validator\IdentityUniqueValidator;
+use User\Form\Validator\PasswordValidator;
 use User\Form\Validator\DisplayNameUniqueValidator;
 
 /**
@@ -40,28 +41,24 @@ class EditUserFilter extends InputFilter
                 array(
                     'name' => 'EmailAddress',
                 ),
-                new IdentityUniqueValidator($userMapper),
+                new IdentityUniqueValidator($userMapper, $authenticationService),
             ),
         ));
 
         $this->add(array(
             'name' => 'password',
             'required' => false,
-            'allowEmpty' => true,
-            'filters' => array(array('name' => 'StringTrim')),
+            'allowEmpty' => false,
+            'validators' => array(
+                new PasswordValidator(),
+            )
         ));
 
         $this->add(array(
             'name' => 'passwordVerify',
-            'required' => true,
-            'filters' => array(array('name' => 'StringTrim')),
+            'required' => false,
+            'allowEmpty' => false,
             'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 6,
-                    ),
-                ),
                 new PasswordVerifyValidator(),
             ),
         ));

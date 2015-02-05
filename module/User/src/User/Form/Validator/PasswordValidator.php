@@ -1,27 +1,25 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace User\Form\Validator;
+
+use Zend\Validator\AbstractValidator;
 
 /**
  * Description of PasswordValidator
  *
  * @author Dev
  */
-class PasswordValidator extends \Zend\Validator\AbstractValidator
+class PasswordValidator extends AbstractValidator
 {
 
     const NOTMATCH = 'notmatch';
     const PASSWORDISEMPTY = 'isempty';
+    const PASSWORDVERIFYREQUIRED = 'verifyrequired';
 
-    protected $_messageTemplates = array(
+    protected $messageTemplates = array(
         self::NOTMATCH => "Repeated password don't match GUGUS",
-        self::PASSWORDISEMPTY => "You have to fill password field GUGUS"
+        self::PASSWORDISEMPTY => "You have to fill password field GUGUS",
+        self::PASSWORDVERIFYREQUIRED => "Verify is required"
     );
 
     public function isValid($value, $context = null)
@@ -29,9 +27,9 @@ class PasswordValidator extends \Zend\Validator\AbstractValidator
 
         $value = (string) $value;
 
-        if (isset($context['password']) && !$value)
+        if (isset($context['password']) && strlen($context['passwordVerify']) == 0)
         {
-            $this->_error(self::PASSWORDISEMPTY);
+            $this->error(self::PASSWORDVERIFYREQUIRED);
             return false;
         }
 
