@@ -1,0 +1,39 @@
+<?php
+/**
+ * Database Access Local Definition
+ * 
+ * - First enable in php.ini following extension for DB access to work
+ *    extension=php_pdo_mysql.dll
+ *
+ * - Change host,port,user and password to match your configuration
+ *
+ * - Run script create_database.sql from \scripts to create database
+ *
+ * - Create database tables/schema with doctrine by running following comand
+ *    vendor\bin\doctrine-module orm:schema-tool:create
+ *
+ * - Run scripts insert_roles.sql from \scripts to fill roles tables with
+ *   defaults
+ *
+ * @NOTE: Copy this file without .dist - Extension and work in that file. 
+ * In practice,the .local.php files, will not be INCLUDED in your source
+ * control. Do not include passwords or other sensitive information in this
+ * local.php.dist file but only in your local.php.
+ */
+return array(
+    'doctrine' => array(
+        'connection' => array(
+            // default connection name
+            'orm_default' => array(
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                'params' => array(
+                    'host'     => 'localhost',
+                    'port'     => '3306',
+                    'user'     => 'username',
+                    'password' => 'password',
+                    'dbname'   => 'badenfahrt',
+                )
+            )
+        )
+    ),
+);
