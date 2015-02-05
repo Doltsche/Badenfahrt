@@ -172,6 +172,6 @@ div.container a.brand {
   font-size: 16px;
 }
 
-#login-btn, #logout-btn {
+#login-btn, #logout-btn, #login-name {
     margin-top: 7px;
 }

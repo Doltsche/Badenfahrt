@@ -54,8 +54,8 @@
                             ->setUlClass('nav navbar-nav');
                     ?>
                     <?php if ($this->userIdentity()): ?>
-                        <div class="nav navbar-right">Eingeloggt als 
-                            <?php echo $this->userIdentity()->getDisplayName() ?>
+                        <div class="nav navbar-right">
+                            <a id="login-name">Eingeloggt als <?php echo $this->userIdentity()->getDisplayName() ?></a>
                             <?php echo '<a id="logout-btn" class="btn btn-info" type="button" href="' . $this->url('user/logout') . '">Logout</a>'; ?> 
                         </div>
                     <?php else: ?>
