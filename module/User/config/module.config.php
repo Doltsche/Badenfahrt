@@ -148,7 +148,6 @@ return array(
     ),
     'service_manager' => array(
         'invokables' => array(
-            'User\Service\UserMailServiceInterface' => 'User\Service\UserMailService',
         ),
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
@@ -156,6 +155,7 @@ return array(
             'User\Mapper\PersonalMapperInterface' => 'User\Mapper\Factory\PersonalMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
             'User\Service\UserPasswordServiceInterface' => 'User\Service\Factory\UserPasswordServiceFactory',
+            'User\Service\UserMailServiceInterface' => 'User\Service\Factory\UserMailServiceFactory',
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
             'register_user_form' => 'User\Form\Factory\RegisterUserFormFactory',
             'edit_user_form' => 'User\Form\Factory\EditUserFormFactory',

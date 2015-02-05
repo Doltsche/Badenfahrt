@@ -17,16 +17,17 @@ class UserPasswordService implements UserPasswordServiceInterface {
         $this->userMailService = $userMailService;
     }
 
+    //Todo Better encryption
     public function isSatisfied($user, $plainPassword) {
         //encrypt pwd
-        $encryptedPassword = mcrypt_create_iv(128, $plainPassword);
+        $encryptedPassword = md5($plainPassword);
 
         return $user->getPassword() == $encryptedPassword;
     }
 
     public function updatePassword($user, $plainPassword) {
 
-        $encryptedPassword = mcrypt_create_iv(128, $plainPassword);
+        $encryptedPassword = md5($plainPassword);
         $user->setPassword($encryptedPassword);
 
         return $user;
