@@ -8,29 +8,28 @@ namespace User\Service;
  * @author avogel
  */
 class UserPasswordService implements UserPasswordServiceInterface {
-    
+
     protected $userMapper;
     protected $userMailService;
-    
-    public function __construct($userMapper, $userMailService) 
-    {
+
+    public function __construct($userMapper, $userMailService) {
         $this->userMapper = $userMapper;
         $this->userMailService = $userMailService;
     }
-    
-    public function isSatisfied($user, $plainPassword)
-    {
+
+    public function isSatisfied($user, $plainPassword) {
         //encrypt pwd
-        $user->getPassword();
+        $encryptedPassword = mcrypt_create_iv(128, $plainPassword);
+
+        return $user->getPassword() == $encryptedPassword;
     }
 
     public function updatePassword($user, $plainPassword) {
-        
 
-        // TODO: Encrypt plainPassword;
-        $encryptedPassword = '';
-        $user->setPasswor($encryptedPassword);
-        
+        $encryptedPassword = mcrypt_create_iv(128, $plainPassword);
+        $user->setPassword($encryptedPassword);
+
         return $user;
     }
+
 }

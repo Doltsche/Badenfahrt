@@ -1,5 +1,40 @@
-ZendSkeletonApplication
-=======================
+﻿<img src="http://framework.zend.com/images/head-bottom-picture.png"
+ alt="ZF2 Logo 1" title="ZF2 User Module" align="right" />
+
+
+# Zend Skeleton Application - UserModul für Badenfahrt
+---
+
+
+
+Dies ist ein UserModul für ZF2.
+---
+<img src="https://packages.zendframework.com/docs/latest/manual/en/_static/zf2_logo.png"
+ alt="ZF2 Logo 0" title="ZF2 User Module" align="right" />
+
+Es gibt folgende Aktionen:
+
+  - Index
+   - Anzeige der Hauptseite
+  - Registrieren
+   - Formular für Benutzer-Registrierung
+  - Anmelden / Abmelden
+   - Formulare für das Login und das Logout
+  - Services
+   - Self-Service für Passwort zurücksetzten
+   - Self-Service Profile Bearbeiten
+   - Benutzerverwaltung für Administratoren
+
+Von [Samuel Egger], [Christoph Junker] und [Andreas Vogelbacher] für ein Semesterprojekt in der [ABB-TS] [1]:
+
+Version
+---
+0.9.31
+
+> Achtung:
+
+> Installationsaleitungen beachten
+
 
 Introduction
 ------------
@@ -75,3 +110,10 @@ project and you should be ready to go! It should look something like below:
             Allow from all
         </Directory>
     </VirtualHost>
+
+
+
+[Andreas Vogelbacher]:nixda@willkeinspam.com
+[Samuel Egger]:nixda@willkeinspam.com
+[Christoph Junker]:nixda@willkeinspam.com
+[1]:http://abbts.ch
