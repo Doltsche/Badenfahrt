@@ -1,0 +1,42 @@
+<?php
+/**
+ * Mail Local Definition
+ *
+ * - Change host, connection_class, port, ssl accordingly to your email
+ *   provider.
+ * 
+ * - Enter your username and password for email access
+ * 
+ * Example: Gmail
+ *      'host' => 'smtp.gmail.com',
+ *      'connection_class' => 'login',
+ *      'port' => '465',
+ *      'ssl' => 'ssl'
+ * 
+ * Example: Yahoo
+ *      'host' => 'mail.yahoo.com',
+ *       'connection_class'  => 'plain',
+ *      'port' => '2525',
+ *      'ssl' => 'tls'
+ *
+ * @NOTE: Copy this file without .dist - Extension and work in that file. 
+ * In practice,the .local.php files, will not be INCLUDED in your source
+ * control. Do not include passwords or other sensitive information in this
+ * local.php.dist file but only in your local.php.
+ */
+return array(
+    'mail' => array(
+        'transport' => array(
+            'options' => array(
+                'host' => 'smtp.gmail.com',
+                'connection_class' => 'login',
+                'port' => '465',
+                'connection_config' => array(
+                    'username' => 'Badenfahrt2015@gmail.com',
+                    'password' => 'baden123',
+                    'ssl' => 'ssl'
+                ),
+            ),
+        ),
+    ),
+);

@@ -1,0 +1,45 @@
+<h2>Avatar ändern</h2>
+
+<?php if ($this->editError): ?>
+    <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
+        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->editError; ?>
+    </div>
+<?php endif ?>
+
+<div class="row ">
+    <div class="row-same-height">
+        <div class="col-xs-2 col-xs-height">
+            <img src="<?php echo $this->basePath() . '/user/avatar' ?>" alt="avatar" />
+        </div>
+        <div class="col-xs-6 col-xs-height col-top">
+            <?php
+            $this->form->setAttribute('action', $this->url('user/editavatar'));
+            $this->form->setAttribute('enctype', 'multipart/form-data');
+            $this->form->prepare();
+
+            echo $this->form()->openTag($this->form);
+            foreach ($this->form as $element)
+            {
+                if ($element instanceof Zend\Form\Element\Submit)
+                {
+                    echo '<div>';
+                    $element->setAttribute('class', 'btn btn-primary');
+                    $element->setAttribute('style', 'float: left; margin-right: 17px;');
+                } else
+                {
+                    echo '<div class="form-group">';
+                    $label = $element->getOption('label');
+                    echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+                    echo $this->formElementErrors($element);
+                    $element->setAttribute('class', 'form-control');
+                }
+                echo $this->formElement($element);
+                echo '</div>';
+            }
+            echo $this->form()->closeTag($this->form);
+            ?>
+
+            <a class="btn btn-default" href="/user/profile">Schliessen</a>
+        </div>
+    </div>
+</div>

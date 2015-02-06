@@ -49,7 +49,7 @@ class RegisterController extends AbstractActionController
                 $userMapper->save($user);
 
                 // Send confirmation request.
-                $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface');
+                $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface'); 
                 $userMailService->sendConfirmationRequest($user);
 
                 $this->registeredUser = $user;

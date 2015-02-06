@@ -164,118 +164,79 @@ class UserController extends AbstractActionController
         ));
     }
 
-//    public function editAction()
-//    {
-//        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-//        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-//        if (!$authenticationService->hasIdentity())
-//        {
-//            return $this->redirect()->toRoute('user');
-//        }
-//
-//        $editError = false;
-//        $form = new EditForm();
-//
-//        $user = $userMapper->findById($authenticationService->getIdentity()->getId());
-//        $oldIdentity = $user->getIdentity();
-//        $oldDisplayName = $user->getDisplayName();
-//
-//        $form->bind($user);
-//
-//        $request = $this->getRequest();
-//        if ($request->isPost())
-//        {
-//            if ($request->getPost()['user-fieldset']['password'])
-//            {
-//                $user->getInputFilter()->add(array(
-//                    'name' => 'password',
-//                    'required' => true,
-//                    'filters' => array(array('name' => 'StringTrim')),
-//                    'validators' => array(
-//                        array(
-//                            'name' => 'StringLength',
-//                            'options' => array(
-//                                'min' => 6,
-//                            ),
-//                        ),
-//                    ),
-//                ));
-//
-//                $user->getInputFilter()->add(array(
-//                    'name' => 'passwordVerify',
-//                    'required' => true,
-//                    'filters' => array(array('name' => 'StringTrim')),
-//                    'validators' => array(
-//                        array(
-//                            'name' => 'StringLength',
-//                            'options' => array(
-//                                'min' => 6,
-//                            ),
-//                        ),
-//                    ),
-//                ));
-//            }
-//
-//            $form->setData($request->getPost());
-//            if ($form->isValid())
-//            {
-//                $user = $form->getData();
-//                if ($user->getIdentity() != $oldIdentity && $userMapper->findByIdentity($user->getIdentity()))
-//                {
-//                    $editError = "Die E-Mail '{$user->getIdentity()}' wurde bereits registriert.";
-//                    $user->setIdentity('');
-//                    $user->setIdentityVerify('');
-//                    $form->bind($user);
-//                } else if ($user->getDisplayName() != $oldDisplayName && $userMapper->findByDisplayName($user->getDisplayName()))
-//                {
-//                    $editError = "Der Anzeigename '{$user->getDisplayName()}' wurde bereits registriert.";
-//                    $user->setDisplayName('');
-//                    $form->bind($user);
-//                } else
-//                {
-//                    if ($user->getAvatar())
-//                    {
-//                        // IMPORTANT: Enable the php_fileinfo.dll extension.
-//                        $isImageValidator = new MimeType();
-//                        $isImageValidator->setMimeType(array(
-//                            'image/png',
-//                            'image/jpeg',
-//                        ));
-//
-//                        $adapter = new \Zend\File\Transfer\Adapter\Http();
-//                        $adapter->setValidators(array(
-//                            $isImageValidator,
-//                            new Size(array('min' => 1024, 'max' => 51200,)),
-//                        ));
-//
-//                        if (!$adapter->isValid())
-//                        {
-//                            $form->get('user-fieldset')->setMessages(array('avatar' => $adapter->getMessages()));
-//                        } else
-//                        {
-//                            $avatarDir = dirname(__DIR__) . '/Assets';
-//                            $adapter->setDestination($avatarDir);
-//                            if ($adapter->receive($user->getAvatar()))
-//                            {
-//                                $user->setAvatar($avatarDir . '/' . $user->getAvatar());
-//                            } else
-//                            {
-//                                $messages = $adapter->getMessages();
-//                            }
-//                        }
-//                    }
-//
-//                    // $userMapper->save($user);
-//                }
-//            }
-//        }
-//
-//        $msgs = $form->getMessages();
-//        return array(
-//            'editForm' => $form,
-//            'editError' => $editError,
-//        );
-//    }
+    public function editAvatarAction()
+    {
+        $form = $this->getServiceLocator()->get('edit_avatar_form');
+        
+        $request = $this->getRequest();
+        if ($request->isPost())
+        {
+            $avatarFile = $this->params()->fromFiles('avatar');
+            $avatarFileName = $avatarFile['name'];
+
+            // IMPORTANT: Enable the php_fileinfo.dll extension.
+            $isImageValidator = new MimeType();
+            $isImageValidator->setMimeType(array(
+                'image/png',
+                'image/jpeg',
+            ));
+
+            $adapter = new HttpAdapter();
+            $adapter->setValidators(array(
+                $isImageValidator,
+                new Size(array('min' => 1024, 'max' => 51200,)),
+            ));
+
+            if ($adapter->isValid())
+            {
+                $adapter->setDestination($this->getAvatarBaseDir());
+                if ($adapter->receive($avatarFileName))
+                {
+                    $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
+                    $user = $authenticationService->getIdentity();
+                    $user->setAvatar($avatarFileName);
+
+                    $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+                    $userMapper->save($user);
+                }
+            }
+        }
+
+        return new ViewModel(array(
+            'form' => $form,
+        ));
+    }
+
+    public function avatarAction()
+    {
+        $avatarDir = $this->getAvatarBaseDir() . '\\avatar-placeholder.jpg';
+        $user = null;
+
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
+        {
+            $id = $this->params()->fromRoute('id');
+            $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+            $user = $userMapper->findById($id);
+        } else
+        {
+            $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
+            $user = $authenticationService->getIdentity();
+        }
+
+        if ($user->getAvatar() && file_exists($this->getAvatarBaseDir() . '\\' . $user->getAvatar()))
+        {
+            $avatarDir = $this->getAvatarBaseDir() . '\\' . $user->getAvatar();
+        }
+
+        $fp = fopen($avatarDir, 'rb');
+        $size = getimagesize($avatarDir);
+        if ($size && $fp)
+        {
+            header('Content-Type: ' . $size['mime']);
+            header('Content-Length: ' . filesize($avatarDir));
+            fpassthru($fp);
+        }
+    }
 
     public function deleteAction()
     {
@@ -294,37 +255,14 @@ class UserController extends AbstractActionController
         return $this->redirect()->toRoute('user/manage');
     }
 
-    protected function prepareAvatar($file, $crop = array('x' => 0, 'y' => 0, 'w' => 100, 'h' => 100))
+    protected function cropImage($file, $crop = array('x' => 0, 'y' => 0, 'w' => 100, 'h' => 100))
     {
-        // IMPORTANT: Enable the php_fileinfo.dll extension.
-        $isImageValidator = new MimeType();
-        $isImageValidator->setMimeType(array(
-            'image/png',
-            'image/jpeg',
-        ));
+        
+    }
 
-        $adapter = new HttpAdapter();
-        $adapter->setValidators(array(
-            $isImageValidator,
-            new Size(array('min' => 1024, 'max' => 51200,)),
-        ));
-
-        if (!$adapter->isValid())
-        {
-            return false;
-        } else
-        {
-            $avatarDir = dirname(__DIR__) . '\..\..\avatars';
-            $adapter->setDestination($avatarDir);
-
-            if ($adapter->receive($file['name']))
-            {
-                return $avatarDir . '\\' . $file['name'];
-            } else
-            {
-                return '';
-            }
-        }
+    protected function getAvatarBaseDir()
+    {
+        return dirname(__DIR__) . '\..\..\avatars';
     }
 
 }

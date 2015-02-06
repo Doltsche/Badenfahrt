@@ -18,6 +18,23 @@ function validateForm(formId) {
     });
 }
 
+function doit() {
+    $.ajax({
+        type: 'POST',
+        url: '/user/editavatar',
+        // TODO: Use parameter
+        data: JSON.stringify($('#editAvatarForm').serializeArray()),
+        dataType: 'json',
+        contentType: "application/json",
+        success: function (data) {
+            alert('success');
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert(xhr);
+        }
+    });
+}
+
 function decorate(data) {
     var messageHtml = '';
     if (data.success) {
@@ -52,7 +69,7 @@ function showForm(url) {
             $('.modal').modal({backdrop: 'static'});
         },
         error: function (xhr, textStatus, errorThrown) {
-            alert('Der Request ging in die Toilette.');
+            alert('Der Request ging in die Toilette:' + errorThrown);
         }
     });
 }

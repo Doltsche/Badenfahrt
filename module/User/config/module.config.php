@@ -89,6 +89,27 @@ return array(
                             ),
                         ),
                     ),
+                    'editavatar' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => '/editavatar',
+                            'defaults' => array(
+                                'action' => 'editavatar',
+                            ),
+                        ),
+                    ),
+                    'avatar' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/avatar[/:id]',
+                            'defaults' => array(
+                                'action' => 'avatar',
+                            ),
+                            'constraints' => array(
+                                'id' => '[1-9]\d*',
+                            ),
+                        ),
+                    ),
                     'manage' => array(
                         'type' => 'literal',
                         'options' => array(
@@ -140,7 +161,8 @@ return array(
             __DIR__ . '/../view',
         ),
         'template_map' => array(
-            'editUserModal' => __DIR__ . '/../view/user/dialog/edit-user-modal.phtml'
+            'editUserModal' => __DIR__ . '/../view/user/dialog/edit-user-modal.phtml',
+            'editAvatarModal' => __DIR__ . '/../view/user/dialog/edit-avatar-modal.phtml',
         ),
         'strategies' => array(
             'ViewJsonStrategy',
@@ -159,6 +181,7 @@ return array(
             'user_authentication_service' => 'User\Authentication\Factory\AuthenticationServiceFactory',
             'register_user_form' => 'User\Form\Factory\RegisterUserFormFactory',
             'edit_user_form' => 'User\Form\Factory\EditUserFormFactory',
+            'edit_avatar_form' => 'User\Form\Factory\EditAvatarFormFactory',
             'register_personal_form' => 'User\Form\Factory\RegisterPersonalFormFactory',
         )
     ),
@@ -217,14 +240,16 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
                 array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
-                array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('registered', 'user')), // TODO: remove registered
+                array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('user')),
                 array('controller' => 'User\Controller\User', 'action' => 'test', 'roles' => array('guest', 'user')),
                 array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array()),
                 array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),
                 array('controller' => 'User\Controller\Register', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
-                array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user', 'administrator')),
-                array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('user', 'administrator')),
+                array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user')),
+                array('controller' => 'User\Controller\User', 'action' => 'editavatar', 'roles' => array('user')),
+                array('controller' => 'User\Controller\User', 'action' => 'avatar', 'roles' => array('user')),
+                array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('administrator')),
             ),
         ),
     ),

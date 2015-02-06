@@ -21,11 +21,13 @@ if ($this->runModal)
 </div>
 
 <p class="lead">
-    <img src="<?php echo $this->basePath() . '/img/avatar-placeholder.jpg' ?>" 
-         alt="avatar placeholder"  style="float:left;" />
+    <img src="<?php echo $this->basePath() . '/user/avatar' ?>" 
+         alt="avatar"  style="float:left;" />
          <?php echo $user->getIdentity(); ?>
 </p>
-<button type="button" class="btn btn-default" onclick="showForm('\\user\\edit');">Bearbeiten</button>
+<button type="button" class="btn btn-default" onclick="showForm('\\user\\edit');">Profil bearbeiten</button>
+<br>
+<a class="btn btn-default" href="/user/editavatar">Avatar ändern</a>
 <p style="clear: both;" />
 
 <h2>Persönliche Angaben</h2>
