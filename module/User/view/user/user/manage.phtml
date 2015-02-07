@@ -17,8 +17,21 @@
             <td><?php echo $this->escapeHtml($user->getLastname()); ?></td>
             <td><?php echo $this->escapeHtml($user->getIdentity()); ?></td>
             <td>
-                <a href="<?php echo $this->url('user/manage/edit', array('id' => $user->getId())); ?>">Bearbeiten</a>
-                <a href="<?php echo $this->url('user/manage/delete', array('id' => $user->getId())); ?>">Löschen</a>
+                
+                <div id="profile-avatar" class="btn-group-vertical" id="profile">
+        <button type="button" class="btn btn-primary dropdown-toggle" 
+                data-toggle="dropdown">
+            Verwaltung
+            <span class="caret"></span>
+        </button>
+
+        <ul role="menu" class="dropdown-menu">
+            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/edit', array('id' => $user->getId())); ?>">Profildaten Bearbeiten</a></li>
+            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editavatar', array('id' => $user->getId())); ?>">Avatar Bearbeiten</a></li>
+            <li class="divider"></li>
+            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/manage/delete', array('id' => $user->getId())); ?>">Löschen</a></li>
+        </ul>
+    </div>
             </td>
         </tr>
 
