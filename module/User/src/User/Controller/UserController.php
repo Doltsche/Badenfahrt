@@ -213,6 +213,8 @@ class UserController extends AbstractActionController
                     $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
                     $userMapper->save($user);
                 }
+            }else{
+                 \Zend\Debug\Debug::dump($adapter->getMessages());
             }
         }
 

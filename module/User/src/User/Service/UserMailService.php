@@ -14,7 +14,7 @@ use Zend\Mail\Transport\SmtpOptions;
 /**
  * Description of UserService
  *
- * @author Dev
+ * @author avogel
  */
 class UserMailService implements UserMailServiceInterface
 {
@@ -33,8 +33,8 @@ class UserMailService implements UserMailServiceInterface
         //Local Variables for easyer access
         $email = $user->getIdentity();      //Email from new User
         // TODO: Use first and last naem
-        $ToLName = "It"; // $user->getPersonal()->getLastName();    //Users Last Name
-        $ToFName =  "Works"; // $user->getPersonal()->getFirstName();   //Users First Name
+        $ToLName = $user->getLastName();    //Users Last Name
+        $ToFName =  $user->getFirstName();   //Users First Name
         //$sender = $this->options['options']['connection_config']['username'];   //Senders Email address for contact data
         $sender = "info@127.0.0.1";
         

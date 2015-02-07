@@ -5,8 +5,7 @@
 <?php
 $user = $this->userIdentity();
 
-if ($this->runModal)
-{
+if ($this->runModal) {
     $script = "$( document ).ready(function() {" .
             "$('#$this->runModal').modal('show');" .
             "});";
@@ -19,22 +18,36 @@ if ($this->runModal)
     <h1>Mein Benutzerprofil</h1>
 </div>
 
-<p class="lead">
-    <img src="<?php echo $this->basePath() . '/user/avatar' ?>" 
-         alt="avatar"  style="float:left;" />
-         <?php echo $user->getIdentity(); ?>
-</p>
-<button type="button" class="btn btn-default" onclick="showForm('\\user\\edit');">Profil bearbeiten</button>
-<br>
-<a class="btn btn-default" href="/user/editavatar">Avatar ändern</a>
-<p style="clear: both;" />
+<div class="container">
+    <p id="profile-avatar"><img src="<?php echo $this->basePath() . '/user/avatar' ?>" 
+            alt="avatar"   /></p>
+    <p id="profile-avatar" class="lead">
+        &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $user->getIdentity(); ?></p>
 
-<h2>Persönliche Angaben</h2>
-<p class="lead">
-    <?php echo $user->getFirstname() . ' ' . $user->getLastname(); ?><br>
-    <?php echo $user->getStreetAndNr(); ?><br>
-    <?php echo $user->getPostalCode() . ' ' . $user->getCity(); ?><br><br>
-    Telefon: <?php echo $user->getPhone(); ?>
-</p>
+    <div id="profile-avatar" class="btn-group-vertical" id="profile">
+        <button type="button" class="btn btn-primary dropdown-toggle" 
+                data-toggle="dropdown">
+            Bearbeiten
+            <span class="caret"></span>
+        </button>
 
+        <ul role="menu" class="dropdown-menu">
+            <li role="presentation"><a role="menuitem" onclick="showForm('\\user\\edit');">Profil Daten</a></li>
+            <li class="divider"></li>
+            <li role="presentation"><a role="menuitem" href="/user/editavatar">Avatar</a></li>
+        </ul>
+    </div>
+
+    <p style="clear: both;" />
+</div>
+<div class="container">
+    <h2>Persönliche Angaben</h2>
+    <p class="lead">
+        <?php echo $user->getFirstname() . ' ' . $user->getLastname(); ?><br>
+        <?php echo $user->getStreetAndNr(); ?><br>
+        <?php echo $user->getPostalCode() . ' ' . $user->getCity(); ?><br><br>
+        Telefon: <?php echo $user->getPhone(); ?>
+    </p>
+
+</div>
 <div id="profilemodal"></div>
