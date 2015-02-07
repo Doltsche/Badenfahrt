@@ -173,5 +173,8 @@ div.container a.brand {
 }
 
 #login-btn, #logout-btn, #login-name {
-    margin-top: 7px;
+    //padding: 15px 15px;
+    margin-top: 7.5px;
+    margin-bottom: 7.5px;
+    vertical-align:middle;
 }

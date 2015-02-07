@@ -14,7 +14,7 @@ use Zend\Mail\Transport\SmtpOptions;
 /**
  * Description of UserService
  *
- * @author Dev
+ * @author avogel
  */
 class UserMailService implements UserMailServiceInterface
 {

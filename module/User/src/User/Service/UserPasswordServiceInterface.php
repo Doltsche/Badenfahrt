@@ -10,7 +10,7 @@ namespace User\Service;
 
 /**
  *
- * @author avogel
+ * @author dev
  */
 interface UserPasswordServiceInterface 
 {
