@@ -24,9 +24,6 @@ class EditUserFormFactory implements FactoryInterface
 
         $form = new EditUserForm();
         $form->setInputFilter($filter);
-        
-        $user = $authenticationService->getIdentity();
-        $form->bind($user);
 
         $form->setAttribute('id', 'editUserForm');
         

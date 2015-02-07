@@ -1,3 +1,7 @@
+<script type="text/javascript">
+    var urlform = '<?php echo $this->url('user/profile'); ?>';
+</script>
+
 <h1>Benutzer verwalten</h1>
 
 <table class="table">
@@ -17,24 +21,26 @@
             <td><?php echo $this->escapeHtml($user->getLastname()); ?></td>
             <td><?php echo $this->escapeHtml($user->getIdentity()); ?></td>
             <td>
-                
-                <div id="profile-avatar" class="btn-group-vertical" id="profile">
-        <button type="button" class="btn btn-primary dropdown-toggle" 
-                data-toggle="dropdown">
-            Verwaltung
-            <span class="caret"></span>
-        </button>
 
-        <ul role="menu" class="dropdown-menu">
-            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/edit', array('id' => $user->getId())); ?>">Profildaten Bearbeiten</a></li>
-            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editavatar', array('id' => $user->getId())); ?>">Avatar Bearbeiten</a></li>
-            <li class="divider"></li>
-            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/manage/delete', array('id' => $user->getId())); ?>">Löschen</a></li>
-        </ul>
-    </div>
+                <div id="profile-avatar" class="btn-group-vertical" id="profile">
+                    <button type="button" class="btn btn-primary dropdown-toggle" 
+                            data-toggle="dropdown">
+                        Verwaltung
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul role="menu" class="dropdown-menu">
+                        <li role="presentation"><a role="menuitem" onclick="showForm('\\user\\edit');">Profildaten Bearbeiten</a></li>
+                        <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editavatar', array('id' => $user->getId())); ?>">Avatar Bearbeiten</a></li>
+                        <li class="divider"></li>
+                        <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/delete', array('id' => $user->getId())); ?>">Löschen</a></li>
+                    </ul>
+                </div>
             </td>
         </tr>
 
     <?php endforeach; ?>
 
 </table>
+
+<div id="profilemodal"></div>

@@ -81,7 +81,7 @@ return array(
                         ),
                     ),
                     'edit' => array(
-                        'type' => 'literal',
+                        'type' => 'segment',
                         'options' => array(
                             'route' => '/edit[/:id]',
                             'defaults' => array(
@@ -110,6 +110,18 @@ return array(
                             'route' => '/avatar[/:id]',
                             'defaults' => array(
                                 'action' => 'avatar',
+                            ),
+                            'constraints' => array(
+                                'id' => '[1-9]\d*',
+                            ),
+                        ),
+                    ),
+                    'delete' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/delete[/:id]',
+                            'defaults' => array(
+                                'action' => 'delete',
                             ),
                             'constraints' => array(
                                 'id' => '[1-9]\d*',

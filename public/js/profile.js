@@ -2,7 +2,6 @@ function validateForm(formId) {
     $.ajax({
         type: 'POST',
         url: '/user/edit',
-        // TODO: Use parameter
         data: JSON.stringify($('#' + formId).serializeArray()),
         dataType: 'json',
         contentType: "application/json",
@@ -14,23 +13,6 @@ function validateForm(formId) {
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>\n\
             <span class="sr-only">Bei der Anfrage ist ein Fehler aufgetreten.\n\
              Bitte versuchen Sie es später nocheinmal.</span></div>');
-        }
-    });
-}
-
-function doit() {
-    $.ajax({
-        type: 'POST',
-        url: '/user/editavatar',
-        // TODO: Use parameter
-        data: JSON.stringify($('#editAvatarForm').serializeArray()),
-        dataType: 'json',
-        contentType: "application/json",
-        success: function (data) {
-            alert('success');
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            alert(xhr);
         }
     });
 }
@@ -65,7 +47,7 @@ function showForm(url) {
         dataType: 'json',
         contentType: "application/json",
         success: function (data) {
-            $('#profilemodal').html(data.form);
+            $('#profilemodal').html(data.modal);
             $('.modal').modal({backdrop: 'static'});
         },
         error: function (xhr, textStatus, errorThrown) {

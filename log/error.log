@@ -1,0 +1,14 @@
+2015-02-07T21:49:50+01:00 ERR (3): Route with name "manage" does not have child routes
+2015-02-07T21:50:41+01:00 ERR (3): Route with name "delete" not found
+2015-02-07T22:21:00+01:00 NOTICE (5): Undefined variable: authenticationService {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Controller\\UserController.php","line":112}
+2015-02-07T22:23:28+01:00 NOTICE (5): Undefined variable: authenticationService {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Controller\\UserController.php","line":112}
+2015-02-07T22:25:59+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:27:12+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:30:53+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:32:10+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:32:48+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:32:55+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:33:35+01:00 ERR (3): Route with name "" not found
+2015-02-07T22:39:29+01:00 NOTICE (5): Undefined variable: avatarRoute {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Controller\\UserController.php","line":247}
+2015-02-07T22:46:14+01:00 NOTICE (5): Undefined variable: authenticationService {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Controller\\UserController.php","line":193}
+2015-02-07T22:47:05+01:00 NOTICE (5): Undefined variable: user {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\view\\user\\user\\profile.phtml","line":13}

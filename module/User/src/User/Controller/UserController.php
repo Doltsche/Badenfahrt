@@ -19,6 +19,16 @@ use Zend\View\Model\JsonModel;
 class UserController extends AbstractActionController
 {
 
+    protected $userMapper;
+    protected $authenticationService;
+
+    /**
+     * Action invoked by route /user.
+     * 
+     * Login.
+     * 
+     * @return ViewModel
+     */
     public function loginAction()
     {
         $request = $this->getRequest();
@@ -26,31 +36,39 @@ class UserController extends AbstractActionController
 
         if ($request->isPost())
         {
+            // Populate the form with the posted data.
             $form->setData($request->getPost());
+            
+            // Validate the form.
             if ($form->isValid())
             {
-                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-                $user = $userMapper->findByIdentity($form->get('identity')->getValue());
+                $user = $this->getUserMapper()->findByIdentity($form->get('identity')->getValue());
+                
+                // Check if the authenticated user is allowed to login (did he confirm the email).
                 if ($user && $user->getState() == 0)
                 {
-                    $resendUrl = $this->url()->fromRoute('user/resendconfirmation', array('identity' => $user->getIdentity()));
                     $this->flashMessenger()->addMessage("Bitte bestätigen Sie die E-Mail, die wir Ihnen an " + $user->getIdentity() + " gesandt haben.");
                 } else
                 {
+                    // Fetch the credentials from the form.
                     $password = $form->get('password')->getValue();
                     $identity = $form->get('identity')->getValue();
 
-                    $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-                    $authenticationService->getAdapter()->setCredentials($identity, $password);
+                    // Pass the credentials to the authentication adapter.
+                    $this->getAuthService()->getAdapter()->setCredentials($identity, $password);
 
+                    // Attempt to authenticate.
                     $result = $authenticationService->authenticate();
 
+                    // Check the authentication result.
                     $code = $result->getCode();
                     if ($code == Result::SUCCESS)
                     {
+                        // The authentication was successfully. Redirect the user to his profile.
                         return $this->redirect()->toRoute('user/profile');
                     } else
                     {
+                        // The provied credentials do not match.
                         $this->flashMessenger()->addMessage("Die E-Mail und/oder das Passwort ist falsch.");
 
                         // Hack, hack hack...
@@ -61,15 +79,22 @@ class UserController extends AbstractActionController
                 }
             }
             {
+                // The form data was not valid.
                 $this->flashMessenger()->addMessage('Bitte geben Sie Ihre E-Mail und das Passwort ein, um sich einzuloggen.');
             }
         }
 
+        // Return the login form.
         return new ViewModel(array(
             'form' => $form,
         ));
     }
 
+    /**
+     * Action invoked by route /user/logout.
+     * 
+     * Logout.
+     */
     public function logoutAction()
     {
         $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
@@ -81,33 +106,74 @@ class UserController extends AbstractActionController
         return $this->redirect()->toRoute('home');
     }
 
+    /**
+     * Action invoked by route /user/manage.
+     * 
+     * @return ViewModel
+     */
     public function manageAction()
     {
-        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-        $users = $userMapper->findAll();
+        $users = $this->getUserMapper()->findAll();
 
         return new ViewModel(array(
             'users' => $users));
     }
 
+    /**
+     * Action invoked by route /user/profile.
+     * 
+     * @return ViewModel
+     */
     public function profileAction()
     {
-        return new ViewModel(array());
+        return new ViewModel(array(
+            'user' => $this->getAuthService()->getIdentity(),
+        ));
     }
 
+    /**
+     * Action invoked by route /user/edit[/:id]
+     * 
+     * Renders a modal dialog that allows to edit a user. The rendered output
+     * is then returned in a JSON string. If no id is given, the edit form
+     * is populated with the current authenticated user. Otherwise with the user found
+     * by the given id (only allowed with administrator role).
+     * 
+     * @return JsonModel
+     */
     public function editAction()
     {
+        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         $editUserForm = $this->getServiceLocator()->get('edit_user_form');
+        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
 
+        // Get the correct user.
+        $user = null;
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
+        {
+            $id = $this->params()->fromRoute('id');
+            $user = $userMapper->findById($id);
+        } else
+        {
+            $user = $authenticationService->getIdentity();
+        }
+
+        // Bind the user to the edit form.
+        $editUserForm->bind($user);
+
+        // Render the modal dialog.
         $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
         $editUserModel = new ViewModel(array('form' => $editUserForm));
         $editUserModel->setTemplate('editUserModal');
         $editUserModal = $renderer->render($editUserModel);
 
+        // Holds the error messages of the form (used by JavaScript).
         $messages = array();
+        
         $request = $this->getRequest();
         if ($request->isPost())
         {
+            // Fetch the posted data.
             $formdata = array();
             $ajaxdata = \Zend\Json\Json::decode($request->getContent(), \Zend\Json\Json::TYPE_ARRAY);
             foreach ($ajaxdata as $value)
@@ -115,19 +181,28 @@ class UserController extends AbstractActionController
                 $formdata[$value['name']] = $value['value'];
             }
 
+            // Populate the form with the fetched data.
             $editUserForm->setData($formdata);
+            
+            // Validate the form.
             if ($editUserForm->isValid())
             {
-                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
                 $editedUser = $editUserForm->getData();
 
+                // Update the password if it was changed.
                 if ($editedUser->getPassword())
                 {
                     $passwordService = $this->getServiceLocator()->get('User\Service\UserPasswordServiceInterface');
                     $passwordService->updatePassword($editedUser, $editedUser->getPassword());
                 }
 
-                $userMapper->save($editedUser);
+                // The user is identified by a hidden id field in the form. Ensure that a normal user
+                // can not edit another user by changing the id of the hidden field.
+                $authenticatedUserId = $authenticationService->getIdentity()->getId();
+                if ($authenticatedUserId == $editedUser->getId() || $this->isAllowed('administrator'))
+                {
+                    $userMapper->save($editedUser);
+                }
             }
         } else
         {
@@ -147,14 +222,14 @@ class UserController extends AbstractActionController
         return new JsonModel(array(
             'success' => $messages ? false : true,
             'messages' => $messages,
-            'form' => $editUserModal,
+            'modal' => $editUserModal,
         ));
     }
 
     public function editAvatarAction()
     {
-        $closeRoute = '/user/edit';
-        $avatarRoute = '/user/avatar';
+        $closeUrl = '';
+        $avatarUrl = '';
 
         $user = null;
 
@@ -163,12 +238,16 @@ class UserController extends AbstractActionController
             $id = $this->params()->fromRoute('id');
             $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
             $user = $userMapper->findById($id);
-            
-            $closeRoute = '/user/manage';
-            $avatarRoute = '/user/avatar/' . $user->getId();
+
+            $closeUrl = $this->url()->fromRoute('user/manage');
+            $avatarUrl = $this->url()->fromRoute('user/avatar', array('id' => $user->getId()));
         } else
         {
+            $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
             $user = $authenticationService->getIdentity();
+
+            $closeUrl = $this->url()->fromRoute('user/profile');
+            $avatarUrl = $this->url()->fromRoute('user/avatar');
         }
 
         $form = $this->getServiceLocator()->get('edit_avatar_form');
@@ -213,18 +292,27 @@ class UserController extends AbstractActionController
                     $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
                     $userMapper->save($user);
                 }
-            }else{
-                 \Zend\Debug\Debug::dump($adapter->getMessages());
+            } else
+            {
+                \Zend\Debug\Debug::dump($adapter->getMessages());
             }
         }
 
         return new ViewModel(array(
-            'avatarRoute' => $avatarRoute,
-            'closeRoute' => $closeRoute,
+            'avatarUrl' => $avatarUrl,
+            'closeUrl' => $closeUrl,
             'form' => $form,
         ));
     }
 
+    /**
+     * Action invoked by route /user/avatar[/:id]
+     * 
+     * Shows the avatar of the authenticated user with php fpassthru. If the id is given,
+     * the avatar of the user with the given id is shown (only allowed with administrator role).
+     * 
+     * @return ViewModel
+     */
     public function avatarAction()
     {
         $avatarDir = $this->getAvatarBaseDir() . '\\avatar-placeholder.jpg';
@@ -233,12 +321,10 @@ class UserController extends AbstractActionController
         if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
         {
             $id = $this->params()->fromRoute('id');
-            $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-            $user = $userMapper->findById($id);
+            $user = $this->getUserMapper()->findById($id);
         } else
         {
-            $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-            $user = $authenticationService->getIdentity();
+            $user = $this->getAuthService()->getIdentity();
         }
 
         if ($user->getAvatar() && file_exists($this->getAvatarBaseDir() . '\\' . $user->getAvatar()))
@@ -319,6 +405,26 @@ class UserController extends AbstractActionController
     protected function getAvatarBaseDir()
     {
         return dirname(__DIR__) . '\..\..\avatars';
+    }
+
+    protected function getUserMapper()
+    {
+        if (!$this->userMapper)
+        {
+            $this->userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+        }
+
+        return $this->userMapper;
+    }
+
+    protected function getAuthService()
+    {
+        if (!$this->authenticationService)
+        {
+            $this->authenticationService = $this->getServiceLocator()->get('user_authentication_service');
+        }
+
+        return $this->authenticationService;
     }
 
 }
