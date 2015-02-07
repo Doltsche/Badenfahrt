@@ -41,6 +41,7 @@ class RegisterUserFilter extends InputFilter
         $this->add(array(
             'name' => 'identity',
             'required' => true,
+            'allowEmpty' => false,
             'validators' => array(
                 array(
                     'name' => 'EmailAddress',
@@ -52,6 +53,7 @@ class RegisterUserFilter extends InputFilter
         $this->add(array(
             'name' => 'password',
             'required' => true,
+            'allowEmpty' => false,
             'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
@@ -66,6 +68,7 @@ class RegisterUserFilter extends InputFilter
         $this->add(array(
             'name' => 'passwordVerify',
             'required' => true,
+            'allowEmpty' => false,
             'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
@@ -81,6 +84,7 @@ class RegisterUserFilter extends InputFilter
         $this->add(array(
             'name' => 'firstname',
             'required' => true,
+            'allowEmpty' => false,
             'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
@@ -96,6 +100,7 @@ class RegisterUserFilter extends InputFilter
         $this->add(array(
             'name' => 'lastname',
             'required' => true,
+            'allowEmpty' => false,
             'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
@@ -111,6 +116,7 @@ class RegisterUserFilter extends InputFilter
         $this->add(array(
             'name' => 'streetAndNr',
             'required' => true,
+            'allowEmpty' => false,
             'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
@@ -127,11 +133,8 @@ class RegisterUserFilter extends InputFilter
             'name' => 'postalCode',
             'required' => true,
             'allowEmpty' => false,
-            'filters' => array(array('name' => 'Digits')),
+            'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
-                array(
-                    'name' => 'Digits',
-                ),
                 array(
                     'name' => 'StringLength',
                     'options' => array(
@@ -160,18 +163,15 @@ class RegisterUserFilter extends InputFilter
 
         $this->add(array(
             'name' => 'phoneNumber',
-            'required' => false,
-            'allowEmpty' => true,
-            'filters' => array(array('name' => 'Digits')),
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
-                array(
-                    'name' => 'Digits',
-                ),
                 array(
                     'name' => 'StringLength',
                     'options' => array(
                         'min' => 7,
-                        'max' => 13,
+                        'max' => 20,
                     ),
                 )
             ),

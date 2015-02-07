@@ -70,7 +70,7 @@ class RegisterController extends AbstractActionController
             $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface');
             $userMailService->sendConfirmationRequest($user);
         }
-        
+
         // Redirect to the login page.
         return $this->redirect()->toRoute('user');
     }
@@ -89,8 +89,9 @@ class RegisterController extends AbstractActionController
 
             // Set state for confirmed user.
             $user->setState(1);
-
             $userMapper->save($user);
+
+            $this->flashMessenger()->addSuccessMessage("Ihre E-Mail wurde erfolgreich bestätigt. Sie können sich jetzt einloggen.");
         }
 
         return $this->redirect()->toRoute('user');

@@ -83,18 +83,24 @@ return array(
                     'edit' => array(
                         'type' => 'literal',
                         'options' => array(
-                            'route' => '/edit',
+                            'route' => '/edit[/:id]',
                             'defaults' => array(
                                 'action' => 'edit',
+                            ),
+                            'constraints' => array(
+                                'id' => '[1-9]\d*',
                             ),
                         ),
                     ),
                     'editavatar' => array(
-                        'type' => 'literal',
+                        'type' => 'segment',
                         'options' => array(
-                            'route' => '/editavatar',
+                            'route' => '/editavatar[/:id]',
                             'defaults' => array(
                                 'action' => 'editavatar',
+                            ),
+                            'constraints' => array(
+                                'id' => '[1-9]\d*',
                             ),
                         ),
                     ),
@@ -116,33 +122,6 @@ return array(
                             'route' => '/manage',
                             'defaults' => array(
                                 'action' => 'manage',
-                            ),
-                        ),
-                        'may_terminate' => true,
-                        'child_routes' => array(
-                            'edit' => array(
-                                'type' => 'segment',
-                                'options' => array(
-                                    'route' => '/edit/:id',
-                                    'defaults' => array(
-                                        'action' => 'edit',
-                                    ),
-                                    'constraints' => array(
-                                        'id' => '[1-9]\d*',
-                                    ),
-                                ),
-                            ),
-                            'delete' => array(
-                                'type' => 'segment',
-                                'options' => array(
-                                    'route' => '/delete/:id',
-                                    'defaults' => array(
-                                        'action' => 'delete',
-                                    ),
-                                    'constraints' => array(
-                                        'id' => '[1-9]\d*',
-                                    ),
-                                ),
                             ),
                         ),
                     ),

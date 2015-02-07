@@ -22,28 +22,23 @@ class UserController extends AbstractActionController
     public function loginAction()
     {
         $request = $this->getRequest();
-        $loginForm = new LoginForm();
-        $loginMessage = null;
+        $form = new LoginForm();
 
         if ($request->isPost())
         {
-            $loginFailed = true;
-
-            $loginForm->setData($request->getPost());
-            if ($loginForm->isValid())
+            $form->setData($request->getPost());
+            if ($form->isValid())
             {
                 $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-                $user = $userMapper->findByIdentity($loginForm->get('identity')->getValue());
+                $user = $userMapper->findByIdentity($form->get('identity')->getValue());
                 if ($user && $user->getState() == 0)
                 {
                     $resendUrl = $this->url()->fromRoute('user/resendconfirmation', array('identity' => $user->getIdentity()));
-                    $loginMessage = "Bitte bestätigen Sie die E-Mail, die wir Ihnen zugesandt haben. "
-                            . "Klicken sie auf <a href=\"" . $resendUrl . "\">E-Mail erneut senden</a>, damit wir Ihnen die E-Mail "
-                            . "für die Bestätigung erneut zusenden.";
+                    $this->flashMessenger()->addMessage("Bitte bestätigen Sie die E-Mail, die wir Ihnen an " + $user->getIdentity() + " gesandt haben.");
                 } else
                 {
-                    $password = $loginForm->get('password')->getValue();
-                    $identity = $loginForm->get('identity')->getValue();
+                    $password = $form->get('password')->getValue();
+                    $identity = $form->get('identity')->getValue();
 
                     $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
                     $authenticationService->getAdapter()->setCredentials($identity, $password);
@@ -56,15 +51,22 @@ class UserController extends AbstractActionController
                         return $this->redirect()->toRoute('user/profile');
                     } else
                     {
-                        $loginMessage = "Der Benutzername und/oder das Passwort ist falsch.";
+                        $this->flashMessenger()->addMessage("Die E-Mail und/oder das Passwort ist falsch.");
+
+                        // Hack, hack hack...
+                        return new ViewModel(array(
+                            'form' => $form,
+                        ));
                     }
                 }
+            }
+            {
+                $this->flashMessenger()->addMessage('Bitte geben Sie Ihre E-Mail und das Passwort ein, um sich einzuloggen.');
             }
         }
 
         return new ViewModel(array(
-            'loginForm' => $loginForm,
-            'loginMessage' => $loginMessage,
+            'form' => $form,
         ));
     }
 
@@ -90,14 +92,7 @@ class UserController extends AbstractActionController
 
     public function profileAction()
     {
-        $request = $this->getRequest();
-
-        if (!$request->isXmlHttpRequest())
-        {
-            return new ViewModel(array());
-        }
-
-        return $this->editAction();
+        return new ViewModel(array());
     }
 
     public function editAction()
@@ -158,6 +153,24 @@ class UserController extends AbstractActionController
 
     public function editAvatarAction()
     {
+        $closeRoute = '/user/edit';
+        $avatarRoute = '/user/avatar';
+
+        $user = null;
+
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
+        {
+            $id = $this->params()->fromRoute('id');
+            $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+            $user = $userMapper->findById($id);
+            
+            $closeRoute = '/user/manage';
+            $avatarRoute = '/user/avatar/' . $user->getId();
+        } else
+        {
+            $user = $authenticationService->getIdentity();
+        }
+
         $form = $this->getServiceLocator()->get('edit_avatar_form');
 
         $request = $this->getRequest();
@@ -181,16 +194,21 @@ class UserController extends AbstractActionController
 
             if ($adapter->isValid())
             {
-                $adapter->setDestination($this->getAvatarBaseDir());
+                $newAvatarFileName = substr(md5(uniqid(mt_rand(), true)), 0, 16) . '.jpg';
+                $newAvatarPath = $this->getAvatarBaseDir() . DIRECTORY_SEPARATOR . $newAvatarFileName;
+
+                $adapter->addFilter('File\Rename', array(
+                    'target' => $newAvatarPath,
+                    'overwrite' => true));
+
                 if ($adapter->receive($avatarFileName))
                 {
-                    $avatarPath = $this->getAvatarBaseDir() . '\\' . $avatarFileName;
-                    $resizedAvatar = $this->resizeImage($avatarPath, 130, 130);
-                    imagejpeg($resizedAvatar, $avatarPath);
+                    $resizedAvatar = $this->resizeImage($newAvatarPath, 130, 130);
+                    imagejpeg($resizedAvatar, $newAvatarPath);
 
                     $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-                    $user = $authenticationService->getIdentity();
-                    $user->setAvatar($avatarFileName);
+
+                    $user->setAvatar($newAvatarFileName);
 
                     $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
                     $userMapper->save($user);
@@ -199,6 +217,8 @@ class UserController extends AbstractActionController
         }
 
         return new ViewModel(array(
+            'avatarRoute' => $avatarRoute,
+            'closeRoute' => $closeRoute,
             'form' => $form,
         ));
     }

@@ -15,6 +15,8 @@ abstract class UserFormBase extends Form
         $this->setHydrator(new ClassMethods(false));
         $this->setObject(new User());
         
+        $element = new \Zend\Form\Element\Text();
+        
         $this->add(array(
             'type' => 'hidden',
             'name' => 'id',

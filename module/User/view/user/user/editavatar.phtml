@@ -9,7 +9,7 @@
 <div class="row ">
     <div class="row-same-height">
         <div class="col-xs-2 col-xs-height">
-            <img src="<?php echo $this->basePath() . '/user/avatar' ?>" alt="avatar" />
+            <img src="<?php echo $this->url($this->avatarRoute); ?>" alt="avatar" />
         </div>
         <div class="col-xs-6 col-xs-height col-top">
             <?php
@@ -39,7 +39,7 @@
             echo $this->form()->closeTag($this->form);
             ?>
 
-            <a class="btn btn-default" href="/user/profile">Schliessen</a>
+            <a class="btn btn-default" href="<?php echo $this->url($this->closeRoute); ?>">Schliessen</a>
         </div>
     </div>
 </div>
