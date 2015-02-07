@@ -20,7 +20,7 @@ if ($this->runModal) {
 
 <div class="container">
     <p id="profile-avatar"><img src="<?php echo $this->basePath() . '/user/avatar' ?>" 
-            alt="avatar"   /></p>
+                                alt="avatar"   /></p>
     <p id="profile-avatar" class="lead">
         &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $user->getIdentity(); ?></p>
 
@@ -50,4 +50,14 @@ if ($this->runModal) {
     </p>
 
 </div>
+
+
+<div class="container">
+    <button type="button" class="btn btn-danger" onclick="location.href='/user/delete'">Anmeldung l&ouml;schen
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+    </button>
+</div>
+
+
+
 <div id="profilemodal"></div>
