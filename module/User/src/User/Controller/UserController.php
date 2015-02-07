@@ -58,7 +58,7 @@ class UserController extends AbstractActionController
                     $this->getAuthService()->getAdapter()->setCredentials($identity, $password);
 
                     // Attempt to authenticate.
-                    $result = $authenticationService->authenticate();
+                    $result = $this->getAuthService()->authenticate();
 
                     // Check the authentication result.
                     $code = $result->getCode();
@@ -97,10 +97,9 @@ class UserController extends AbstractActionController
      */
     public function logoutAction()
     {
-        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-        if ($authenticationService->hasIdentity())
+        if ($this->getAuthService()->hasIdentity())
         {
-            $authenticationService->clearIdentity();
+            $this->getAuthService()->clearIdentity();
         }
 
         return $this->redirect()->toRoute('home');
@@ -143,19 +142,17 @@ class UserController extends AbstractActionController
      */
     public function editAction()
     {
-        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         $editUserForm = $this->getServiceLocator()->get('edit_user_form');
-        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
 
         // Get the correct user.
         $user = null;
         if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
         {
             $id = $this->params()->fromRoute('id');
-            $user = $userMapper->findById($id);
+            $user = $this->getUserMapper()->findById($id);
         } else
         {
-            $user = $authenticationService->getIdentity();
+            $user = $this->getAuthService()->getIdentity();
         }
 
         // Bind the user to the edit form.
@@ -198,10 +195,10 @@ class UserController extends AbstractActionController
 
                 // The user is identified by a hidden id field in the form. Ensure that a normal user
                 // can not edit another user by changing the id of the hidden field.
-                $authenticatedUserId = $authenticationService->getIdentity()->getId();
+                $authenticatedUserId = $this->getAuthService()->getIdentity()->getId();
                 if ($authenticatedUserId == $editedUser->getId() || $this->isAllowed('administrator'))
                 {
-                    $userMapper->save($editedUser);
+                    $this->getUserMapper()->save($editedUser);
                 }
             }
         } else
@@ -236,15 +233,13 @@ class UserController extends AbstractActionController
         if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
         {
             $id = $this->params()->fromRoute('id');
-            $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-            $user = $userMapper->findById($id);
+            $user = $this->getUserMapper()->findById($id);
 
             $closeUrl = $this->url()->fromRoute('user/manage');
             $avatarUrl = $this->url()->fromRoute('user/avatar', array('id' => $user->getId()));
         } else
         {
-            $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-            $user = $authenticationService->getIdentity();
+            $user = $this->getAuthService()->getIdentity();
 
             $closeUrl = $this->url()->fromRoute('user/profile');
             $avatarUrl = $this->url()->fromRoute('user/avatar');
@@ -285,12 +280,8 @@ class UserController extends AbstractActionController
                     $resizedAvatar = $this->resizeImage($newAvatarPath, 130, 130);
                     imagejpeg($resizedAvatar, $newAvatarPath);
 
-                    $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-
                     $user->setAvatar($newAvatarFileName);
-
-                    $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-                    $userMapper->save($user);
+                    $this->getUserMapper()->save($user);
                 }
             } else
             {
@@ -351,14 +342,10 @@ class UserController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('id');
 
-        $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
-        $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
-
-        $user = $userMapper->findById($id);
-
-        if ($user && $user->getId() != $authenticationService->getIdentity()->getId())
+        $user = $this->getUserMapper()->findById($id);
+        if ($user && $user->getId() != $this->getAuthService()->getIdentity()->getId())
         {
-            $userMapper->remove($user);
+            $this->getUserMapper()->remove($user);
         }
 
         return $this->redirect()->toRoute('user/manage');
