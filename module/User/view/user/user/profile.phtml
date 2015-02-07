@@ -4,7 +4,6 @@
 
 <?php
 $user = $this->userIdentity();
-$personal = $user->getPersonal();
 
 if ($this->runModal)
 {
@@ -32,10 +31,10 @@ if ($this->runModal)
 
 <h2>Persönliche Angaben</h2>
 <p class="lead">
-    <?php echo $personal->getFirstname() . ' ' . $personal->getLastname(); ?><br>
-    <?php echo $personal->getStreetAndNr(); ?><br>
-    <?php echo $personal->getPostalCode() . ' ' . $personal->getCity(); ?><br><br>
-    Telefon: <?php echo $personal->getPhone(); ?>
+    <?php echo $user->getFirstname() . ' ' . $user->getLastname(); ?><br>
+    <?php echo $user->getStreetAndNr(); ?><br>
+    <?php echo $user->getPostalCode() . ' ' . $user->getCity(); ?><br><br>
+    Telefon: <?php echo $user->getPhone(); ?>
 </p>
 
 <div id="profilemodal"></div>

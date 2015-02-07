@@ -18,7 +18,7 @@ class RegisterUserFilter extends InputFilter
     protected $userMapper;
 
     public function __construct($userMapper)
-    {
+    {   
         $this->userMapper = $userMapper;
 
         $this->add(array(
@@ -27,6 +27,7 @@ class RegisterUserFilter extends InputFilter
             'filters' => array(array('name' => 'StringTrim')),
             'validators' => array(
                 array(
+                    'locale' => 'de',
                     'name' => 'StringLength',
                     'options' => array(
                         'min' => 3,
@@ -76,5 +77,105 @@ class RegisterUserFilter extends InputFilter
                 new PasswordVerifyValidator()
             ),
         ));
+
+        $this->add(array(
+            'name' => 'firstname',
+            'required' => true,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'lastname',
+            'required' => true,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'streetAndNr',
+            'required' => true,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'postalCode',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'Digits')),
+            'validators' => array(
+                array(
+                    'name' => 'Digits',
+                ),
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 10,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'city',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'phoneNumber',
+            'required' => false,
+            'allowEmpty' => true,
+            'filters' => array(array('name' => 'Digits')),
+            'validators' => array(
+                array(
+                    'name' => 'Digits',
+                ),
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 7,
+                        'max' => 13,
+                    ),
+                )
+            ),
+        ));
     }
+
 }

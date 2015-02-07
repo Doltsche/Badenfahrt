@@ -22,20 +22,7 @@ return array(
                             'route' => '/register',
                             'defaults' => array(
                                 'controller' => 'User\Controller\Register',
-                                'action' => 'registerUser',
-                            ),
-                        ),
-                        'may_terminate' => true,
-                        'child_routes' => array(
-                            'personal' => array(
-                                'type' => 'literal',
-                                'options' => array(
-                                    'route' => '/personal',
-                                    'defaults' => array(
-                                        'controller' => 'User\Controller\Register',
-                                        'action' => 'registerPersonal',
-                                    ),
-                                ),
+                                'action' => 'register',
                             ),
                         ),
                     ),
@@ -55,6 +42,19 @@ return array(
                             'defaults' => array(
                                 'controller' => 'User\Controller\Register',
                                 'action' => 'confirm',
+                            ),
+                            'constraints' => array(
+                                'token' => '[a-zA-Z0-9_-]+',
+                            ),
+                        ),
+                    ),
+                    'resendconfirmation' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/resendconfirmation/:identity',
+                            'defaults' => array(
+                                'controller' => 'User\Controller\Register',
+                                'action' => 'resendConfirmation',
                             ),
                             'constraints' => array(
                                 'token' => '[a-zA-Z0-9_-]+',
@@ -174,7 +174,6 @@ return array(
         'factories' => array(
             'User\Mapper\UserMapperInterface' => 'User\Mapper\Factory\UserMapperFactory',
             'User\Mapper\RoleMapperInterface' => 'User\Mapper\Factory\RoleMapperFactory',
-            'User\Mapper\PersonalMapperInterface' => 'User\Mapper\Factory\PersonalMapperFactory',
             'User\Authentication\IdentityProvider' => 'User\Factory\IdentityProviderFactory',
             'User\Service\UserPasswordServiceInterface' => 'User\Service\Factory\UserPasswordServiceFactory',
             'User\Service\UserMailServiceInterface' => 'User\Service\Factory\UserMailServiceFactory',
@@ -182,7 +181,6 @@ return array(
             'register_user_form' => 'User\Form\Factory\RegisterUserFormFactory',
             'edit_user_form' => 'User\Form\Factory\EditUserFormFactory',
             'edit_avatar_form' => 'User\Form\Factory\EditAvatarFormFactory',
-            'register_personal_form' => 'User\Form\Factory\RegisterPersonalFormFactory',
         )
     ),
     'view_helpers' => array(
@@ -238,13 +236,13 @@ return array(
         ),
         'guards' => array(
             'BjyAuthorize\Guard\Controller' => array(
-                array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user', 'administrator')),
+                array('controller' => 'Application\Controller\Application', array('action' => 'index'), 'roles' => array('guest', 'user')),
                 array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('user')),
                 array('controller' => 'User\Controller\User', 'action' => 'test', 'roles' => array('guest', 'user')),
                 array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array()),
-                array('controller' => 'User\Controller\Register', 'action' => 'registerUser', 'roles' => array('guest')),
-                array('controller' => 'User\Controller\Register', 'action' => 'registerPersonal', 'roles' => array('registered')),
+                array('controller' => 'User\Controller\Register', 'action' => 'register', 'roles' => array('guest')),
+                array('controller' => 'User\Controller\Register', 'action' => 'resendConfirmation', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\Register', 'action' => 'confirm', 'roles' => array('guest', 'registered')),
                 array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user')),
                 array('controller' => 'User\Controller\User', 'action' => 'editavatar', 'roles' => array('user')),

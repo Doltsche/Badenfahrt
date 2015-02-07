@@ -7,11 +7,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Authentication\Result;
 use User\Form\LoginForm;
 use Zend\File\Transfer\Adapter\Http as HttpAdapter;
-use User\Form\EditForm;
 use Zend\Validator\File\Size;
 use Zend\Validator\File\MimeType;
-use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Resolver;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -26,7 +23,7 @@ class UserController extends AbstractActionController
     {
         $request = $this->getRequest();
         $loginForm = new LoginForm();
-        $loginFailed = false;
+        $loginMessage = null;
 
         if ($request->isPost())
         {
@@ -35,7 +32,15 @@ class UserController extends AbstractActionController
             $loginForm->setData($request->getPost());
             if ($loginForm->isValid())
             {
-                try
+                $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
+                $user = $userMapper->findByIdentity($loginForm->get('identity')->getValue());
+                if ($user && $user->getState() == 0)
+                {
+                    $resendUrl = $this->url()->fromRoute('user/resendconfirmation', array('identity' => $user->getIdentity()));
+                    $loginMessage = "Bitte bestätigen Sie die E-Mail, die wir Ihnen zugesandt haben. "
+                            . "Klicken sie auf <a href=\"" . $resendUrl . "\">E-Mail erneut senden</a>, damit wir Ihnen die E-Mail "
+                            . "für die Bestätigung erneut zusenden.";
+                } else
                 {
                     $password = $loginForm->get('password')->getValue();
                     $identity = $loginForm->get('identity')->getValue();
@@ -44,31 +49,22 @@ class UserController extends AbstractActionController
                     $authenticationService->getAdapter()->setCredentials($identity, $password);
 
                     $result = $authenticationService->authenticate();
-                } catch (Exception $ex)
-                {
-                    $result = Result::FAILURE_UNCATEGORIZED;
-                }
 
-                $code = $result->getCode();
-                if ($code == Result::SUCCESS)
-                {
-                    if ($authenticationService->getIdentity()->getState() == 0)
+                    $code = $result->getCode();
+                    if ($code == Result::SUCCESS)
                     {
-                        // TODO
-                        return $this->redirect()->toRoute('user', array('action' => 'confirmPrompt'), array(), true);
-                    } else if ($authenticationService->getIdentity()->getState() == 1)
+                        return $this->redirect()->toRoute('user/profile');
+                    } else
                     {
-                        return $this->redirect()->toRoute('user/register/personal');
+                        $loginMessage = "Der Benutzername und/oder das Passwort ist falsch.";
                     }
-
-                    return $this->redirect()->toRoute('user/profile');
                 }
             }
         }
 
         return new ViewModel(array(
             'loginForm' => $loginForm,
-            'loginFailed' => $loginFailed,
+            'loginMessage' => $loginMessage,
         ));
     }
 
@@ -87,10 +83,6 @@ class UserController extends AbstractActionController
     {
         $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         $users = $userMapper->findAll();
-//        foreach ($users as $user)
-//        {
-//            $user->getPersonal();
-//        }
 
         return new ViewModel(array(
             'users' => $users));
@@ -167,7 +159,7 @@ class UserController extends AbstractActionController
     public function editAvatarAction()
     {
         $form = $this->getServiceLocator()->get('edit_avatar_form');
-        
+
         $request = $this->getRequest();
         if ($request->isPost())
         {
@@ -192,6 +184,10 @@ class UserController extends AbstractActionController
                 $adapter->setDestination($this->getAvatarBaseDir());
                 if ($adapter->receive($avatarFileName))
                 {
+                    $avatarPath = $this->getAvatarBaseDir() . '\\' . $avatarFileName;
+                    $resizedAvatar = $this->resizeImage($avatarPath, 130, 130);
+                    imagejpeg($resizedAvatar, $avatarPath);
+
                     $authenticationService = $this->getServiceLocator()->get('user_authentication_service');
                     $user = $authenticationService->getIdentity();
                     $user->setAvatar($avatarFileName);
@@ -236,6 +232,11 @@ class UserController extends AbstractActionController
             header('Content-Length: ' . filesize($avatarDir));
             fpassthru($fp);
         }
+
+        $viewModel = new ViewModel(array());
+        $viewModel->setTerminal(true);
+
+        return $viewModel();
     }
 
     public function deleteAction()
@@ -255,9 +256,42 @@ class UserController extends AbstractActionController
         return $this->redirect()->toRoute('user/manage');
     }
 
-    protected function cropImage($file, $crop = array('x' => 0, 'y' => 0, 'w' => 100, 'h' => 100))
+    /**
+     * Resize an image and keep the proportions. 
+     * Source from http://php.net/manual/de/function.imagecopyresized.php.
+     * 
+     * @param string $filename
+     * @param integer $max_width
+     * @param integer $max_height
+     * 
+     * @return image
+     */
+    protected function resizeImage($filename, $max_width, $max_height)
     {
-        
+        list($orig_width, $orig_height) = getimagesize($filename);
+
+        $width = $orig_width;
+        $height = $orig_height;
+
+        // taller
+        if ($height > $max_height)
+        {
+            $width = ($max_height / $height) * $width;
+            $height = $max_height;
+        }
+
+        // wider
+        if ($width > $max_width)
+        {
+            $height = ($max_width / $width) * $height;
+            $width = $max_width;
+        }
+
+        $image_p = imagecreatetruecolor($width, $height);
+        $image = imagecreatefromjpeg($filename);
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height);
+
+        return $image_p;
     }
 
     protected function getAvatarBaseDir()

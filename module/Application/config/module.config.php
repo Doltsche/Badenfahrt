@@ -61,6 +61,7 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+            'translator2' => 'Zend\I18n\Translator\TranslatorServiceFactory',
         ),
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
@@ -71,7 +72,7 @@ return array(
         ),
     ),
     'translator' => array(
-        'locale' => 'en_US',
+        'locale' => 'de_DE',
         'translation_file_patterns' => array(
             array(
                 'type' => 'gettext',

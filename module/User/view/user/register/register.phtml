@@ -1,0 +1,45 @@
+<h2>Registrieren</h2>
+
+<?php if ($this->user): ?>
+    <div class="alert alert-info">
+        <a class="close" data-dismiss="alert" href="#">×</a>Sie haben sich erfolgreich registriert.
+        Bitte bestätigen Sie die E-Mail, die an <strong><?php echo $this->escapeHtml($user->getIdentity()); ?></strong> gesendet wurde, 
+        um die Registration abzuschliessen und Ihr Profil freizuschalten.
+    </div>
+<?php else: ?>
+    <div class="row">
+        <div class="col-xs-6">
+            <?php
+            $this->form->setAttribute('action', $this->url('user/register'));
+            $this->form->prepare();
+            echo $this->form()->openTag($this->form);
+            foreach ($this->form as $element)
+            {
+                if ($element instanceof Zend\Form\Element\Submit)
+                {
+                    echo '<div>';
+                    $element->setAttribute('class', 'btn btn-primary');
+                } else
+                {
+                    if ($element->getMessages())
+                    {
+                        echo '<div class="control-group has-error">';
+                    } else
+                    {
+                        echo '<div class="form-group">';
+                    }
+                    $label = $element->getOption('label');
+                    echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
+                    echo $this->formElementErrors($element);
+                    $element->setAttribute('class', 'form-control');
+                    $element->setAttribute('placeholder', $label);
+                }
+                echo $this->formElement($element);
+
+                echo '</div>';
+            }
+            echo $this->form()->closeTag($this->form);
+            ?>
+        </div>
+    </div>
+<?php endif ?>

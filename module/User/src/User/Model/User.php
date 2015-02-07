@@ -44,12 +44,6 @@ class User implements ProviderInterface
     protected $displayName;
 
     /**
-     * @ORM\OneToOne(targetEntity="User\Model\Personal")
-     * @ORM\JoinColumn(name="personal_id", referencedColumnName="id")
-     * */
-    protected $personal;
-
-    /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -76,6 +70,42 @@ class User implements ProviderInterface
      * )
      */
     protected $roles;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $firstname;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $lastname;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $streetAndNr;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100)
+     */
+    protected $city;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=4)
+     */
+    protected $postalCode;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=10)
+     */
+    protected $phone;
 
     /**
      * Initialies the roles variable.
@@ -125,16 +155,6 @@ class User implements ProviderInterface
     public function setDisplayName($displayName)
     {
         $this->displayName = $displayName;
-    }
-
-    public function getPersonal()
-    {
-        return $this->personal;
-    }
-
-    public function setPersonal($personal)
-    {
-        $this->personal = $personal;
     }
 
     public function getAvatar()
@@ -192,6 +212,66 @@ class User implements ProviderInterface
     public function addRole($role)
     {
         $this->roles[] = $role;
+    }
+
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+    }
+
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+    }
+
+    public function getStreetAndNr()
+    {
+        return $this->streetAndNr;
+    }
+
+    public function setStreetAndNr($streetAndNr)
+    {
+        $this->streetAndNr = $streetAndNr;
+    }
+
+    public function getPostalCode()
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode($postalCode)
+    {
+        $this->postalCode = $postalCode;
+    }
+
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    public function setCity($city)
+    {
+        $this->city = $city;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
     }
 
 }

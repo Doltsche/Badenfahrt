@@ -50,7 +50,8 @@ class Module
                 $simpleIdentityProvider->setAuthenticatedRole($config['authenticated_role']);
 
                 return $simpleIdentityProvider;
-            },);
+            },
+        );
     }
 
 }

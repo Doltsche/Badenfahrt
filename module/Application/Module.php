@@ -14,6 +14,8 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
+use Zend\I18n\Translator\Translator;
+use Zend\Validator\AbstractValidator;
 
 class Module
 {
@@ -22,10 +24,10 @@ class Module
 
     public function __construct()
     {
-        $logger = new Logger;
-        $logger->addWriter(new Stream(__DIR__ . '/../../log/error.log'));
-        
-        Logger::registerErrorHandler($logger);
+        $this->logger = new Logger;
+        $this->logger->addWriter(new Stream(__DIR__ . '/../../log/error.log'));
+
+        \Zend\Log\Logger::registerErrorHandler($this->logger);
     }
 
     public function onBootstrap(MvcEvent $e)
@@ -39,6 +41,11 @@ class Module
 
         // Handle the view render error (exception).
         $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER_ERROR, array($this, 'handleError'));
+
+        $translator = $e->getApplication()->getServiceManager()->get('translator2');
+        $translator->addTranslationFile('phpArray', __DIR__ . '\\..\..\\vendor\\zendframework\\zendframework\\resources\\languages\\de\\Zend_Validate.php', 'default', 'de_DE');
+
+        \Zend\Validator\AbstractValidator::setDefaultTranslator(new \Zend\Mvc\I18n\Translator($translator));
     }
 
     public function handleError(MvcEvent $e)

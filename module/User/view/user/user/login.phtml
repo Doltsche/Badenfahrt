@@ -1,16 +1,15 @@
 <h2 class="form-signin-heading">Bitte einloggen</h2>
 
-<?php if ($this->loginFailed): ?>
-    <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
-        <a class="close" data-dismiss="alert" href="#">×</a>Benutzername und/oder Passwort ist falsch.
+<?php if ($this->loginMessage): ?>
+    <div class="alert alert-warning">
+        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->loginMessage; ?>
     </div>
 <?php endif ?>
 
 <div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-6">
         <?php
         $this->loginForm->setAttribute('action', $this->url('user'));
-        $this->loginForm->setAttribute('class', 'form-signin');
         $this->loginForm->prepare();
         echo $this->form()->openTag($this->loginForm);
         foreach ($this->loginForm as $element)
@@ -33,6 +32,5 @@
         }
         echo $this->form()->closeTag($this->loginForm);
         ?>
-
     </div>
 </div>
