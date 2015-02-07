@@ -31,7 +31,8 @@
                     $label = $element->getOption('label');
                     echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
                     echo $this->formElementErrors($element);
-                    $element->setAttribute('class', 'form-control');
+                    $element->setAttribute('class', 'btn btn-default btn-file');
+                    //$element->setAttribute('class', 'form-control');
                 }
                 echo $this->formElement($element);
                 echo '</div>';
