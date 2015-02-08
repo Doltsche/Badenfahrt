@@ -1,12 +1,19 @@
-function validateForm(formId) {
+function validateForm(url, formId) {
     $.ajax({
         type: 'POST',
-        url: '/user/edit',
+        url: url,
         data: JSON.stringify($('#' + formId).serializeArray()),
         dataType: 'json',
         contentType: "application/json",
         success: function (data) {
-            decorate(data);
+            if (data.persisted) {
+                $('#profilemodal').html('');
+                $(".modal-backdrop").remove();
+            } else {
+                $(".modal-backdrop").remove();
+                $('#profilemodal').html(data.modal);
+                $('.modal').modal({backdrop: 'static'});
+            }
         },
         error: function (xhr, textStatus, errorThrown) {
             $('#message').html('<div class="alert alert-danger" role="alert">\n\
@@ -15,29 +22,6 @@ function validateForm(formId) {
              Bitte versuchen Sie es später nocheinmal.</span></div>');
         }
     });
-}
-
-function decorate(data) {
-    var messageHtml = '';
-    if (data.success) {
-        location.reload();
-        return;
-    } else {
-        var msg = '';
-        jQuery.each(data.messages, function (i, val) {
-            // We could use the following line to add custom css to the elements:
-            // $("input[name=" + i + "]\"");
-            console.log(i + ': ' + val + '<br>');
-            msg += i + ': ' + val + '<br>';
-        });
-
-        messageHtml = '<div class="alert alert-danger" role="alert">\n\
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>\n\
-            <span class="sr-only">Error:</span>' + msg +
-                'Die Angaben sind Fehlerhaft.\n\
-        </div>';
-    }
-    $('#message').html(messageHtml);
 }
 
 function showForm(url) {

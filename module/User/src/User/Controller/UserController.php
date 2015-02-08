@@ -131,7 +131,7 @@ class UserController extends AbstractActionController
     }
 
     /**
-     * Action invoked by route /user/edit[/:id]
+     * Action invoked by route /user/renderUserEditModal[/:id]
      * 
      * Renders a modal dialog that allows to edit a user. The rendered output
      * is then returned in a JSON string. If no id is given, the edit form
@@ -140,9 +140,10 @@ class UserController extends AbstractActionController
      * 
      * @return JsonModel
      */
-    public function editAction()
+    public function renderUserEditModalAction()
     {
         $editUserForm = $this->getServiceLocator()->get('edit_user_form');
+        $persisted = false;
 
         // Get the correct user.
         $user = null;
@@ -158,15 +159,6 @@ class UserController extends AbstractActionController
         // Bind the user to the edit form.
         $editUserForm->bind($user);
 
-        // Render the modal dialog.
-        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-        $editUserModel = new ViewModel(array('form' => $editUserForm));
-        $editUserModel->setTemplate('editUserModal');
-        $editUserModal = $renderer->render($editUserModel);
-
-        // Holds the error messages of the form (used by JavaScript).
-        $messages = array();
-
         $request = $this->getRequest();
         if ($request->isPost())
         {
@@ -177,7 +169,7 @@ class UserController extends AbstractActionController
             {
                 $formdata[$value['name']] = $value['value'];
             }
-
+            
             // Populate the form with the fetched data.
             $editUserForm->setData($formdata);
 
@@ -200,25 +192,20 @@ class UserController extends AbstractActionController
                 {
                     $this->getUserMapper()->save($editedUser);
                 }
-            }
-        } else
-        {
-            $errors = $editUserForm->getMessages();
-            foreach ($errors as $key => $row)
-            {
-                if (!empty($row) && $key != 'submit')
-                {
-                    foreach ($row as $keyer => $rower)
-                    {
-                        $messages[$key][] = $rower;
-                    }
-                }
+                
+                // Ignore the fact that the user may not be persisted due to invalid authorization.
+                $persisted = true;
             }
         }
 
+        // Render the modal dialog.
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $editUserModel = new ViewModel(array('form' => $editUserForm));
+        $editUserModel->setTemplate('editUserModal');
+        $editUserModal = $renderer->render($editUserModel);
+
         return new JsonModel(array(
-            'success' => $messages ? false : true,
-            'messages' => $messages,
+            'persisted' => $persisted,
             'modal' => $editUserModal,
         ));
     }
@@ -351,7 +338,7 @@ class UserController extends AbstractActionController
     {
         $user = null;
         $redirectRoute = 'home';
-        
+
         if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
         {
             $id = $this->params()->fromRoute('id');

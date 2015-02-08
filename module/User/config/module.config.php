@@ -80,24 +80,24 @@ return array(
                             ),
                         ),
                     ),
-                    'edit' => array(
+                    'renderUserEditModal' => array(
                         'type' => 'segment',
                         'options' => array(
-                            'route' => '/edit[/:id]',
+                            'route' => '/renderUserEditModal[/:id]',
                             'defaults' => array(
-                                'action' => 'edit',
+                                'action' => 'renderUserEditModal',
                             ),
                             'constraints' => array(
                                 'id' => '[1-9]\d*',
                             ),
                         ),
                     ),
-                    'editavatar' => array(
+                    'editAvatar' => array(
                         'type' => 'segment',
                         'options' => array(
-                            'route' => '/editavatar[/:id]',
+                            'route' => '/editAvatar[/:id]',
                             'defaults' => array(
-                                'action' => 'editavatar',
+                                'action' => 'editAvatar',
                             ),
                             'constraints' => array(
                                 'id' => '[1-9]\d*',
@@ -231,8 +231,8 @@ return array(
                 array('controller' => 'User\Controller\User', 'action' => 'login', 'roles' => array('guest')),
                 array('controller' => 'User\Controller\User', 'action' => 'logout', 'roles' => array()),
                 array('controller' => 'User\Controller\User', 'action' => 'profile', 'roles' => array('user')),
-                array('controller' => 'User\Controller\User', 'action' => 'edit', 'roles' => array('user')),
-                array('controller' => 'User\Controller\User', 'action' => 'editavatar', 'roles' => array('user')),
+                array('controller' => 'User\Controller\User', 'action' => 'renderUserEditModal', 'roles' => array('user')),
+                array('controller' => 'User\Controller\User', 'action' => 'editAvatar', 'roles' => array('user')),
                 array('controller' => 'User\Controller\User', 'action' => 'delete', 'roles' => array('user')),
                 array('controller' => 'User\Controller\User', 'action' => 'avatar', 'roles' => array('user')),
                 array('controller' => 'User\Controller\User', 'action' => 'manage', 'roles' => array('administrator')),

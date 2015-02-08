@@ -98,7 +98,7 @@ class RegisterController extends AbstractActionController
 
         $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         $user = $userMapper->findByToken($token);
-        if ($user && $user->getState == 0)
+        if ($user && $user->getState() == 0)
         {
             // Give the user the user role.
             $roleMapper = $this->getServiceLocator()->get('User\Mapper\RoleMapperInterface');

@@ -32,9 +32,9 @@ if ($this->runModal) {
         </button>
 
         <ul role="menu" class="dropdown-menu">
-            <li role="presentation"><a role="menuitem" onclick="showForm('\\user\\edit');">Profil Daten</a></li>
+            <li role="presentation"><a role="menuitem" onclick="showForm('<?php echo $this->url('user/renderUserEditModal'); ?>');">Profil Daten</a></li>
             <li class="divider"></li>
-            <li role="presentation"><a role="menuitem" href="/user/editavatar">Avatar</a></li>
+            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editAvatar'); ?>">Avatar</a></li>
         </ul>
     </div>
 

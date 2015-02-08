@@ -30,7 +30,7 @@
                     </button>
 
                     <ul role="menu" class="dropdown-menu">
-                        <li role="presentation"><a role="menuitem" onclick="showForm('<?php echo $this->url('user/edit', array('id' => $user->getId())); ?>');">Profildaten Bearbeiten</a></li>
+                        <li role="presentation"><a role="menuitem" onclick="showForm('<?php echo $this->url('user/renderUserEditModal', array('id' => $user->getId())); ?>');">Profildaten Bearbeiten</a></li>
                         <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editavatar', array('id' => $user->getId())); ?>">Avatar Bearbeiten</a></li>
                         <li class="divider"></li>
                         <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/delete', array('id' => $user->getId())); ?>">Löschen</a></li>
