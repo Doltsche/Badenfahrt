@@ -16,8 +16,7 @@ use Zend\View\Model\JsonModel;
  *
  * @author Dev
  */
-class UserController extends AbstractActionController
-{
+class UserController extends AbstractActionController {
 
     protected $userMapper;
     protected $authenticationService;
@@ -29,27 +28,22 @@ class UserController extends AbstractActionController
      * 
      * @return ViewModel
      */
-    public function loginAction()
-    {
+    public function loginAction() {
         $request = $this->getRequest();
         $form = new LoginForm();
 
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             // Populate the form with the posted data.
             $form->setData($request->getPost());
 
             // Validate the form.
-            if ($form->isValid())
-            {
+            if ($form->isValid()) {
                 $user = $this->getUserMapper()->findByIdentity($form->get('identity')->getValue());
 
                 // Check if the authenticated user is allowed to login (did he confirm the email).
-                if ($user && $user->getState() == 0)
-                {
+                if ($user && $user->getState() == 0) {
                     $this->flashMessenger()->addMessage("Bitte bestätigen Sie die E-Mail, die wir Ihnen an " + $user->getIdentity() + " gesandt haben.");
-                } else
-                {
+                } else {
                     // Fetch the credentials from the form.
                     $password = $form->get('password')->getValue();
                     $identity = $form->get('identity')->getValue();
@@ -62,12 +56,10 @@ class UserController extends AbstractActionController
 
                     // Check the authentication result.
                     $code = $result->getCode();
-                    if ($code == Result::SUCCESS)
-                    {
+                    if ($code == Result::SUCCESS) {
                         // The authentication was successfully. Redirect the user to his profile.
                         return $this->redirect()->toRoute('user/profile');
-                    } else
-                    {
+                    } else {
                         // The provied credentials do not match.
                         $this->flashMessenger()->addWarningMessage("Die E-Mail und/oder das Passwort ist falsch.");
 
@@ -77,8 +69,7 @@ class UserController extends AbstractActionController
                         ));
                     }
                 }
-            }
-            {
+            } {
                 // The form data was not valid.
                 $this->flashMessenger()->addWarningMessage('Bitte geben Sie Ihre E-Mail und das Passwort ein, um sich einzuloggen.');
             }
@@ -95,10 +86,8 @@ class UserController extends AbstractActionController
      * 
      * Logout.
      */
-    public function logoutAction()
-    {
-        if ($this->getAuthService()->hasIdentity())
-        {
+    public function logoutAction() {
+        if ($this->getAuthService()->hasIdentity()) {
             $this->getAuthService()->clearIdentity();
         }
 
@@ -110,8 +99,7 @@ class UserController extends AbstractActionController
      * 
      * @return ViewModel
      */
-    public function manageAction()
-    {
+    public function manageAction() {
         $users = $this->getUserMapper()->findAll();
 
         return new ViewModel(array(
@@ -123,8 +111,7 @@ class UserController extends AbstractActionController
      * 
      * @return ViewModel
      */
-    public function profileAction()
-    {
+    public function profileAction() {
         return new ViewModel(array(
             'user' => $this->getAuthService()->getIdentity(),
         ));
@@ -140,41 +127,18 @@ class UserController extends AbstractActionController
      * 
      * @return JsonModel
      */
-    public function editAction()
-    {
+    public function editAction() {
         $editUserForm = $this->getServiceLocator()->get('edit_user_form');
-
-        // Get the correct user.
-        $user = null;
-        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
-        {
-            $id = $this->params()->fromRoute('id');
-            $user = $this->getUserMapper()->findById($id);
-        } else
-        {
-            $user = $this->getAuthService()->getIdentity();
-        }
-
-        // Bind the user to the edit form.
-        $editUserForm->bind($user);
-
-        // Render the modal dialog.
-        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-        $editUserModel = new ViewModel(array('form' => $editUserForm));
-        $editUserModel->setTemplate('editUserModal');
-        $editUserModal = $renderer->render($editUserModel);
 
         // Holds the error messages of the form (used by JavaScript).
         $messages = array();
 
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             // Fetch the posted data.
             $formdata = array();
             $ajaxdata = \Zend\Json\Json::decode($request->getContent(), \Zend\Json\Json::TYPE_ARRAY);
-            foreach ($ajaxdata as $value)
-            {
+            foreach ($ajaxdata as $value) {
                 $formdata[$value['name']] = $value['value'];
             }
 
@@ -182,13 +146,11 @@ class UserController extends AbstractActionController
             $editUserForm->setData($formdata);
 
             // Validate the form.
-            if ($editUserForm->isValid())
-            {
+            if ($editUserForm->isValid()) {
                 $editedUser = $editUserForm->getData();
 
                 // Update the password if it was changed.
-                if ($editedUser->getPassword())
-                {
+                if ($editedUser->getPassword()) {
                     $passwordService = $this->getServiceLocator()->get('User\Service\UserPasswordServiceInterface');
                     $passwordService->updatePassword($editedUser, $editedUser->getPassword());
                 }
@@ -196,25 +158,38 @@ class UserController extends AbstractActionController
                 // The user is identified by a hidden id field in the form. Ensure that a normal user
                 // can not edit another user by changing the id of the hidden field.
                 $authenticatedUserId = $this->getAuthService()->getIdentity()->getId();
-                if ($authenticatedUserId == $editedUser->getId() || $this->isAllowed('administrator'))
-                {
+                if ($authenticatedUserId == $editedUser->getId() || $this->isAllowed('administrator')) {
                     $this->getUserMapper()->save($editedUser);
                 }
-            }
-        } else
-        {
-            $errors = $editUserForm->getMessages();
-            foreach ($errors as $key => $row)
-            {
-                if (!empty($row) && $key != 'submit')
-                {
-                    foreach ($row as $keyer => $rower)
-                    {
-                        $messages[$key][] = $rower;
+            } else {
+                $errors = $editUserForm->getMessages();
+                foreach ($errors as $key => $row) {
+                    if (!empty($row) && $key != 'submit') {
+                        foreach ($row as $keyer => $rower) {
+                            $messages[$key][] = $rower;
+                        }
                     }
                 }
             }
+        } else {
+            // Get the correct user.
+            $user = null;
+            if ($this->isAllowed('administrator') && $this->params()->fromRoute('id')) {
+                $id = $this->params()->fromRoute('id');
+                $user = $this->getUserMapper()->findById($id);
+            } else {
+                $user = $this->getAuthService()->getIdentity();
+            }
+
+            // Bind the user to the edit form.
+            $editUserForm->bind($user);
         }
+
+        // Render the modal dialog.
+        $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $editUserModel = new ViewModel(array('form' => $editUserForm));
+        $editUserModel->setTemplate('editUserModal');
+        $editUserModal = $renderer->render($editUserModel);
 
         return new JsonModel(array(
             'success' => $messages ? false : true,
@@ -223,22 +198,19 @@ class UserController extends AbstractActionController
         ));
     }
 
-    public function editAvatarAction()
-    {
+    public function editAvatarAction() {
         $closeUrl = '';
         $avatarUrl = '';
 
         $user = null;
 
-        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
-        {
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id')) {
             $id = $this->params()->fromRoute('id');
             $user = $this->getUserMapper()->findById($id);
 
             $closeUrl = $this->url()->fromRoute('user/manage');
             $avatarUrl = $this->url()->fromRoute('user/avatar', array('id' => $user->getId()));
-        } else
-        {
+        } else {
             $user = $this->getAuthService()->getIdentity();
 
             $closeUrl = $this->url()->fromRoute('user/profile');
@@ -248,8 +220,7 @@ class UserController extends AbstractActionController
         $form = $this->getServiceLocator()->get('edit_avatar_form');
 
         $request = $this->getRequest();
-        if ($request->isPost())
-        {
+        if ($request->isPost()) {
             $avatarFile = $this->params()->fromFiles('avatar');
             $avatarFileName = $avatarFile['name'];
 
@@ -266,8 +237,7 @@ class UserController extends AbstractActionController
                 new Size(array('min' => 1024, 'max' => 51200,)),
             ));
 
-            if ($adapter->isValid())
-            {
+            if ($adapter->isValid()) {
                 $newAvatarFileName = substr(md5(uniqid(mt_rand(), true)), 0, 16) . '.jpg';
                 $newAvatarPath = $this->getAvatarBaseDir() . DIRECTORY_SEPARATOR . $newAvatarFileName;
 
@@ -275,18 +245,15 @@ class UserController extends AbstractActionController
                     'target' => $newAvatarPath,
                     'overwrite' => true));
 
-                if ($adapter->receive($avatarFileName))
-                {
+                if ($adapter->receive($avatarFileName)) {
                     $resizedAvatar = $this->resizeImage($newAvatarPath, 130, 130);
                     imagejpeg($resizedAvatar, $newAvatarPath);
 
                     $user->setAvatar($newAvatarFileName);
                     $this->getUserMapper()->save($user);
                 }
-            } else
-            {
-                foreach ($adapter->getMessages() as $message)
-                {
+            } else {
+                foreach ($adapter->getMessages() as $message) {
                     $this->flashMessenger()->addErrorMessage($message);
                 }
             }
@@ -307,29 +274,24 @@ class UserController extends AbstractActionController
      * 
      * @return ViewModel
      */
-    public function avatarAction()
-    {
+    public function avatarAction() {
         $avatarDir = $this->getAvatarBaseDir() . '\\avatar-placeholder.jpg';
         $user = null;
 
-        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
-        {
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id')) {
             $id = $this->params()->fromRoute('id');
             $user = $this->getUserMapper()->findById($id);
-        } else
-        {
+        } else {
             $user = $this->getAuthService()->getIdentity();
         }
 
-        if ($user->getAvatar() && file_exists($this->getAvatarBaseDir() . '\\' . $user->getAvatar()))
-        {
+        if ($user->getAvatar() && file_exists($this->getAvatarBaseDir() . '\\' . $user->getAvatar())) {
             $avatarDir = $this->getAvatarBaseDir() . '\\' . $user->getAvatar();
         }
 
         $fp = fopen($avatarDir, 'rb');
         $size = getimagesize($avatarDir);
-        if ($size && $fp)
-        {
+        if ($size && $fp) {
             header('Content-Type: ' . $size['mime']);
             header('Content-Length: ' . filesize($avatarDir));
             fpassthru($fp);
@@ -347,24 +309,20 @@ class UserController extends AbstractActionController
      * Deletes the current authenticated user 
      * or the user found by the given id (only allowed with administrator role).
      */
-    public function deleteAction()
-    {
+    public function deleteAction() {
         $user = null;
         $redirectRoute = 'home';
-        
-        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
-        {
+
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id')) {
             $id = $this->params()->fromRoute('id');
             $user = $this->getUserMapper()->findById($id);
 
             $redirectRoute = 'user/manage';
-        } else
-        {
+        } else {
             $user = $this->getAuthService()->getIdentity();
         }
 
-        if ($user)
-        {
+        if ($user) {
             $this->getUserMapper()->remove($user);
         }
 
@@ -381,23 +339,20 @@ class UserController extends AbstractActionController
      * 
      * @return image
      */
-    protected function resizeImage($filename, $max_width, $max_height)
-    {
+    protected function resizeImage($filename, $max_width, $max_height) {
         list($orig_width, $orig_height) = getimagesize($filename);
 
         $width = $orig_width;
         $height = $orig_height;
 
         // taller
-        if ($height > $max_height)
-        {
+        if ($height > $max_height) {
             $width = ($max_height / $height) * $width;
             $height = $max_height;
         }
 
         // wider
-        if ($width > $max_width)
-        {
+        if ($width > $max_width) {
             $height = ($max_width / $width) * $height;
             $width = $max_width;
         }
@@ -409,25 +364,20 @@ class UserController extends AbstractActionController
         return $image_p;
     }
 
-    protected function getAvatarBaseDir()
-    {
+    protected function getAvatarBaseDir() {
         return dirname(__DIR__) . '\..\..\avatars';
     }
 
-    protected function getUserMapper()
-    {
-        if (!$this->userMapper)
-        {
+    protected function getUserMapper() {
+        if (!$this->userMapper) {
             $this->userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         }
 
         return $this->userMapper;
     }
 
-    protected function getAuthService()
-    {
-        if (!$this->authenticationService)
-        {
+    protected function getAuthService() {
+        if (!$this->authenticationService) {
             $this->authenticationService = $this->getServiceLocator()->get('user_authentication_service');
         }
 
