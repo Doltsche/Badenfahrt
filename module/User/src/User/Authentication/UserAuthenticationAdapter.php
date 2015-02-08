@@ -6,9 +6,7 @@ use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
 
 /**
- * Description of BlogAuthAdapter
- *
- * @author Dev
+ * The UserAuthenticationAdapter class.
  */
 class UserAuthenticationAdapter implements AdapterInterface
 {
@@ -16,22 +14,27 @@ class UserAuthenticationAdapter implements AdapterInterface
     protected $userMapper;
     protected $identity;
     protected $password;
-    protected $user;
     protected $passwordService;
 
+    /**
+     * Initializes a new instance of the UserAuthenticationAdapter class.
+     * 
+     * @param \User\Mapper\UserMapperInterface $userMapper
+     * @param \User\Service\UserPasswordServiceInterface $passwordService
+     */
     public function __construct($userMapper, $passwordService)
     {
         $this->userMapper = $userMapper;
         $this->passwordService = $passwordService;
     }
 
+    /**
+     * Authenticate by the set credentials.
+     * 
+     * @return Result
+     */
     public function authenticate()
     {
-        if ($this->user)
-        {
-            return new Result(Result::SUCCESS, $user->getId(), array());
-        }
-
         $user = $this->userMapper->findByIdentity($this->identity);
 
         if (!$user)
@@ -46,12 +49,13 @@ class UserAuthenticationAdapter implements AdapterInterface
 
         return new Result(Result::FAILURE_CREDENTIAL_INVALID, 0, array());
     }
-
-    public function setUser($user)
-    {
-        $this->user = $user;
-    }
-
+    
+    /**
+     * Set the login credentials.
+     * 
+     * @param string $identity
+     * @param string $password
+     */
     public function setCredentials($identity, $password)
     {
         $this->identity = $identity;

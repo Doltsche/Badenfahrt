@@ -9,13 +9,17 @@ use User\Authentication\UserAuthenticationAdapter;
 use User\Authentication\UserAuthenticationStorage;
 
 /**
- * Description of AuthenticationServiceFactory
- *
- * @author Dev
+ * The factory creates an instance of the AuthenticationService class.
  */
 class AuthenticationServiceFactory implements FactoryInterface
 {
 
+    /**
+     * Creates an instance of the RegisterUserForm class.
+     * 
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return AuthenticationService
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');

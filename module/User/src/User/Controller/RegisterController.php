@@ -7,16 +7,20 @@ use Zend\View\Model\ViewModel;
 use User\Model\User;
 
 /**
- * Description of UserController
- *
- * @author Dev
+ * The RegisterController class. Contains registration relevant actions.
  */
 class RegisterController extends AbstractActionController
 {
 
+    /**
+     * Action invoked by route /user/register.
+     * 
+     * Register a new user.
+     * 
+     * @return ViewModel
+     */
     public function registerAction()
     {
-        $success = false;
         $user = null;
 
         $form = $this->getServiceLocator()->get('register_user_form');

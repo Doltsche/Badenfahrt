@@ -8,15 +8,18 @@ use User\Form\Validator\IdentityUniqueValidator;
 use User\Form\Validator\DisplayNameUniqueValidator;
 
 /**
- * Description of RegisterFilter
- *
- * @author Dev
+ * The filter class for the register user form.
  */
 class RegisterUserFilter extends InputFilter
 {
 
     protected $userMapper;
 
+    /**
+     * Creates a new instance of the RegisterUserFilter class.
+     * 
+     * @param \User\Mapper\UserMapperInterface $userMapper
+     */
     public function __construct($userMapper)
     {   
         $this->userMapper = $userMapper;

@@ -6,13 +6,17 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Description of PostForm
- *
- * @author Dev
+ * The login form.
  */
 class LoginForm extends Form
 {
 
+    /**
+     * Creates a new instance of the LoginForm class.
+     * 
+     * @param string $name
+     * @param array $options
+     */
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);

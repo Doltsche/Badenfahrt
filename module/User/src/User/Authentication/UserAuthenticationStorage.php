@@ -1,7 +1,5 @@
 <?php
 
-// KOPIERT VON ZFC USER UND ANGEPASST
-
 namespace User\Authentication;
 
 use Zend\Authentication\Storage;
@@ -9,6 +7,12 @@ use Zend\Authentication\Storage\StorageInterface;
 use Zend\ServiceManager\ServiceManager;
 use ZfcUser\Mapper\UserInterface as UserMapper;
 
+/**
+ * Copied and modified from ZfcUser module.
+ * 
+ * This storage adapter only stores the id of the authenticated User object
+ * in the session and not the entire User object.
+ */
 class UserAuthenticationStorage implements Storage\StorageInterface
 {
 

@@ -8,13 +8,17 @@ use User\Form\EditUserForm;
 use User\Form\Filter\EditUserFilter;
 
 /**
- * Description of AuthenticationServiceFactory
- *
- * @author Dev
+ * The factory creates an instance of the EditUserForm class.
  */
 class EditUserFormFactory implements FactoryInterface
 {
 
+    /**
+     * Creates an instance of the EditUserForm class.
+     * 
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return EditUserForm
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
