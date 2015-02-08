@@ -22,9 +22,8 @@ class EditUserFormFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
-        $authenticationService = $serviceLocator->get('user_authentication_service');
         
-        $filter = new EditUserFilter($userMapper, $authenticationService);
+        $filter = new EditUserFilter($userMapper);
 
         $form = new EditUserForm();
         $form->setInputFilter($filter);

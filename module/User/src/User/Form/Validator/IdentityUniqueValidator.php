@@ -19,22 +19,20 @@ class IdentityUniqueValidator extends AbstractValidator
     );
     
     protected $userMapper;
-    protected $authenticationService;
 
-    public function __construct($userMapper, $authenticationService = null, array $options = array())
+    public function __construct($userMapper, array $options = array())
     {
         parent::__construct($options);
 
         $this->userMapper = $userMapper;
-        $this->authenticationService = $authenticationService;
     }
 
     public function isValid($value, $context = null)
     {
         $identity = null;
-        if ($this->authenticationService)
+        if (context['id'])
         {
-            $identity = $this->authenticationService->getIdentity();
+            $identity = $this->userMapper->findById(context['id']);
         }
 
         if (!$value)

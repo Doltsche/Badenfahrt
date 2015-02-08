@@ -20,7 +20,7 @@ class EditUserFilter extends InputFilter
      * @param \User\Mapper\UserMapperInterface $userMapper
      * @param \Zend\Authentication\AuthenticationService $authenticationService
      */
-    public function __construct($userMapper, $authenticationService)
+    public function __construct($userMapper)
     {
         $this->add(array(
             'name' => 'displayName',
@@ -34,7 +34,7 @@ class EditUserFilter extends InputFilter
                         'max' => 255,
                     ),
                 ),
-                new DisplayNameUniqueValidator($userMapper, $authenticationService),
+                new DisplayNameUniqueValidator($userMapper),
             ),
         ));
 
@@ -45,7 +45,7 @@ class EditUserFilter extends InputFilter
                 array(
                     'name' => 'EmailAddress',
                 ),
-                new IdentityUniqueValidator($userMapper, $authenticationService),
+                new IdentityUniqueValidator($userMapper),
             ),
         ));
 
