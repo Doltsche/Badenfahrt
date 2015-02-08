@@ -1,3 +1,4 @@
+<div class="container">
 <h2>Avatar ändern</h2>
 
 <?php
@@ -16,7 +17,8 @@ $this->flashMessenger()->getPluginFlashMessenger()->clearCurrentMessagesFromCont
 
 <div class="row ">
     <div class="row-same-height">
-        <div class="col-xs-2 col-xs-height">
+
+        <div class="col-xs-4">
             <img src="<?php echo $this->avatarUrl; ?>" alt="avatar" />
         </div>
         <div class="col-xs-6 col-xs-height col-top">
@@ -26,15 +28,12 @@ $this->flashMessenger()->getPluginFlashMessenger()->clearCurrentMessagesFromCont
             $this->form->prepare();
 
             echo $this->form()->openTag($this->form);
-            foreach ($this->form as $element)
-            {
-                if ($element instanceof Zend\Form\Element\Submit)
-                {
+            foreach ($this->form as $element) {
+                if ($element instanceof Zend\Form\Element\Submit) {
                     echo '<div>';
                     $element->setAttribute('class', 'btn btn-primary');
                     $element->setAttribute('style', 'float: left; margin-right: 17px;');
-                } else
-                {
+                } else {
                     echo '<div class="form-group">';
                     $label = $element->getOption('label');
                     echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
@@ -50,4 +49,5 @@ $this->flashMessenger()->getPluginFlashMessenger()->clearCurrentMessagesFromCont
             <a class="btn btn-default" href="<?php echo $this->closeUrl; ?>">Schliessen</a>
         </div>
     </div>
+</div>
 </div>
