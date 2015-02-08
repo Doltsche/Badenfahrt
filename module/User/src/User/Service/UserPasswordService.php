@@ -14,19 +14,20 @@ class UserPasswordService implements UserPasswordServiceInterface {
 
     
     /**
-     * @var Passkey for AES128 Encryption 
+     * @var Passkey for AES Encryption 
      */
     protected $key;
     
     /**
-     * Function to encrypt with AES128
+     * Function to encrypt with AES
+     * Using MCRYPT_RIJNDAEL_256 algorithm
      * 
      * @param $toEncrypt    password to be encyrpted
      * @param $key          public key to use for encryption
      */
-    private function encyptAES128($toEncrypt, $key) {
+    private function encyptAES($toEncrypt, $key) {
         //Encrypt
-        $passcrypt = trim(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, trim($toEncrypt), MCRYPT_MODE_ECB));
+        $passcrypt = trim(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, trim($toEncrypt), MCRYPT_MODE_ECB));
         //Make ist usable for MySQL
         $encoded = base64_encode($passcrypt);
         return $encoded;
@@ -39,7 +40,8 @@ class UserPasswordService implements UserPasswordServiceInterface {
      */
     public function __construct($userMapper) {
         $this->userMapper = $userMapper;
-        $this->key ="BadenFahrtPasskey2015";
+        
+        $this->key ="BadenFahrtPasskey2015Sem-Arbeit"; // This should be a random string, recommended 32 bytes
     }
 
     /**
@@ -50,7 +52,7 @@ class UserPasswordService implements UserPasswordServiceInterface {
      */
     public function updatePassword($user, $plainPassword) {
 
-        $encryptedPassword = $this->encyptAES128($plainPassword,$this->key);
+        $encryptedPassword = $this->encyptAES($plainPassword,$this->key);
         $user->setPassword($encryptedPassword);
 
         return $user;
@@ -65,7 +67,7 @@ class UserPasswordService implements UserPasswordServiceInterface {
      */
     public function isSatisfied($user, $plainPassword) {
         // Encrypt pwd
-        $encryptedPassword = $this->encyptAES128($plainPassword,$this->key);
+        $encryptedPassword = $this->encyptAES($plainPassword,$this->key);
 
         return $user->getPassword() == $encryptedPassword;
     }
