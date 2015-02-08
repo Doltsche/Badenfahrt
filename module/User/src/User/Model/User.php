@@ -103,7 +103,7 @@ class User implements ProviderInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=20)
      */
     protected $phone;
 
