@@ -3,34 +3,54 @@
 namespace User\Service;
 
 /**
- * Description of UserPasswordService
- *
- * @author avogel
+ * Implements the UserPasswordServiceInterface interface.
  */
-class UserPasswordService implements UserPasswordServiceInterface {
+class UserPasswordService implements UserPasswordServiceInterface
+{
 
+    /**
+     * @var \User\Mapper\UserMapperInterface 
+     */
     protected $userMapper;
-    protected $userMailService;
 
-    public function __construct($userMapper, $userMailService) {
+    /**
+     * Creates a new instance of the UserPasswordService class.
+     * 
+     * @param User\Mapper\UserMapperInterface $userMapper
+     */
+    public function __construct($userMapper)
+    {
         $this->userMapper = $userMapper;
-        $this->userMailService = $userMailService;
     }
 
-    //Todo Better encryption
-    public function isSatisfied($user, $plainPassword) {
-        //encrypt pwd
-        $encryptedPassword = md5($plainPassword);
-
-        return $user->getPassword() == $encryptedPassword;
-    }
-
-    public function updatePassword($user, $plainPassword) {
+    /**
+     * Encrypts the given password and sets it on the user.
+     * 
+     * @param \User\Model\User $user
+     * @param string $plainPassword
+     */
+    public function updatePassword($user, $plainPassword)
+    {
 
         $encryptedPassword = md5($plainPassword);
         $user->setPassword($encryptedPassword);
 
         return $user;
+    }
+
+    /**
+     * Checks if the given plain password matches the encrypted password
+     * of the user.
+     * 
+     * @param \User\Model\User $user
+     * @param string $plainPassword
+     */
+    public function isSatisfied($user, $plainPassword)
+    {
+        // Encrypt pwd
+        $encryptedPassword = md5($plainPassword);
+
+        return $user->getPassword() == $encryptedPassword;
     }
 
 }

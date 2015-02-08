@@ -1,20 +1,27 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace User\Service;
 
 /**
- *
- * @author dev
+ * The UserPasswordServiceInterface interface defines methods related 
+ * to the user password.
  */
 interface UserPasswordServiceInterface 
 {
+    /**
+     * Encrypts the given password and sets it on the user.
+     * 
+     * @param \User\Model\User $user
+     * @param string $plainPassword
+     */
     public function updatePassword($user, $plainPassword);
     
+    /**
+     * Checks if the given plain password matches the encrypted password
+     * of the user.
+     * 
+     * @param \User\Model\User $user
+     * @param string $password
+     */
     public function isSatisfied($user, $password);
 }

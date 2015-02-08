@@ -7,15 +7,21 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use User\Service\UserPasswordService;
 
 /**
- * Description of UserPasswordServiceFactory
- *
- * @author avogel
+ * The factory creates an instance of a UserPasswordServiceInterface implementation.
  */
-class UserPasswordServiceFactory implements FactoryInterface {
+class UserPasswordServiceFactory implements FactoryInterface
+{
 
-    public function createService(ServiceLocatorInterface $serviceLocator) {
+    /**
+     * Creates an instance of a class that implements the UserPasswordServiceInterface interface.
+     * 
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return \User\Service\UserPasswordServiceInterface
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
-        $userMailService = $serviceLocator->get('User\Service\UserMailServiceInterface');
-        return new UserPasswordService($userMapper, $userMailService);
+        return new UserPasswordService($userMapper);
     }
+
 }
