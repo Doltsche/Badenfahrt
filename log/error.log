@@ -26,3 +26,16 @@ SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'ph
 2015-02-08T13:55:53+01:00 ERR (3): Route with name "editavatar" not found
 2015-02-08T15:55:41+01:00 ERR (3): You are not authorized to access User\Controller\User:profile
 2015-02-08T16:20:50+01:00 ERR (3): You are not authorized to access User\Controller\User:profile
+2015-02-08T18:43:04+01:00 WARN (4): mcrypt_encrypt(): Key of size 31 not supported by this algorithm. Only keys of sizes 16, 24 or 32 supported {"errno":2,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Service\\UserPasswordService.php","line":30}
+2015-02-08T18:45:04+01:00 WARN (4): mcrypt_encrypt(): Key of size 31 not supported by this algorithm. Only keys of sizes 16, 24 or 32 supported {"errno":2,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Service\\UserPasswordService.php","line":30}
+2015-02-08T18:45:48+01:00 WARN (4): mcrypt_encrypt(): Key of size 31 not supported by this algorithm. Only keys of sizes 16, 24 or 32 supported {"errno":2,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Service\\UserPasswordService.php","line":30}
+2015-02-08T18:55:37+01:00 WARN (4): mcrypt_encrypt(): Key of size 31 not supported by this algorithm. Only keys of sizes 16, 24 or 32 supported {"errno":2,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Service\\UserPasswordService.php","line":30}
+2015-02-08T19:08:14+01:00 ERR (3): An exception occurred while executing 'INSERT INTO user (password, identity, displayName, avatar, token, state, firstname, lastname, streetAndNr, city, postalCode, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params ["BTxbiYoGWoab512d8cgNgW9BdiowUOtjaJ3K\/wQ4Y1U=", "samuel.egger7@gmail.com", "Passwort", null, null, 0, "Samuel", "Egger", "Parkstrasse 1", "Ostermundigen", "3072", "0794288465"]:
+
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'samuel.egger7@gmail.com' for key 'UNIQ_8D93D6496A95E9C4'
+2015-02-08T19:09:14+01:00 ERR (3): An exception occurred while executing 'INSERT INTO user (password, identity, displayName, avatar, token, state, firstname, lastname, streetAndNr, city, postalCode, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params ["BTxbiYoGWoab512d8cgNgW9BdiowUOtjaJ3K\/wQ4Y1U=", "samuel.egger7@gmail.com", "Passwort", null, null, 0, "Samuel", "Egger", "Parkstrasse 1", "Ostermundigen", "3072", "0794288465"]:
+
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'samuel.egger7@gmail.com' for key 'UNIQ_8D93D6496A95E9C4'
+2015-02-08T19:10:07+01:00 ERR (3): An exception occurred while executing 'INSERT INTO user (password, identity, displayName, avatar, token, state, firstname, lastname, streetAndNr, city, postalCode, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params ["BTxbiYoGWoab512d8cgNgW9BdiowUOtjaJ3K\/wQ4Y1U=", "samuel.egger7@gmail.com", "Passwort", null, null, 0, "Samuel", "Egger", "Parkstrasse 1", "Ostermundigen", "3072", "0794288465"]:
+
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'samuel.egger7@gmail.com' for key 'UNIQ_8D93D6496A95E9C4'

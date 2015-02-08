@@ -41,7 +41,7 @@ class UserPasswordService implements UserPasswordServiceInterface {
     public function __construct($userMapper) {
         $this->userMapper = $userMapper;
         
-        $this->key ="BadenFahrtPasskey2015Sem-Arbeit"; // This should be a random string, recommended 32 bytes
+        $this->key ="BadenFahrtPasskey2015Sem--Arbeit"; // This should be a random string, recommended 32 bytes
     }
 
     /**

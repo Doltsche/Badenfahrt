@@ -47,7 +47,7 @@ class DisplayNameUniqueValidator extends AbstractValidator
             $this->error(self::NOTUNIQUE);
             return false;
         } 
-        if (!($identity) && $this->userMapper->findByDisplayName($value))
+        if ($identity == null && $this->userMapper->findByDisplayName($value))
         {
             $this->error(self::NOTUNIQUE);
             return false;

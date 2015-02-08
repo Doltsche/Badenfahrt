@@ -152,20 +152,6 @@ class UserController extends AbstractActionController
         $editUserForm = $this->getServiceLocator()->get('edit_user_form');
         $persisted = false;
 
-        // Get the correct user.
-        $user = null;
-        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
-        {
-            $id = $this->params()->fromRoute('id');
-            $user = $this->getUserMapper()->findById($id);
-        } else
-        {
-            $user = $this->getAuthService()->getIdentity();
-        }
-
-        // Bind the user to the edit form.
-        $editUserForm->bind($user);
-
         $request = $this->getRequest();
         if ($request->isPost())
         {
@@ -184,23 +170,30 @@ class UserController extends AbstractActionController
             if ($editUserForm->isValid())
             {
                 $editedUser = $editUserForm->getData();
-
-                // Update the password if it was changed.
-                if ($editedUser->getPassword())
+                
+                $userToSave = $this->getUserMapper()->findById($editedUser->getId());
+                $userToSave->setCity($editedUser->getCity());
+                $userToSave->setDisplayName($editedUser->getDisplayName());
+                $userToSave->setFirstname($editedUser->getFirstname());
+                $userToSave->setIdentity($editedUser->getIdentity());
+                $userToSave->setLastname($editedUser->getLastname());
+                $userToSave->setPhone($editedUser->getPhone());
+                $userToSave->setPostalCode($editedUser->getPostalCode());
+                $userToSave->setStreetAndNr($editedUser->getStreetAndNr());
+                
+                // Update the password if it has changed.
+                if (strlen($editedUser->getPassword()) > 0)
                 {
                     $passwordService = $this->getServiceLocator()->get('User\Service\UserPasswordServiceInterface');
-                    $passwordService->updatePassword($editedUser, $editedUser->getPassword());
-                } else
-                {
-                    $editedUser = $user->getPassword();
+                    $passwordService->updatePassword($userToSave, $editedUser->getPassword());
                 }
 
                 // The user is identified by a hidden id field in the form. Ensure that a normal user
                 // can not edit another user by changing the id of the hidden field.
                 $authenticatedUserId = $this->getAuthService()->getIdentity()->getId();
-                if ($authenticatedUserId == $editedUser->getId() || $this->isAllowed('administrator'))
+                if ($authenticatedUserId == $userToSave->getId() || $this->isAllowed('administrator'))
                 {
-                    $this->getUserMapper()->save($editedUser);
+                    $this->getUserMapper()->save($userToSave);
                 }
 
                 // Ignore the fact that the user may not be persisted due to invalid authorization.
