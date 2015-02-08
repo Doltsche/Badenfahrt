@@ -30,9 +30,9 @@ class DisplayNameUniqueValidator extends AbstractValidator
     public function isValid($value, $context = null)
     {
         $identity = null;
-        if (context['id'])
+        if ($context['id'])
         {
-            $identity = $this->userMapper->findById(context['id']);
+            $identity = $this->userMapper->findById($context['id']);
         }
 
         if (!$value)
