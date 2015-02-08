@@ -25,7 +25,7 @@ class User implements ProviderInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=255)
      */
     protected $password;
 
@@ -37,7 +37,7 @@ class User implements ProviderInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     protected $displayName;
 
@@ -49,7 +49,7 @@ class User implements ProviderInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=32, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $token;
 
@@ -71,37 +71,37 @@ class User implements ProviderInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      */
     protected $firstname;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      */
     protected $lastname;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      */
     protected $streetAndNr;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=255)
      */
     protected $city;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=4)
+     * @ORM\Column(type="string", length=255)
      */
     protected $postalCode;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=255)
      */
     protected $phone;
 

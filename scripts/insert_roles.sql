@@ -28,10 +28,10 @@ SELECT '-- Schreibe Rollen --' AS ' ';
 INSERT INTO role 
     (id, parent_id, role_id) 
 VALUES
-    (1, NULL, 'guest'),
-    (2, NULL, 'registered'),
-    (3, NULL, 'user'),
-    (4, 3, 'administrator');
+    (1, NULL, 'guest'),      # Besucher, der nicht eingeloggt ist
+    (2, NULL, 'registered'), # Registrierter Benutzer, der noch nicht bestätigt wurde
+    (3, NULL, 'user'),       # Bestätigter Benutzer
+    (4, 3, 'administrator'); # Der Administrator erbt die Rechte vom User.
 
 SHOW WARNINGS;
 
