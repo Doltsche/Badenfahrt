@@ -9,4 +9,4 @@ nbproject
 composer.lock
 vendor/bin
 vendor
-/log/error.php
+/log/error.log
