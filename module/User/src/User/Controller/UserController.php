@@ -11,11 +11,6 @@ use Zend\Validator\File\Size;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\JsonModel;
 
-/**
- * Description of UserController
- *
- * @author Dev
- */
 class UserController extends AbstractActionController
 {
 
@@ -169,7 +164,7 @@ class UserController extends AbstractActionController
             {
                 $formdata[$value['name']] = $value['value'];
             }
-            
+
             // Populate the form with the fetched data.
             $editUserForm->setData($formdata);
 
@@ -192,10 +187,25 @@ class UserController extends AbstractActionController
                 {
                     $this->getUserMapper()->save($editedUser);
                 }
-                
+
                 // Ignore the fact that the user may not be persisted due to invalid authorization.
                 $persisted = true;
             }
+        } else
+        {
+            // Get the correct user.
+            $user = null;
+            if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
+            {
+                $id = $this->params()->fromRoute('id');
+                $user = $this->getUserMapper()->findById($id);
+            } else
+            {
+                $user = $this->getAuthService()->getIdentity();
+            }
+
+            // Bind the user to the edit form.
+            $editUserForm->bind($user);
         }
 
         // Render the modal dialog.

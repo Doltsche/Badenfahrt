@@ -5,9 +5,7 @@ namespace User\Form\Validator;
 use Zend\Validator\AbstractValidator;
 
 /**
- * Description of PasswordValidator
- *
- * @author Dev
+ * Used to validate the verify password.
  */
 class PasswordVerifyValidator extends AbstractValidator
 {

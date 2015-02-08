@@ -5,9 +5,7 @@ namespace User\Form\Validator;
 use Zend\Validator\AbstractValidator;
 
 /**
- * Description of PasswordValidator
- *
- * @author Dev
+ * Used to validate the identity.
  */
 class IdentityUniqueValidator extends AbstractValidator
 {
@@ -16,8 +14,8 @@ class IdentityUniqueValidator extends AbstractValidator
     const ISEMPTY = 'isempty';
 
     protected $messageTemplates = array(
-        self::NOTUNIQUE => "Nicht einmalig.",
-        self::ISEMPTY => "Leer"
+        self::NOTUNIQUE => "Die angegebene E-Mail wird bereits verwendet.",
+        self::ISEMPTY => "Das Feld darf nicht leer sein."
     );
     
     protected $userMapper;

@@ -43,7 +43,8 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>">Badenfahrt</a>
+                     <!-- eigenes Bild -->
+                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php $rnd=rand ( 1 , 3 );echo $this->basePath('img/logo').$rnd.".png" ?>" alt="Badenfahrt"/></a> 
                 </div>
                 <div class="collapse navbar-collapse">
                     <?php
