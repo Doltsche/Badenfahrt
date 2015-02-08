@@ -69,7 +69,7 @@ class UserController extends AbstractActionController
                     } else
                     {
                         // The provied credentials do not match.
-                        $this->flashMessenger()->addMessage("Die E-Mail und/oder das Passwort ist falsch.");
+                        $this->flashMessenger()->addWarningMessage("Die E-Mail und/oder das Passwort ist falsch.");
 
                         // Hack, hack hack...
                         return new ViewModel(array(
@@ -80,7 +80,7 @@ class UserController extends AbstractActionController
             }
             {
                 // The form data was not valid.
-                $this->flashMessenger()->addMessage('Bitte geben Sie Ihre E-Mail und das Passwort ein, um sich einzuloggen.');
+                $this->flashMessenger()->addWarningMessage('Bitte geben Sie Ihre E-Mail und das Passwort ein, um sich einzuloggen.');
             }
         }
 

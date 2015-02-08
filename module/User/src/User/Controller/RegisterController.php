@@ -26,6 +26,7 @@ class RegisterController extends AbstractActionController
         if ($request->isPost())
         {
             $form->setData($request->getPost());
+            $isValid = $form->isValid();
             if ($form->isValid())
             {
                 $userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
@@ -51,7 +52,7 @@ class RegisterController extends AbstractActionController
                 $userMailService->sendConfirmationRequest($user);
             }
         }
-
+        
         return new ViewModel(array(
             'form' => $form,
             'user' => $user,
