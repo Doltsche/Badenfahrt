@@ -285,7 +285,10 @@ class UserController extends AbstractActionController
                 }
             } else
             {
-                \Zend\Debug\Debug::dump($adapter->getMessages());
+                foreach ($adapter->getMessages() as $message)
+                {
+                    $this->flashMessenger()->addErrorMessage($message);
+                }
             }
         }
 

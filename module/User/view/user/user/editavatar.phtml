@@ -1,10 +1,18 @@
 <h2>Avatar ändern</h2>
 
-<?php if ($this->editError): ?>
-    <div class="alert alert-warning"> <!-- TODO: alert-error is not working -->
-        <a class="close" data-dismiss="alert" href="#">×</a><?php echo $this->editError; ?>
-    </div>
-<?php endif ?>
+<?php
+$flash = $this->flashMessenger();
+$flash->setMessageOpenFormat('<div%s>
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+        &times;
+    </button>
+    <ul><li>')
+        ->setMessageSeparatorString('</li><li>')
+        ->setMessageCloseString('</li></ul></div>');
+
+echo $flash->renderCurrent('error', array('alert', 'alert-dismissible', 'alert-danger'));
+$this->flashMessenger()->getPluginFlashMessenger()->clearCurrentMessagesFromContainer();
+?>
 
 <div class="row ">
     <div class="row-same-height">
@@ -32,7 +40,6 @@
                     echo $this->formLabel()->openTag() . $label . $this->formLabel()->closeTag();
                     echo $this->formElementErrors($element);
                     $element->setAttribute('class', 'btn btn-default btn-file');
-                    //$element->setAttribute('class', 'form-control');
                 }
                 echo $this->formElement($element);
                 echo '</div>';
@@ -40,7 +47,7 @@
             echo $this->form()->closeTag($this->form);
             ?>
 
-            <a class="btn btn-default" href="<?php echo $this->url($this->closeRoute); ?>">Schliessen</a>
+            <a class="btn btn-default" href="<?php echo $this->closeUrl; ?>">Schliessen</a>
         </div>
     </div>
 </div>

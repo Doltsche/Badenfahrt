@@ -20,9 +20,8 @@ function validateForm(formId) {
 function decorate(data) {
     var messageHtml = '';
     if (data.success) {
-        messageHtml = '<div class="alert alert-success" role="alert">\n\
-            Änderungen wurden erfolgreich übernommen.\n\
-        </div>';
+        location.reload();
+        return;
     } else {
         var msg = '';
         jQuery.each(data.messages, function (i, val) {

@@ -62,5 +62,102 @@ class EditUserFilter extends InputFilter
                 new PasswordVerifyValidator(),
             ),
         ));
+
+        $this->add(array(
+            'name' => 'firstname',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'lastname',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'streetAndNr',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'postalCode',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 10,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'city',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 3,
+                        'max' => 255,
+                    ),
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'phone',
+            'required' => true,
+            'allowEmpty' => false,
+            'filters' => array(array('name' => 'StringTrim')),
+            'validators' => array(
+                array(
+                    'name' => 'StringLength',
+                    'options' => array(
+                        'min' => 7,
+                        'max' => 20,
+                    ),
+                )
+            ),
+        ));
     }
+
 }
