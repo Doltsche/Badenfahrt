@@ -5,44 +5,48 @@
 <h1>Benutzer verwalten</h1>
 
 <div class="table-responsive"> 
-<table class="table table-striped table-bordered table-hover">
-    <tr>
-        <th>Anzeigename</th>
-        <th>Vorname</th>
-        <th>Nachname</th>
-        <th>Identität</th>
-        <th>&nbsp;</th>
-    </tr>
-
-    <?php foreach ($this->users as $user) : ?>
-
+    <table class="table table-striped table-bordered table-hover">
         <tr>
-            <td><?php echo $this->escapeHtml($user->getDisplayName()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getFirstname()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getLastname()); ?></td>
-            <td><?php echo $this->escapeHtml($user->getIdentity()); ?></td>
-            <td>
-
-                <div id="profile-avatar" class="btn-group-vertical" id="profile">
-                    <button type="button" class="btn btn-primary dropdown-toggle" 
-                            data-toggle="dropdown">
-                        Verwaltung
-                        <span class="caret"></span>
-                    </button>
-
-                    <ul role="menu" class="dropdown-menu">
-                        <li role="presentation"><a role="menuitem" onclick="showForm('<?php echo $this->url('user/renderUserEditModal', array('id' => $user->getId())); ?>');">Profildaten Bearbeiten</a></li>
-                        <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editAvatar', array('id' => $user->getId())); ?>">Avatar Bearbeiten</a></li>
-                        <li class="divider"></li>
-                        <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/delete', array('id' => $user->getId())); ?>">Löschen</a></li>
-                    </ul>
-                </div>
-            </td>
+            <th>Anzeigename</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Identität</th>
+            <th>&nbsp;</th>
         </tr>
 
-    <?php endforeach; ?>
+        <?php foreach ($this->users as $user) : ?>
 
-</table>
+            <?php
+            if ($user->getId() == $this->userIdentity()->getId())
+                continue;
+            ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($user->getDisplayName()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getFirstname()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getLastname()); ?></td>
+                <td><?php echo $this->escapeHtml($user->getIdentity()); ?></td>
+                <td>
+
+                    <div id="profile-avatar" class="btn-group-vertical" id="profile">
+                        <button type="button" class="btn btn-primary dropdown-toggle" 
+                                data-toggle="dropdown">
+                            Verwaltung
+                            <span class="caret"></span>
+                        </button>
+
+                        <ul role="menu" class="dropdown-menu">
+                            <li role="presentation"><a role="menuitem" onclick="showForm('<?php echo $this->url('user/renderUserEditModal', array('id' => $user->getId())); ?>');">Profildaten Bearbeiten</a></li>
+                            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/editAvatar', array('id' => $user->getId())); ?>">Avatar Bearbeiten</a></li>
+                            <li class="divider"></li>
+                            <li role="presentation"><a role="menuitem" href="<?php echo $this->url('user/delete', array('id' => $user->getId())); ?>">Löschen</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+
+        <?php endforeach; ?>
+
+    </table>
 </div>
 
 <div id="profilemodal"></div>
