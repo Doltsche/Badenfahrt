@@ -11,10 +11,20 @@ use Zend\Validator\File\Size;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\JsonModel;
 
+/**
+ * The UserController class.
+ */
 class UserController extends AbstractActionController
 {
 
+    /**
+     * @var \User\Mapper\UserMapperInterface
+     */
     protected $userMapper;
+    
+    /**
+     * @var \Zend\Authentication\AuthenticationService 
+     */
     protected $authenticationService;
 
     /**
@@ -89,6 +99,8 @@ class UserController extends AbstractActionController
      * Action invoked by route /user/logout.
      * 
      * Logout.
+     * 
+     * @return ViewModel
      */
     public function logoutAction()
     {
@@ -178,6 +190,9 @@ class UserController extends AbstractActionController
                 {
                     $passwordService = $this->getServiceLocator()->get('User\Service\UserPasswordServiceInterface');
                     $passwordService->updatePassword($editedUser, $editedUser->getPassword());
+                } else
+                {
+                    $editedUser = $user->getPassword();
                 }
 
                 // The user is identified by a hidden id field in the form. Ensure that a normal user
@@ -220,6 +235,14 @@ class UserController extends AbstractActionController
         ));
     }
 
+    /**
+     * Action invoked by route /user/editAvatar[/:id].
+     * 
+     * Edit the avatar of a user. If the id is given, the avatar of the user 
+     * with the given id will be edited (only allowed with administrator role).
+     * 
+     * @return ViewModel
+     */
     public function editAvatarAction()
     {
         $closeUrl = '';
@@ -343,6 +366,8 @@ class UserController extends AbstractActionController
      * 
      * Deletes the current authenticated user 
      * or the user found by the given id (only allowed with administrator role).
+     * 
+     * @return ViewModel
      */
     public function deleteAction()
     {
@@ -406,11 +431,21 @@ class UserController extends AbstractActionController
         return $image_p;
     }
 
+    /**
+     * Returns the path of the directory for the avatars.
+     * 
+     * @return string
+     */
     protected function getAvatarBaseDir()
     {
         return dirname(__DIR__) . '\..\..\avatars';
     }
 
+    /**
+     * Returns an implementation of the UserMapperInterface interface.
+     * 
+     * @return \User\Mapper\UserMapperInterface.
+     */
     protected function getUserMapper()
     {
         if (!$this->userMapper)
@@ -421,6 +456,11 @@ class UserController extends AbstractActionController
         return $this->userMapper;
     }
 
+    /**
+     * Returns an instance of the AuthenticationService class.
+     * 
+     * @return \Zend\Authentication\AuthenticationService
+     */
     protected function getAuthService()
     {
         if (!$this->authenticationService)

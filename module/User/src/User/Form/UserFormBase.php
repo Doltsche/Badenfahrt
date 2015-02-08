@@ -6,8 +6,17 @@ use User\Model\User;
 use Zend\Form\Form;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
+/**
+ * Abstract base class for the edit user and register user form class.
+ */
 abstract class UserFormBase extends Form
 {
+    /**
+     * Initializes a new instance of the abstract UserFormBase class.
+     * 
+     * @param string $name
+     * @param array $options
+     */
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);

@@ -9,13 +9,17 @@ use User\Form\Validator\PasswordValidator;
 use User\Form\Validator\DisplayNameUniqueValidator;
 
 /**
- * Description of RegisterFilter
- *
- * @author Dev
+ * The filter class for the edit user form.
  */
 class EditUserFilter extends InputFilter
 {
 
+    /**
+     * Creates a new instance of the EditUserFilter class.
+     * 
+     * @param \User\Mapper\UserMapperInterface $userMapper
+     * @param \Zend\Authentication\AuthenticationService $authenticationService
+     */
     public function __construct($userMapper, $authenticationService)
     {
         $this->add(array(
