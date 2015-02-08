@@ -7,7 +7,6 @@ nbproject
 .project
 .settings
 composer.lock
-vendor/bin
-vendor
-log/error.log
+vendor/
+log/
 module/User/avatars/
