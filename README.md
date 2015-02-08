@@ -174,7 +174,7 @@ Hierfür kann das SQL-Script in `scripts\insert_roles.sql` verwendet werden.
 Nun kann die Webseite mit dem Browser Ihrer Wahl getestet werden.
 
 
-[Andreas Vogelbacher]:nixda@willkeinspam.com
-[Samuel Egger]:nixda@willkeinspam.com
-[Christoph Junker]:nixda@willkeinspam.com
+[Andreas Vogelbacher]:<mailto:nixda@willkeinspam.com>
+[Samuel Egger]:<mailto:nixda@willkeinspam.com>
+[Christoph Junker]:<mailto:nixda@willkeinspam.com>
 [1]:http://abbts.ch
