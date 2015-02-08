@@ -247,9 +247,11 @@ class UserController extends AbstractActionController
     {
         $closeUrl = '';
         $avatarUrl = '';
+        $uploadUrl = '';
 
         $user = null;
 
+        $allowed = $this->isAllowed('administrator');
         if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
         {
             $id = $this->params()->fromRoute('id');
@@ -257,12 +259,14 @@ class UserController extends AbstractActionController
 
             $closeUrl = $this->url()->fromRoute('user/manage');
             $avatarUrl = $this->url()->fromRoute('user/avatar', array('id' => $user->getId()));
+            $uploadUrl = $this->url()->fromRoute('user/editAvatar', array('id' => $user->getId()));
         } else
         {
             $user = $this->getAuthService()->getIdentity();
 
             $closeUrl = $this->url()->fromRoute('user/profile');
             $avatarUrl = $this->url()->fromRoute('user/avatar');
+            $uploadUrl = $this->url()->fromRoute('user/editAvatar');
         }
 
         $form = $this->getServiceLocator()->get('edit_avatar_form');
@@ -315,6 +319,7 @@ class UserController extends AbstractActionController
         return new ViewModel(array(
             'avatarUrl' => $avatarUrl,
             'closeUrl' => $closeUrl,
+            'uploadUrl' => $uploadUrl,
             'form' => $form,
         ));
     }

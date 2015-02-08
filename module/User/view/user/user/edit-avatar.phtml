@@ -23,7 +23,7 @@ $this->flashMessenger()->getPluginFlashMessenger()->clearCurrentMessagesFromCont
         </div>
         <div class="col-xs-6 col-xs-height col-top">
             <?php
-            $this->form->setAttribute('action', $this->url('user/editAvatar'));
+            $this->form->setAttribute('action', $this->uploadAvatar);
             $this->form->setAttribute('enctype', 'multipart/form-data');
             $this->form->prepare();
 

@@ -26,19 +26,6 @@ class DoctrineUserMapper implements UserMapperInterface
     }
 
     /**
-     * Finds all User objects.
-     * 
-     * @return array
-     */
-    public function findAll()
-    {
-        $userRepository = $this->entityManager->getRepository('User\Model\User');
-        $users = $userRepository->findAll();
-
-        return $users;
-    }
-
-    /**
      * Finds a User object by the given id.
      * 
      * @param int $id
@@ -123,6 +110,19 @@ class DoctrineUserMapper implements UserMapperInterface
         }
 
         return null;
+    }
+
+    /**
+     * Finds all User objects.
+     * 
+     * @return array
+     */
+    public function findAll()
+    {
+        $userRepository = $this->entityManager->getRepository('User\Model\User');
+        $users = $userRepository->findAll();
+
+        return $users;
     }
 
     /**

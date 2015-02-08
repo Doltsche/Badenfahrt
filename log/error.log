@@ -24,3 +24,5 @@ SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'ph
 2015-02-08T13:47:05+01:00 ERR (3): Route with name "editavatar" not found
 2015-02-08T13:54:41+01:00 ERR (3): Route with name "editavatar" not found
 2015-02-08T13:55:53+01:00 ERR (3): Route with name "editavatar" not found
+2015-02-08T15:55:41+01:00 ERR (3): You are not authorized to access User\Controller\User:profile
+2015-02-08T16:20:50+01:00 ERR (3): You are not authorized to access User\Controller\User:profile
