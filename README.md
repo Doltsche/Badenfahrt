@@ -2,7 +2,7 @@
  alt="ZF2 Logo 1" title="ZF2 User Module" align="right" />
 
 
-# Zend Skeleton Application - UserModul für Badenfahrt
+# Zend Skeleton Application - UserModul für Semeterprojekt: Badenfahrt
 ---
 
 
@@ -21,7 +21,6 @@ Es gibt folgende Aktionen:
   - Anmelden / Abmelden
    - Formulare für das Login und das Logout
   - Services
-   - Self-Service für Passwort zurücksetzten
    - Self-Service Profile Bearbeiten
    - Benutzerverwaltung für Administratoren
 
@@ -29,81 +28,67 @@ Von [Samuel Egger], [Christoph Junker] und [Andreas Vogelbacher] für ein Semest
 
 Version
 ---
-0.9.31
+###### 0.9.69
 
 > Achtung:
 
 > Installationsaleitungen beachten
 
 
-Introduction
+Einführung
 ------------
-This is a simple, skeleton application using the ZF2 MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with ZF2.
+Dieses User-Modul ist im Rahmen der Semester Arbeit für die ABB-TS WS/SS 2015 unter verwendung des ZF2 MVC layer und dessen Modulsystems enstamnden.
+
+Folgende Programme werden Benötigt:
+ - GIT
+ - MySQL >= 5.6
+ - PHP >= 5.6.3
+ - Apache >= 2.4
+
+Folgende Module werden Verwendet:
+ - Doctrine
+ - Doctrine ORM
+ - BjyAuthorize
+
+Wir verwenden dabei auch folgende Bibliotheken:
+ - Bootstrap
+ - JQuery
+
+Zum einsatz kommt in diesem Modul auch die Techniken:
+ - Ajax
+ - E-Mail versand mit Zend
 
 Installation
 ------------
 
-Using Composer (recommended)
-----------------------------
-The recommended way to get a working copy of this project is to clone the repository
-and use `composer` to install dependencies using the `create-project` command:
-
-    curl -s https://getcomposer.org/installer | php --
-    php composer.phar create-project -sdev --repository-url="https://packages.zendframework.com" zendframework/skeleton-application path/to/install
-
-Alternately, clone the repository and manually invoke `composer` using the shipped
-`composer.phar`:
-
-    cd my/project/dir
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git
-    cd ZendSkeletonApplication
-    php composer.phar self-update
-    php composer.phar install
-
-(The `self-update` directive is to ensure you have an up-to-date `composer.phar`
-available.)
-
-Another alternative for downloading the project is to grab it via `curl`, and
-then pass it to `tar`:
-
-    cd my/project/dir
-    curl -#L https://github.com/zendframework/ZendSkeletonApplication/tarball/master | tar xz --strip-components=1
-
-You would then invoke `composer` to install dependencies per the previous
-example.
-
-Using Git submodules
+Projekt Klonen mit Git
 --------------------
-Alternatively, you can install using native git submodules:
+Zuerst muss das Projekt von GitHub geholt werden:
 
-    git clone git://github.com/zendframework/ZendSkeletonApplication.git --recursive
+    git clone git://github.com/Dolsche/Badenfahrt
 
-Web Server Setup
+Web Server Aufsetzten
 ----------------
 
-### PHP CLI Server
-
-The simplest way to get started if you are using PHP 5.4 or above is to start the internal PHP cli-server in the root directory:
-
-    php -S 0.0.0.0:8080 -t public/ public/index.php
-
-This will start the cli-server on port 8080, and bind it to all network
-interfaces.
-
-**Note: ** The built-in CLI server is *for development only*.
+### PHP Configureieren
+In der `PHP.ini` sicherstellen dass folgende Extensions geladen werden:
+ - php_fileinfo.dll
+ - php_gd2.dll
+ - php_mysqli.dll
+ - php_openssl.dll
+ - php_pdo_mysql.dll
 
 ### Apache Setup
 
-To setup apache, setup a virtual host to point to the public/ directory of the
-project and you should be ready to go! It should look something like below:
+Um Apache zu konfigurieren muss ein Virtueller Host eingerichtet werden der auf das public/ Verzeichniss des Projektes zeigt. Dazu muss im Apache Verzeichniss die Datei `conf\extra\httpd-vhosts.conf` angepasst werden.
+Es sollte in etwa so aussehen:
+
 
     <VirtualHost *:80>
-        ServerName zf2-tutorial.localhost
-        DocumentRoot /path/to/zf2-tutorial/public
+        ServerName Badenfahrt.local
+        DocumentRoot /path/to/Badenfahrt/public
         SetEnv APPLICATION_ENV "development"
-        <Directory /path/to/zf2-tutorial/public>
+        <Directory /path/to/Badenfahrt/public>
             DirectoryIndex index.php
             AllowOverride All
             Order allow,deny
@@ -111,6 +96,82 @@ project and you should be ready to go! It should look something like below:
         </Directory>
     </VirtualHost>
 
+Danch Apache neu starten.
+
+Projektspezifische Anpassungen vornehmen
+----------------------------
+
+Im Projektverzeichniss müssen noch Dateien in \config\autoload\ erstellt werden gemäss ihrer Vorlagen für den zugriff auf die MySQL Datenbank und den Emailanbieter:
+ - mail.config.local.php
+ - doctrineconnection.local.php
+
+Hierzu die Vorlagen ohne .disk kopieren und entsprechend anpassen.
+
+ZF2 und BjyAuthorize Module herunter laden
+----------------------------
+
+Wir verwenden dem empfohlenen Weg und holen Module mit hilve vom `Composer`.
+
+    cd pfad/zu/Badenfahrt
+    composer self-update
+    composer install
+
+(Mit `self-update` stellen wir zuerst sicher das `composer` up-to-date ist)
+
+Datenbank erstelen
+----------------------------
+Es muss noch die Datenbank in MySQL erstellt werden.
+
+Hierzu kann z.B. das SQL-Script in `scripts\create_database.sql` verwendet werden.
+
+Danenbank Schema / Tabellen erstellen
+----------------------------
+Um Das Schema erstellen zu könne muss temporär erst die verwendeung von BjyAuthorize aus dem entwernt werden.
+> Die Gründe für diese temporäre Änderung wurden nicht weiter verfolgt, sind aber für zukünftige Versionen empfehlenswert.
+
+Dazu folgende Änderungen durchführen:
+In der Datei `config\application.config.php` das BjyAuthorize auskommentieren.
+
+     'modules' => array(
+        'DoctrineModule',
+        'DoctrineORMModule',
+        //'BjyAuthorize',
+        'Application',
+        'User',
+        'ZendDeveloperTools'
+    ),
+
+In der Datei `module\user\module.php` die verwendung von BjyAuthorize aus der `onBootstrap`funktion auskommentieren.
+
+
+    public function onBootstrap(\Zend\Mvc\MvcEvent $e)
+    {
+        $sm = $e->getApplication()->getServiceManager();
+
+        // Add ACL information to the Navigation view helper
+      /*
+        $authorize = $sm->get('BjyAuthorizeServiceAuthorize');
+        $acl = $authorize->getAcl();
+        $role = $authorize->getIdentity();
+        \Zend\View\Helper\Navigation::setDefaultAcl($acl);
+        \Zend\View\Helper\Navigation::setDefaultRole($role);
+      */
+    }
+
+Nun kann mit `Doctrine`, in der Kommandozeile vom Projektbasis-Pfad, das Schema erstellt werden:
+
+    vendor\bin\doctrine-module  orm:schema-tool:create
+
+> Die Änderungen nach erfolgrichem Kreieren des Schemas nicht vergessen wieder rückgängig zu machen!
+
+Tabellen füllen
+----------------------------
+
+Die Tabellen müssen mit den Rollen-Definitionen für das BjyAuthorize gefüllt werden.
+Hierfür kann das SQL-Script in `scripts\insert_roles.sql` vwerwendet werden.
+
+#Geschaft!
+Nun kann die Webseite mit dem Browser Ihrere Wahl getestet werden.
 
 
 [Andreas Vogelbacher]:nixda@willkeinspam.com
