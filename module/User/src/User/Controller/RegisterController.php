@@ -52,13 +52,18 @@ class RegisterController extends AbstractActionController
                 $userMailService->sendConfirmationRequest($user);
             }
         }
-        
+
         return new ViewModel(array(
             'form' => $form,
             'user' => $user,
         ));
     }
 
+    /**
+     * Action invoked by route /user/resendconfirmation/:identity.
+     * 
+     * Sends the user a new email to confirm his registration.
+     */
     public function resendConfirmationAction()
     {
         $identity = $this->params()->fromRoute('identity');
@@ -67,6 +72,11 @@ class RegisterController extends AbstractActionController
         $user = $userMapper->findByIdentity($identity);
         if ($user && $user->getState() == 0)
         {
+            // Update token for security reason.
+            $token = md5(uniqid(mt_rand(), true));
+            $user->setToken($token);
+            $userMapper->save($user);
+
             // Resend confirmation request.
             $userMailService = $this->getServiceLocator()->get('User\Service\UserMailServiceInterface');
             $userMailService->sendConfirmationRequest($user);
@@ -76,6 +86,12 @@ class RegisterController extends AbstractActionController
         return $this->redirect()->toRoute('user');
     }
 
+    /**
+     * Action invoked by route /user/conform/:token
+     * 
+     * Confirms the validity of the registered email of a user
+     * and elevates the state and role of the user to allow him to login.
+     */
     public function confirmAction()
     {
         $token = $this->params()->fromRoute('token');
@@ -84,6 +100,7 @@ class RegisterController extends AbstractActionController
         $user = $userMapper->findByToken($token);
         if ($user && $user->getState == 0)
         {
+            // Give the user the user role.
             $roleMapper = $this->getServiceLocator()->get('User\Mapper\RoleMapperInterface');
             $userRole = $roleMapper->findByRoleId('user');
             $user->addRole($userRole);
