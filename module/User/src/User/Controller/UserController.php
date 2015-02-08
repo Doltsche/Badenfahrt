@@ -38,12 +38,12 @@ class UserController extends AbstractActionController
         {
             // Populate the form with the posted data.
             $form->setData($request->getPost());
-            
+
             // Validate the form.
             if ($form->isValid())
             {
                 $user = $this->getUserMapper()->findByIdentity($form->get('identity')->getValue());
-                
+
                 // Check if the authenticated user is allowed to login (did he confirm the email).
                 if ($user && $user->getState() == 0)
                 {
@@ -166,7 +166,7 @@ class UserController extends AbstractActionController
 
         // Holds the error messages of the form (used by JavaScript).
         $messages = array();
-        
+
         $request = $this->getRequest();
         if ($request->isPost())
         {
@@ -180,7 +180,7 @@ class UserController extends AbstractActionController
 
             // Populate the form with the fetched data.
             $editUserForm->setData($formdata);
-            
+
             // Validate the form.
             if ($editUserForm->isValid())
             {
@@ -338,17 +338,34 @@ class UserController extends AbstractActionController
         return $viewModel();
     }
 
+    /**
+     * Action invoked by route /user/delete[/:id]
+     * 
+     * Deletes the current authenticated user 
+     * or the user found by the given id (only allowed with administrator role).
+     */
     public function deleteAction()
     {
-        $id = $this->params()->fromRoute('id');
+        $user = null;
+        $redirectRoute = 'home';
+        
+        if ($this->isAllowed('administrator') && $this->params()->fromRoute('id'))
+        {
+            $id = $this->params()->fromRoute('id');
+            $user = $this->getUserMapper()->findById($id);
 
-        $user = $this->getUserMapper()->findById($id);
-        if ($user && $user->getId() != $this->getAuthService()->getIdentity()->getId())
+            $redirectRoute = 'user/manage';
+        } else
+        {
+            $user = $this->getAuthService()->getIdentity();
+        }
+
+        if ($user)
         {
             $this->getUserMapper()->remove($user);
         }
 
-        return $this->redirect()->toRoute('user/manage');
+        return $this->redirect()->toRoute($redirectRoute);
     }
 
     /**
