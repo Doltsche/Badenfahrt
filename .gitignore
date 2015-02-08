@@ -9,4 +9,5 @@ nbproject
 composer.lock
 vendor/bin
 vendor
-/log/error.log
+log/error.log
+module/User/avatars/
