@@ -12,3 +12,8 @@
 2015-02-07T22:39:29+01:00 NOTICE (5): Undefined variable: avatarRoute {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Controller\\UserController.php","line":247}
 2015-02-07T22:46:14+01:00 NOTICE (5): Undefined variable: authenticationService {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\src\\User\\Controller\\UserController.php","line":193}
 2015-02-07T22:47:05+01:00 NOTICE (5): Undefined variable: user {"errno":8,"file":"C:\\Projects\\Badenfahrt\\module\\User\\view\\user\\user\\profile.phtml","line":13}
+2015-02-07T23:57:30+01:00 ERR (3): You are not authorized to access User\Controller\User:profile
+2015-02-08T00:49:26+01:00 ERR (3): You are not authorized to access User\Controller\User:profile
+2015-02-08T01:07:31+01:00 ERR (3): An exception occurred while executing 'INSERT INTO user (password, identity, displayName, avatar, token, state, firstname, lastname, streetAndNr, city, postalCode, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params ["cc03e747a6afbbcbf8be7668acfebee5", "samuel.egger7@gmail.com", "Samuel Egger", null, "f7aced9aa26fce1a3523abeccd87e437", 0, "Samuel", "Egger", "Parkstrasse 1", "Ostermundigen", "3072", "Hallo Telefon"]:
+
+SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'phone' at row 1
