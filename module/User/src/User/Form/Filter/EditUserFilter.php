@@ -34,7 +34,7 @@ class EditUserFilter extends InputFilter
                         'max' => 255,
                     ),
                 ),
-                new DisplayNameUniqueValidator($userMapper),
+                // new DisplayNameUniqueValidator($userMapper),
             ),
         ));
 
@@ -45,7 +45,7 @@ class EditUserFilter extends InputFilter
                 array(
                     'name' => 'EmailAddress',
                 ),
-                new IdentityUniqueValidator($userMapper),
+                // new IdentityUniqueValidator($userMapper),
             ),
         ));
 

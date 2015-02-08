@@ -448,7 +448,7 @@ class UserController extends AbstractActionController
     {
         if (!$this->userMapper)
         {
-            $this->
+            $this->userMapper = $this->getServiceLocator()->get('User\Mapper\UserMapperInterface');
         }
 
         return $this->userMapper;

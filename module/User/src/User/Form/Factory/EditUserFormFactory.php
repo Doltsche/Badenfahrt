@@ -22,7 +22,7 @@ class EditUserFormFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $userMapper = $serviceLocator->get('User\Mapper\UserMapperInterface');
-        
+       
         $filter = new EditUserFilter($userMapper);
 
         $form = new EditUserForm();
