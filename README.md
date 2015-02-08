@@ -45,7 +45,7 @@ Folgende Programme werden benötigt:
  - PHP >= 5.6.3
  - Apache >= 2.4
 
-Folgende Module werden verwendet:
+Folgende Module werden zsätzlich verwendet:
  - Doctrine
  - Doctrine ORM
  - BjyAuthorize
