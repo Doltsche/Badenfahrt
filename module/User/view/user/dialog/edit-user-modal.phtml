@@ -29,8 +29,9 @@
                 ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
-                <button type="button" class="btn btn-default" onclick="validateForm('editUserForm');">Speichern</button>
+               
+                <button type="button" class="btn btn-primary pull-left" onclick="validateForm('editUserForm');">Speichern</button>
+                <button type="button" class="btn btn-default pull-right§" data-dismiss="modal">Zurück</button>
             </div>
             <?php echo $this->form()->closeTag($this->form); ?>
         </div>
